@@ -1,0 +1,1 @@
+This is an admin dashboard for [Roundware](https://github.com/roundware/roundware-server). Uses APIv2.
