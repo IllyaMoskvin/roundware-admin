@@ -1,0 +1,39 @@
+// Color names from http://chir.ag/projects/name-that-color
+
+$color-blue             : #719EE3;      // Havelock Blue
+$color-blue-light       : #B5CDF0;      // Perano
+$color-text             : #333333;      // Mine Shaft
+
+// Hover states / active states / background
+
+$color-gray-dark        : #DBDBDB;      // Alto
+$color-gray-medium      : #F2F2F2;      // Concrete
+$color-gray-light       : #F7F7F7;      // Alabaster
+
+$color-dropdown         : #517FC6;      // Indigo
+$color-dropdown-hover   : #2F5EA7;      // Azure
+$color-icon-delete      : #D62B2B;      // Valencia
+$color-icon-accept      : #22BD31;      // Forrest Green
+
+$color-groups : (
+	#64CC9B,            // Emerald
+	#B1E5CD,            // Pauda
+	#F7CF40,            // Saffron
+	#FBE7A0,            // Cherokee
+	#F6702C,            // Crusta
+	#FBB796,            // Rose Bud
+	#3CCFF0,            // Picton Blue
+	#9EE7F8,            // Sail
+	#8C66C4,            // Amethyst
+	#C5B3E2,            // Prelude
+);
+
+body {
+	overflow-x: hidden;
+}
+
+// map.scss is generated using DennisBecker/grunt-sass-globbing
+// You have no control over the order in which @import statements appear
+// Wrap the contents of each scss file in a class to namespace them
+// Variables defined in main.scss should be accessible to all partials
+@import 'map';
