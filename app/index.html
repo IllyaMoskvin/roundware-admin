@@ -32,7 +32,9 @@
 <body ng-app="app">
 
     <!-- Everything will be rendered here -->
-    <div ui-view></div>
+    <div ng-controller="AppController as vm">
+        <div ui-view></div>
+    </div>
 
     <!-- Bootstrapping -->
     <script src="app.module.js"></script>
@@ -45,6 +47,7 @@
 
     <!-- Load the app itself last -->
     <script src="app.route.js"></script>
+    <script src="app.js"></script>
 
 </body>
 
