@@ -29,7 +29,7 @@
 
 </head>
 
-<body ng-app="app">
+<body ng-app="app" route-css-classnames>
 
     <!-- Everything will be rendered here -->
     <div ng-controller="AppController as vm">
@@ -38,6 +38,9 @@
 
     <!-- Bootstrapping -->
     <script src="app.module.js"></script>
+
+    <!-- Shared stuff -->
+    <script src="shared/route-css-classnames.directive.js"></script>
 
     <!-- We will add other components here -->
 

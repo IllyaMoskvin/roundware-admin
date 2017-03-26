@@ -17,7 +17,10 @@
                 url: '/',
                 templateUrl: 'sandbox/sandbox.html',
                 controller: 'SandboxController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-sandbox'
+                }
             });
 
     }
