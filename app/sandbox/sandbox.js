@@ -1,14 +1,14 @@
 (function () {
 
     angular
-        .module('app.sandbox')
+        .module('app')
         .controller('SandboxController',  SandboxController);
 
     SandboxController.$inject = [];
 
     function SandboxController() {
 
-        vm = this;
+        var vm = this;
 
         vm.echo = "Hello World";
 
