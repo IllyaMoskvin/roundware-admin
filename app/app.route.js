@@ -2,7 +2,8 @@
 
     angular
         .module('app')
-        .config(routing);
+        .config(routing)
+        .run(run);
 
     routing.$inject = ['$stateProvider', '$urlRouterProvider'];
 
@@ -25,7 +26,16 @@
 
     }
 
-    // manual bootstrapping
-    // app.run();
+
+    run.$inject = ['ApiService'];
+
+    function run( ApiService ) {
+
+        // TODO: Load config from file?
+        ApiService.init({
+            url: 'http://localhost:8888/api/2/',
+        });
+
+    }
 
 })();
