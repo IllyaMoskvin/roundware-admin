@@ -30,6 +30,7 @@ $color-groups : (
 
 body {
 	overflow-x: hidden;
+	color: $color-text;
 }
 
 // map.scss is generated using DennisBecker/grunt-sass-globbing
@@ -37,3 +38,10 @@ body {
 // Wrap the contents of each scss file in a class to namespace them
 // Variables defined in main.scss should be accessible to all partials
 @import 'map';
+
+// Temporarily, we are going to override some annoying Bootstrap defaults
+// Later, we should import Bootstrap components selectively using npm
+h1 {
+	margin: 0;
+	font-size: 24px;
+}
