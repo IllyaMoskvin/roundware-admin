@@ -2,7 +2,8 @@
 
     angular
         .module('app')
-        .config(routing);
+        .config(routing)
+        .run(run);
 
     routing.$inject = ['$stateProvider', '$urlRouterProvider'];
 
@@ -21,11 +22,35 @@
                 data: {
                     cssClassnames: 'rw-state-sandbox'
                 }
+            })
+            .state('authenticate', {
+                url: '/authenticate',
+                templateUrl: 'authenticate/authenticate.html',
+                controller: 'AuthenticateController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-authenticate'
+                }
             });
 
     }
 
-    // manual bootstrapping
-    // app.run();
+
+    run.$inject = ['ApiService', 'AuthService'];
+
+    function run( ApiService, AuthService ) {
+
+        // TODO: Load config from file?
+        ApiService.init({
+            url: 'http://localhost:8888/api/2/',
+        });
+
+        AuthService.init({
+            login: '/authenticate',
+            public: ['/authenticate'],
+            redirect: '/',
+        });
+
+    }
 
 })();

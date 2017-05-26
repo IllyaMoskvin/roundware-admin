@@ -24,6 +24,13 @@
     <!-- AngularUI Router -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.min.js"></script>
 
+    <!-- angular-ui-notification -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-notification/0.3.6/angular-ui-notification.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-notification/0.3.6/angular-ui-notification.min.js"></script>
+
+    <!-- ngStorage -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+
     <!-- Site-specific styles, compiled from SCSS using grunt -->
     <link href="app.css" rel="stylesheet">
 
@@ -43,7 +50,12 @@
     <script src="shared/route-css-classnames.directive.js"></script>
     <script src="shared/post-content-type.config.js"></script>
 
+    <!-- Services -->
+    <script src="services/api.service.js"></script>
+    <script src="services/auth.service.js"></script>
+
     <!-- We will add other components here -->
+    <script src="authenticate/authenticate.js"></script>
 
     <!-- Use this to display specific directives, etc. -->
     <script src="sandbox/sandbox.js"></script>

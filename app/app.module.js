@@ -9,6 +9,8 @@
 
         // 3rd party modules
         'ui.router',
+        'ngStorage',
+        'ui-notification',
 
     ]);
 
