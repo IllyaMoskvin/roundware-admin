@@ -3,6 +3,7 @@
     angular
         .module('app')
         .config(routing)
+        .config(notifications)
         .run(run);
 
     routing.$inject = ['$stateProvider', '$urlRouterProvider'];
@@ -32,6 +33,18 @@
                     cssClassnames: 'rw-state-authenticate'
                 }
             });
+
+    }
+
+
+    notifications.$inject = ['NotificationProvider'];
+
+    function notifications( NotificationProvider ) {
+
+        NotificationProvider.setOptions({
+            positionX: 'right',
+            positionY: 'bottom',
+        });
 
     }
 
