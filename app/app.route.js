@@ -66,6 +66,15 @@
                 data: {
                     cssClassnames: 'rw-state-project'
                 }
+            })
+            .state('project.overview', {
+                url: '/overview',
+                templateUrl: 'authenticated/project/overview/overview.html',
+                controller: 'OverviewController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-overview'
+                }
             });
 
     }
