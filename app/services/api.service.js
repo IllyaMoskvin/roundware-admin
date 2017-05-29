@@ -17,6 +17,7 @@
         // define public interface
         return {
             init: init,
+            get: get,
             post: post,
             error: error,
         };
@@ -34,6 +35,24 @@
 
             // Add trailing slash to the url, if it's missing
             settings.url = settings.url.replace(/\/?$/, '/');
+
+        }
+
+        function get( url, config ) {
+
+            url = getFullUrl( url );
+
+            // config is an optional argument
+            config = config || {};
+
+            // session-for-admin-uploads
+            angular.merge( config, {
+                params: {
+                    session_id: 1
+                }
+            });
+
+            return $http.get( url, config );
 
         }
 
