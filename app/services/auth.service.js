@@ -29,6 +29,7 @@
             check: check,
             login: login,
             logout: logout,
+            getUsername: getUsername,
         }
 
         function init( config ) {
@@ -86,6 +87,16 @@
         // Check if a user is currently logged in
         function check() {
             return typeof $localStorage.currentUser !== 'undefined';
+        }
+
+        // Check if a user is currently logged in
+        function getUsername() {
+
+            if( !check() ) {
+                return null;
+            }
+
+            return $localStorage.currentUser.username;
         }
 
         function login(username, password, callback) {

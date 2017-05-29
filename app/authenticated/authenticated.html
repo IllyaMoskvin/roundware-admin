@@ -1,0 +1,21 @@
+<div class="rw-authenticated">
+
+    <!-- Show navbar when user is authenticated -->
+    <nav class="navbar navbar-static-top navbar-default">
+
+        <a class="navbar-brand" href="#">Roundware</a>
+
+        <form class="navbar-form pull-right">
+            <button class="btn" ng-click="vm.logout()">Logout</button>
+        </form>
+
+        <span class="navbar-text pull-right">
+            {{ vm.username }}
+        </span>
+
+    </nav>
+
+    <!-- Children of authenticated will be rendered here -->
+    <div ui-view></div>
+
+</div>

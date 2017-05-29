@@ -32,6 +32,17 @@
                 data: {
                     cssClassnames: 'rw-state-authenticate'
                 }
+            })
+            // Use as parent state to add topbar
+            .state('authenticated', {
+                abstract: true,
+                // Omit URL so that it's not prepended to everything
+                templateUrl: 'authenticated/authenticated.html',
+                controller: 'AuthenticatedController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-authenticated'
+                }
             });
 
     }
