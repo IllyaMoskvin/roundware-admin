@@ -53,6 +53,19 @@
                 data: {
                     cssClassnames: 'rw-state-projects'
                 }
+            })
+            // Use as parent to add sidebar
+            // It uses `authenticated` as parent, so topbar will be there
+            .state('project', {
+                abstract: true,
+                url: '/project/:id',
+                parent: 'authenticated',
+                templateUrl: 'authenticated/project/project.html',
+                controller: 'ProjectController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-project'
+                }
             });
 
     }
