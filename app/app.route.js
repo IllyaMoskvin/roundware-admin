@@ -4,7 +4,8 @@
         .module('app')
         .config(routing)
         .config(notifications)
-        .run(run);
+        .run(services)
+        .run(redirection);
 
     routing.$inject = ['$stateProvider', '$urlRouterProvider'];
 
@@ -16,13 +17,17 @@
         // app routes
         $stateProvider
             .state('sandbox', {
-                url: '/',
+                url: '/sandbox',
                 templateUrl: 'sandbox/sandbox.html',
                 controller: 'SandboxController',
                 controllerAs: 'vm',
                 data: {
                     cssClassnames: 'rw-state-sandbox'
                 }
+            })
+            .state('root', {
+                url: '/',
+                redirectTo: 'projects',
             })
             .state('authenticate', {
                 url: '/authenticate',
@@ -67,6 +72,12 @@
                     cssClassnames: 'rw-state-project'
                 }
             })
+            // If no :id is specified, redirect to projects list
+            // This seems to match /project/:id as well
+            .state('project-undefined', {
+                url: '/project',
+                redirectTo: 'projects',
+            })
             .state('project.overview', {
                 url: '/overview',
                 templateUrl: 'authenticated/project/overview/overview.html',
@@ -92,9 +103,9 @@
     }
 
 
-    run.$inject = ['ApiService', 'AuthService'];
+    services.$inject = ['ApiService', 'AuthService'];
 
-    function run( ApiService, AuthService ) {
+    function services( ApiService, AuthService ) {
 
         // TODO: Load config from file?
         ApiService.init({
@@ -104,7 +115,23 @@
         AuthService.init({
             login: '/authenticate',
             public: ['/authenticate'],
-            redirect: '/',
+            redirect: '/projects',
+        });
+
+    }
+
+
+    redirection.$inject = ['$rootScope', '$state'];
+
+    function redirection( $rootScope, $state ) {
+
+        // Allows us to add redirects to routes via redirectTo
+        // https://stackoverflow.com/a/29491412/1943591
+        $rootScope.$on('$stateChangeStart', function( event, to, params ) {
+            if( to.redirectTo ) {
+                event.preventDefault();
+                $state.go(to.redirectTo, params, {location: 'replace'})
+            }
         });
 
     }
