@@ -43,6 +43,16 @@
                 data: {
                     cssClassnames: 'rw-state-authenticated'
                 }
+            })
+            .state('projects', {
+                url: '/projects',
+                parent: 'authenticated',
+                templateUrl: 'authenticated/projects/projects.html',
+                controller: 'ProjectsController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-projects'
+                }
             });
 
     }
