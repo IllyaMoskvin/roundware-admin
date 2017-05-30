@@ -48,7 +48,9 @@
 
     <!-- Shared stuff -->
     <script src="shared/route-css-classnames.directive.js"></script>
-    <script src="shared/post-content-type.config.js"></script>
+    <!-- Deprecating: Roundware should be able to handle application/json now -->
+    <!-- This seems to interfere with PATCH requests, potentially others too -->
+    <!-- <script src="shared/post-content-type.config.js"></script> -->
 
     <!-- Services -->
     <script src="services/api.service.js"></script>

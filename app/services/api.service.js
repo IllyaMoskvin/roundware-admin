@@ -19,6 +19,7 @@
             init: init,
             get: get,
             post: post,
+            patch: patch,
             error: error,
         };
 
@@ -61,6 +62,14 @@
             url = getFullUrl( url );
 
             return $http.post( url, data, config );
+
+        }
+
+        function patch( url, data, config ) {
+
+            url = getFullUrl( url );
+
+            return $http.patch( url, data, config );
 
         }
 

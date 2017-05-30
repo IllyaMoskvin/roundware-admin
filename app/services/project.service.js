@@ -13,6 +13,7 @@
         return {
             list: list,
             detail: detail,
+            update: update,
         };
 
         function list() {
@@ -24,6 +25,12 @@
         function detail( id ) {
 
             return ApiService.get( 'projects/' + id );
+
+        }
+
+        function update( id, data ) {
+
+            return ApiService.patch( 'projects/' + id, data );
 
         }
 
