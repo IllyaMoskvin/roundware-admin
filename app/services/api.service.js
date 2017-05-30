@@ -17,7 +17,9 @@
         // define public interface
         return {
             init: init,
+            get: get,
             post: post,
+            patch: patch,
             error: error,
         };
 
@@ -37,11 +39,37 @@
 
         }
 
+        function get( url, config ) {
+
+            url = getFullUrl( url );
+
+            // config is an optional argument
+            config = config || {};
+
+            // session-for-admin-uploads
+            angular.merge( config, {
+                params: {
+                    session_id: 1
+                }
+            });
+
+            return $http.get( url, config );
+
+        }
+
         function post( url, data, config ) {
 
             url = getFullUrl( url );
 
             return $http.post( url, data, config );
+
+        }
+
+        function patch( url, data, config ) {
+
+            url = getFullUrl( url );
+
+            return $http.patch( url, data, config );
 
         }
 

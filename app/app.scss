@@ -28,6 +28,10 @@ $color-groups : (
 	#C5B3E2,            // Prelude
 );
 
+// Variables for sizing, padding, margins, etc.
+
+$sidebar-width: 150px;
+
 body {
 	overflow-x: hidden;
 	color: $color-text;

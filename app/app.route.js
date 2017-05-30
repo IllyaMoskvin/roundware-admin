@@ -3,7 +3,9 @@
     angular
         .module('app')
         .config(routing)
-        .run(run);
+        .config(notifications)
+        .run(services)
+        .run(redirection);
 
     routing.$inject = ['$stateProvider', '$urlRouterProvider'];
 
@@ -15,13 +17,17 @@
         // app routes
         $stateProvider
             .state('sandbox', {
-                url: '/',
+                url: '/sandbox',
                 templateUrl: 'sandbox/sandbox.html',
                 controller: 'SandboxController',
                 controllerAs: 'vm',
                 data: {
                     cssClassnames: 'rw-state-sandbox'
                 }
+            })
+            .state('root', {
+                url: '/',
+                redirectTo: 'projects',
             })
             .state('authenticate', {
                 url: '/authenticate',
@@ -31,14 +37,75 @@
                 data: {
                     cssClassnames: 'rw-state-authenticate'
                 }
+            })
+            // Use as parent state to add topbar
+            .state('authenticated', {
+                abstract: true,
+                // Omit URL so that it's not prepended to everything
+                templateUrl: 'authenticated/authenticated.html',
+                controller: 'AuthenticatedController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-authenticated'
+                }
+            })
+            .state('projects', {
+                url: '/projects',
+                parent: 'authenticated',
+                templateUrl: 'authenticated/projects/projects.html',
+                controller: 'ProjectsController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-projects'
+                }
+            })
+            // Use as parent to add sidebar
+            // It uses `authenticated` as parent, so topbar will be there
+            .state('project', {
+                abstract: true,
+                url: '/project/:id',
+                parent: 'authenticated',
+                templateUrl: 'authenticated/project/project.html',
+                controller: 'ProjectController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-project'
+                }
+            })
+            // If no :id is specified, redirect to projects list
+            // This seems to match /project/:id as well
+            .state('project-undefined', {
+                url: '/project',
+                redirectTo: 'projects',
+            })
+            .state('project.overview', {
+                url: '/overview',
+                templateUrl: 'authenticated/project/overview/overview.html',
+                controller: 'OverviewController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-overview'
+                }
             });
 
     }
 
 
-    run.$inject = ['ApiService', 'AuthService'];
+    notifications.$inject = ['NotificationProvider'];
 
-    function run( ApiService, AuthService ) {
+    function notifications( NotificationProvider ) {
+
+        NotificationProvider.setOptions({
+            positionX: 'right',
+            positionY: 'bottom',
+        });
+
+    }
+
+
+    services.$inject = ['ApiService', 'AuthService'];
+
+    function services( ApiService, AuthService ) {
 
         // TODO: Load config from file?
         ApiService.init({
@@ -48,7 +115,23 @@
         AuthService.init({
             login: '/authenticate',
             public: ['/authenticate'],
-            redirect: '/',
+            redirect: '/projects',
+        });
+
+    }
+
+
+    redirection.$inject = ['$rootScope', '$state'];
+
+    function redirection( $rootScope, $state ) {
+
+        // Allows us to add redirects to routes via redirectTo
+        // https://stackoverflow.com/a/29491412/1943591
+        $rootScope.$on('$stateChangeStart', function( event, to, params ) {
+            if( to.redirectTo ) {
+                event.preventDefault();
+                $state.go(to.redirectTo, params, {location: 'replace'})
+            }
         });
 
     }

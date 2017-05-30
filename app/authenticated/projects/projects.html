@@ -1,0 +1,13 @@
+<div class="rw-projects">
+
+    <ul>
+
+        <li ng-repeat="project in vm.projects">
+            <a ui-sref="project.overview({ id: project.project_id })">
+                {{ project.name }}
+            </a>
+        </li>
+
+    </ul>
+
+</div>
