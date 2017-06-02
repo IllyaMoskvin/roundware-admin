@@ -19,14 +19,7 @@
 
         function activate() {
 
-            ProjectService.detail( $stateParams.id ).then(
-                function( response ) {
-                    vm.project = response.data;
-                },
-                function( response ) {
-                    Notification.error( { message: 'Cannot retrieve project' } );
-                }
-            );
+            vm.project = ProjectService.detail( $stateParams.id );
 
         }
 
@@ -35,14 +28,7 @@
             ProjectService.update( vm.project.project_id, {
                 // TODO: Make a copy of the original and only send the updated fields
                 name: vm.project.name
-            }).then(
-                function( response ) {
-                    vm.project = response.data;
-                },
-                function( response ) {
-                    Notification.error( { message: 'Cannot save project' } );
-                }
-            );
+            });
 
         }
 

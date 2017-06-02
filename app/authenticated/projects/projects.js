@@ -10,24 +10,9 @@
 
         var vm = this;
 
-        vm.projects = [];
-
-        activate();
+        vm.projects = ProjectService.list();
 
         return vm;
-
-        function activate() {
-
-            ProjectService.list().then(
-                function( response ) {
-                    vm.projects = response.data;
-                },
-                function( response ) {
-                    Notification.error( { message: 'Cannot retrieve projects' } );
-                }
-            );
-
-        }
 
     }
 

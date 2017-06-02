@@ -10,24 +10,9 @@
 
         var vm = this;
 
-        vm.project = null;
-
-        activate();
+        vm.project = ProjectService.detail( $stateParams.id );
 
         return vm;
-
-        function activate() {
-
-            ProjectService.detail( $stateParams.id ).then(
-                function( response ) {
-                    vm.project = response.data;
-                },
-                function( response ) {
-                    Notification.error( { message: 'Cannot retrieve project' } );
-                }
-            );
-
-        }
 
     }
 
