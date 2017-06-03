@@ -5,11 +5,11 @@
         .module('app')
         .factory('ProjectService', Service);
 
-    Service.$inject = ['ApiService'];
+    Service.$inject = ['ApiService', 'CacheFactory'];
 
-    function Service(ApiService) {
+    function Service(ApiService, CacheFactory) {
 
-        var data = [];
+        var cache = new CacheFactory.Cache( 'project_id' );
 
         // define public interface
         return {
@@ -20,84 +20,25 @@
 
         function list() {
 
-            ApiService.get( 'projects' ).then( updateData, updateError );
+            ApiService.get( 'projects' ).then( cache.update, cache.error );
 
-            return data;
-
-        }
-
-        function detail( id ) {
-
-            ApiService.get( 'projects/' + id ).then( updateDatum, updateError );
-
-            return findDatum( id );
+            return cache.list();
 
         }
 
-        function update( id, data ) {
+        function detail( id, editable ) {
 
-            ApiService.patch( 'projects/' + id, data ).then( updateDatum, updateError );
+            ApiService.get( 'projects/' + id ).then( cache.update, cache.error );
 
-            return findDatum( id );
-
-        }
-
-        function updateData( response ) {
-
-            angular.forEach( response.data, function( newDatum, i ) {
-
-                var oldDatum = findDatum( newDatum.project_id );
-
-                angular.extend( oldDatum, newDatum );
-
-            });
-
-            return data;
+            return cache.detail( id, editable );
 
         }
 
-        function findDatum( id ) {
+        function update( id, data, editable ) {
 
-            // Standardize id into integer
-            id = parseInt( id );
+            ApiService.patch( 'projects/' + id, data ).then( cache.update, cache.error );
 
-            var dummy = { project_id: id };
-            var datum;
-
-            // Search for existing datum
-            for( var i = 0; i < data.length; i++ ) {
-
-                datum = data[i];
-
-                if( datum.project_id == id ) {
-                    return datum;
-                }
-
-            }
-
-            // If there's no match, add dummy to data collection
-            data.push( dummy );
-            return dummy;
-
-        }
-
-        function updateDatum( response ) {
-
-            // Find the datum in the data collection
-            // Replace its properties with those from the server
-            var datum = findDatum( response.data.project_id );
-
-            angular.extend( datum, response.data );
-
-            return datum;
-
-        }
-
-        function updateError( response ) {
-
-            console.error( 'Unable to update cache' );
-
-            return response;
+            return cache.detail( id, editable );
 
         }
 
