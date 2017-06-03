@@ -10,7 +10,7 @@
 
         var vm = this;
 
-        vm.project = ProjectService.detail( $stateParams.id );
+        vm.project = ProjectService.detail( $stateParams.id ).clean;
 
         return vm;
 

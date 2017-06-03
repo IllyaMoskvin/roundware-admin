@@ -26,19 +26,19 @@
 
         }
 
-        function detail( id, editable ) {
+        function detail( id ) {
 
             ApiService.get( 'projects/' + id ).then( cache.update, cache.error );
 
-            return cache.detail( id, editable );
+            return cache.detail( id );
 
         }
 
-        function update( id, data, editable ) {
+        function update( id, data ) {
 
             ApiService.patch( 'projects/' + id, data ).then( cache.update, cache.error );
 
-            return cache.detail( id, editable );
+            return cache.detail( id );
 
         }
 

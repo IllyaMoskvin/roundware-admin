@@ -19,7 +19,7 @@
 
         function activate() {
 
-            vm.project = ProjectService.detail( $stateParams.id, true );
+            vm.project = ProjectService.detail( $stateParams.id ).dirty;
 
         }
 

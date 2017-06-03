@@ -3,8 +3,8 @@
     <ul>
 
         <li ng-repeat="project in vm.projects">
-            <a ui-sref="project.overview({ id: project.project_id })">
-                {{ project.name }}
+            <a ui-sref="project.overview({ id: project.id })">
+                {{ project.clean.name }}
             </a>
         </li>
 

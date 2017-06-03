@@ -37,9 +37,9 @@
             // We are treating it as a constant, essentially.
             ID_FIELD = ID_FIELD || 'id';
 
-            // TODO: Two arrays vs. array of { clean: {}, dirty: {} }
-            var clean = [];
-            var dirty = [];
+            // Each item in cache is { clean: {}, dirty: {} }
+            // It is up to the view or the controller to choose one
+            var cache = []
 
             return {
                 update: update,
@@ -70,16 +70,16 @@
             }
 
 
-            function list( editable ) {
+            function list( ) {
 
-                return editable ? dirty : clean;
+                return cache;
 
             }
 
 
-            function detail( id, editable ) {
+            function detail( id ) {
 
-                return getDatum( id, editable ? dirty : clean );
+                return getDatum( id );
 
             }
 
@@ -92,7 +92,7 @@
 
                 });
 
-                return data;
+                return cache;
 
             }
 
@@ -103,18 +103,17 @@
                 // Replace its properties with those from the server
                 var id = newDatum[ ID_FIELD ];
 
-                var cleanDatum = getDatum( id, clean );
-                var dirtyDatum = getDatum( id, dirty );
+                var oldDatum = getDatum( id );
 
-                angular.extend( cleanDatum, newDatum );
-                angular.extend( dirtyDatum, newDatum );
+                angular.extend( oldDatum.clean, newDatum );
+                angular.extend( oldDatum.dirty, newDatum );
 
                 return newDatum;
 
             }
 
 
-            function getDatum( id, cache ) {
+            function getDatum( id ) {
 
                 // Ensure id is an integer
                 id = parseInt( id );
@@ -122,17 +121,18 @@
                 // Search for existing datum
                 for( var i = 0; i < cache.length; i++ ) {
 
-                    if( cache[i][ ID_FIELD ] == id ) {
+                    if( cache[i].id == id ) {
                         return cache[i];
                     }
 
                 }
 
                 // Otherwise, add dummy to cache
-                var dummy = {};
-
-                // Blank slate is just {id: id}
-                dummy[ ID_FIELD ] = id;
+                var dummy = {
+                    id: id,
+                    clean: {},
+                    dirty: {},
+                };
 
                 cache.push( dummy );
                 return dummy;
