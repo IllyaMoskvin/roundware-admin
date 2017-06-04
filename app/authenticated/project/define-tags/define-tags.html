@@ -1,0 +1,47 @@
+<!-- Tag Categories -->
+<table st-table="vm.displayed.categories" st-safe-src="vm.categories" class="table table-striped">
+    <colgroup>
+        <col width="42">
+        <col>
+        <col width="45">
+    </colgroup>
+        <thead>
+            <tr>
+                <th st-sort="clean.id" st-sort-default="true">ID</th>
+                <th st-sort="clean.name" colspan="2">Tag Category</th>
+            </tr>
+        </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.displayed.categories">
+            <td>{{ row.clean.id }}</td>
+            <td>{{ row.clean.name }}</td>
+            <td><a href="javascript:;" ng-click="console.log( row )" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-edit"></span></a></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- Tags -->
+<table st-table="vm.displayed.tags" st-safe-src="vm.tags" class="table table-striped">
+    <colgroup>
+        <col width="42">
+        <col>
+        <col>
+        <col width="45">
+    </colgroup>
+        <thead>
+            <tr>
+                <th st-sort="clean.id" st-sort-default="true">ID</th>
+                <th st-sort="clean.value">Tag</th>
+                <th st-sort="clean.tag_categoy_id"  st-sort-default="true" colspan="2">Category</th>
+            </tr>
+        </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.displayed.tags">
+            <td>{{ row.clean.id }}</td>
+            <td>{{ row.clean.value }}</td>
+            <td>{{ row.clean.tag_categoy_id }}</td>
+            <td><a href="javascript:;" ng-click="console.log( row )" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-edit"></span></a></td>
+        </tr>
+    </tbody>
+</table>

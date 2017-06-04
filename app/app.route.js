@@ -86,6 +86,15 @@
                 data: {
                     cssClassnames: 'rw-state-overview'
                 }
+            })
+            .state('project.define-tags', {
+                url: '/define-tags',
+                templateUrl: 'authenticated/project/define-tags/define-tags.html',
+                controller: 'DefineTagsController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-define-tags'
+                }
             });
 
     }
