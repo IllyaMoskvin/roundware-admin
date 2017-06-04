@@ -24,6 +24,7 @@
                 list: list,
                 detail: detail,
                 update: update,
+                find: find,
             };
 
 
@@ -68,6 +69,24 @@
                 ApiService.patch( url, data, config ).then( cache.update, cache.error );
 
                 return datum;
+
+            }
+
+
+            // find() is like a soft detail(), meant for static views
+            function find( ) {
+
+                // assume that the argument is an id
+                if( arguments.length === 1 ) {
+
+                    var id = arguments[0];
+
+                    return cache.detail( id );
+
+                }
+
+                // TODO: more robust filters
+                console.log( arguments );
 
             }
 

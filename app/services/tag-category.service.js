@@ -16,6 +16,7 @@
             list: list,
             detail: detail,
             update: update,
+            find: collection.find
         };
 
         // TODO: tag_categoy_id is misspelled

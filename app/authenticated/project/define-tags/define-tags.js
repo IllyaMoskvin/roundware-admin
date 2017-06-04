@@ -13,6 +13,8 @@
         vm.categories = null;
         vm.tags = null;
 
+        vm.TagCategoryService = TagCategoryService;
+
         activate();
 
         return vm;
