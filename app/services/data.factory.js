@@ -13,11 +13,11 @@
             Collection: Collection,
         }
 
-        function Collection( ID_FIELD ) {
+        function Collection( ID_FIELD, WRAPPER ) {
 
-            // See CacheFactory for more info on ID_FIELD
+            // See CacheFactory for more info on ID_FIELD and WRAPPER
 
-            var cache = new CacheFactory.Cache( ID_FIELD || 'id' );
+            var cache = new CacheFactory.Cache( ID_FIELD || 'id', WRAPPER );
 
             // define public interface
             return {

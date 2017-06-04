@@ -31,11 +31,15 @@
             Cache: Cache,
         }
 
-        function Cache( ID_FIELD ) {
+        function Cache( ID_FIELD, WRAPPER ) {
 
             // For some resources, this could be e.g. project_id
             // We are treating it as a constant, essentially.
             ID_FIELD = ID_FIELD || 'id';
+
+            // Some resources, e.g. tags are wrapped in an object
+            // WRAPPER is the property that contains our data
+            // If it is omitted, assume data array is the root element
 
             // Each item in cache is { clean: {}, dirty: {} }
             // It is up to the view or the controller to choose one
@@ -49,6 +53,11 @@
             };
 
             function update( response ) {
+
+                // Determine if we need to unwrap the data
+                if( WRAPPER && response.data.hasOwnProperty( WRAPPER ) ) {
+                    response.data = response.data[ WRAPPER ];
+                }
 
                 // Determine we are updating all data
                 if( response.data.constructor === Array ) {

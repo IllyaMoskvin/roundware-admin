@@ -9,7 +9,7 @@
 
     function Service(DataFactory) {
 
-        var collection = new DataFactory.Collection( 'id' );
+        var collection = new DataFactory.Collection( 'id', 'tags' );
 
         // define public interface
         return {
