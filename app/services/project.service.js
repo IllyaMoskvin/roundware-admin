@@ -5,9 +5,11 @@
         .module('app')
         .factory('ProjectService', Service);
 
-    Service.$inject = ['ApiService'];
+    Service.$inject = ['DataFactory'];
 
-    function Service(ApiService) {
+    function Service(DataFactory) {
+
+        var collection = new DataFactory.Collection( 'project_id' );
 
         // define public interface
         return {
@@ -18,19 +20,19 @@
 
         function list() {
 
-            return ApiService.get( 'projects' );
+            return collection.list( 'projects' );
 
         }
 
         function detail( id ) {
 
-            return ApiService.get( 'projects/' + id );
+            return collection.detail( 'projects/' + id );
 
         }
 
         function update( id, data ) {
 
-            return ApiService.patch( 'projects/' + id, data );
+            return collection.update( 'projects/' + id, data );
 
         }
 
