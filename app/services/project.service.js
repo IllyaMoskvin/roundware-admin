@@ -5,11 +5,11 @@
         .module('app')
         .factory('ProjectService', Service);
 
-    Service.$inject = ['ApiService', 'CacheFactory'];
+    Service.$inject = ['DataFactory'];
 
-    function Service(ApiService, CacheFactory) {
+    function Service(DataFactory) {
 
-        var cache = new CacheFactory.Cache( 'project_id' );
+        var collection = new DataFactory.Collection( 'project_id' );
 
         // define public interface
         return {
@@ -20,25 +20,19 @@
 
         function list() {
 
-            ApiService.get( 'projects' ).then( cache.update, cache.error );
-
-            return cache.list();
+            return collection.list( 'projects' );
 
         }
 
         function detail( id ) {
 
-            ApiService.get( 'projects/' + id ).then( cache.update, cache.error );
-
-            return cache.detail( id );
+            return collection.detail( 'projects/' + id );
 
         }
 
         function update( id, data ) {
 
-            ApiService.patch( 'projects/' + id, data ).then( cache.update, cache.error );
-
-            return cache.detail( id );
+            return collection.update( 'projects/' + id, data );
 
         }
 
