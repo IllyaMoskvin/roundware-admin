@@ -41,9 +41,20 @@
             // WRAPPER is the property that contains our data
             // If it is omitted, assume data array is the root element
 
-            // Each item in cache is { clean: {}, dirty: {} }
+            // Each item in cache.both is { clean: {}, dirty: {} }
             // It is up to the view or the controller to choose one
-            var cache = []
+
+            // For convenience, you can also do...
+            //
+            //     list().dirty, list().clean
+            //
+            // ...to get an array of non-nested datums on a list level
+
+            var cache = {
+                clean: [],
+                dirty: [],
+                both: [],
+            };
 
             return {
                 update: update,
@@ -88,7 +99,7 @@
 
             function detail( id ) {
 
-                return getDatum( id );
+                return getDatum( id, cache.both );
 
             }
 
@@ -110,41 +121,70 @@
 
                 // Find the datum in both the clean and dirty data collections
                 // Replace its properties with those from the server
+
+                // This also updates datums in cache.both,
+                //   since it points to the same objects
+
                 var id = newDatum[ ID_FIELD ];
 
-                var oldDatum = getDatum( id );
-
-                angular.extend( oldDatum.clean, newDatum );
-                angular.extend( oldDatum.dirty, newDatum );
+                angular.extend( getDatum( id, cache.clean ), newDatum );
+                angular.extend( getDatum( id, cache.dirty ), newDatum );
 
                 return newDatum;
 
             }
 
 
-            function getDatum( id ) {
+            function getDatum( id, source ) {
 
                 // Ensure id is an integer
                 id = parseInt( id );
 
                 // Search for existing datum
-                for( var i = 0; i < cache.length; i++ ) {
+                for( var i = 0; i < source.length; i++ ) {
 
-                    if( cache[i].id == id ) {
-                        return cache[i];
+                    // Assumes that an id is set on all items
+                    if( source[i].id == id ) {
+                        return source[i];
                     }
 
                 }
 
-                // Otherwise, add dummy to cache
-                var dummy = {
-                    id: id,
-                    clean: {},
-                    dirty: {},
+                // If the datum wasn't found,
+                // add it to all the arrays
+
+                var clean = {};
+                var dirty = {};
+                var both = {
+                    clean: clean,
+                    dirty: dirty,
                 };
 
-                cache.push( dummy );
-                return dummy;
+                // I'd like to ignore ID_FIELD when possible
+                clean[ID_FIELD] = clean.id = id;
+                dirty[ID_FIELD] = dirty.id = id;
+                both[ID_FIELD] = both.id = id;
+
+                cache.clean.push( clean );
+                cache.dirty.push( dirty );
+                cache.both.push( both );
+
+                // Figure out what to return
+                switch( source ) {
+
+                    case cache.clean:
+                        return clean;
+                    break;
+
+                    case cache.dirty:
+                        return dirty;
+                    break;
+
+                    default:
+                        return both;
+                    break;
+
+                }
 
             }
 
