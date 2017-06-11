@@ -18,6 +18,7 @@
             // See CacheFactory for more info on ID_FIELD and WRAPPER
 
             var cache = new CacheFactory.Cache( ID_FIELD || 'id', WRAPPER );
+            var filters = {};
 
             // define public interface
             return {
@@ -25,10 +26,13 @@
                 detail: detail,
                 find: find,
                 update: update,
+                filter: filter,
             };
 
 
             function list( url, config ) {
+
+                var config = getConfig( config );
 
                 ApiService.get( url, config ).then( cache.update, cache.error );
 
@@ -40,6 +44,7 @@
             function detail( url, config ) {
 
                 var id = getId( url );
+                var config = getConfig( config );
 
                 ApiService.get( url, config ).then( cache.update, cache.error );
 
@@ -53,6 +58,7 @@
             function find( url, config ) {
 
                 var id = getId( url );
+                var config = getConfig( config );
                 var datum = cache.detail( id );
 
                 // Enrich the datum with an extra property: track whether
@@ -97,6 +103,16 @@
             }
 
 
+            // Use this to set persistent param filters for all GET requests
+            // Expects an object of params as per Angular's $http.config
+            // TODO: Additive filters? Currently, it's a `set` situation.
+            function filter( params ) {
+
+                return filters = params || {};
+
+            }
+
+
             function getId( url ) {
 
                 // Assumes that the last part of the URL is the id
@@ -112,6 +128,22 @@
                 return parseInt( id );
 
             }
+
+
+            function getConfig( config ) {
+
+                // config is an optional argument
+                config = config || {};
+
+                // apply any defined filters
+                angular.merge( config, {
+                    params: filters
+                });
+
+                return config;
+
+            }
+
 
             // TODO: Abstract this into a module, or use existing library?
             function getChanges( clean, dirty ) {

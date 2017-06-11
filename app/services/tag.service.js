@@ -16,6 +16,7 @@
             list: list,
             detail: detail,
             update: update,
+            filter: collection.filter
         };
 
         function list() {
