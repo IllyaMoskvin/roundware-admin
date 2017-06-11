@@ -11,6 +11,7 @@
         'ui.router',
         'ngStorage',
         'ui-notification',
+        'smart-table',
 
     ]);
 

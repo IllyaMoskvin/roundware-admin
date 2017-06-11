@@ -16,8 +16,8 @@
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
     <!-- AngularJS core dependencies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.1/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.1/angular-sanitize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.min.js"></script>
 
     <!-- TODO: Decide if Bootstrap's scripts are needed; possibly include angular-ui/bootstrap here -->
 
@@ -30,6 +30,9 @@
 
     <!-- ngStorage -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+
+    <!-- angular-smart-table -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-smart-table/2.1.8/smart-table.min.js"></script>
 
     <!-- Site-specific styles, compiled from SCSS using grunt -->
     <link href="app.css" rel="stylesheet">
@@ -51,6 +54,8 @@
     <!-- Deprecating: Roundware should be able to handle application/json now -->
     <!-- This seems to interfere with PATCH requests, potentially others too -->
     <!-- <script src="shared/post-content-type.config.js"></script> -->
+    <script src="shared/form-integer.directive.js"></script>
+    <script src="shared/smart-table-button.directive.js"></script>
 
     <!-- Services -->
     <script src="services/api.service.js"></script>
@@ -58,6 +63,8 @@
     <script src="services/cache.factory.js"></script>
     <script src="services/data.factory.js"></script>
     <script src="services/project.service.js"></script>
+    <script src="services/tag.service.js"></script>
+    <script src="services/tag-category.service.js"></script>
 
     <!-- We will add other components here -->
     <script src="authenticate/authenticate.js"></script>
@@ -65,6 +72,7 @@
     <script src="authenticated/projects/projects.js"></script>
     <script src="authenticated/project/project.js"></script>
     <script src="authenticated/project/overview/overview.js"></script>
+    <script src="authenticated/project/define-tags/define-tags.js"></script>
 
     <!-- Use this to display specific directives, etc. -->
     <script src="sandbox/sandbox.js"></script>

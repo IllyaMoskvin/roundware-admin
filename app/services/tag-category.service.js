@@ -3,7 +3,7 @@
 
     angular
         .module('app')
-        .factory('ProjectService', Service);
+        .factory('TagCategoryService', Service);
 
     Service.$inject = ['DataFactory'];
 
@@ -15,24 +15,31 @@
         return {
             list: list,
             detail: detail,
+            find: find,
             update: update,
         };
 
         function list() {
 
-            return collection.list( 'projects' );
+            return collection.list( 'tagcategories' );
 
         }
 
         function detail( id ) {
 
-            return collection.detail( 'projects/' + id );
+            return collection.detail( 'tagcategories/' + id );
+
+        }
+
+        function find( id ) {
+
+            return collection.find( 'tagcategories/' + id );
 
         }
 
         function update( id, data ) {
 
-            return collection.update( 'projects/' + id, data );
+            return collection.update( 'tagcategories/' + id, data );
 
         }
 

@@ -1,0 +1,47 @@
+<!-- Tag Categories -->
+<table st-table="vm.displayed.categories" st-safe-src="vm.categories.clean" class="table table-striped">
+    <colgroup>
+        <col width="42">
+        <col>
+        <col width="45">
+    </colgroup>
+    <thead>
+        <tr>
+            <th st-sort="id" st-sort-default="true">ID</th>
+            <th st-sort="name" colspan="2">Tag Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.displayed.categories">
+            <td>{{ row.id }}</td>
+            <td>{{ row.name }}</td>
+            <td><st-button ng-click="vm.echo(row)"/></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- Tags -->
+<table st-table="vm.displayed.tags" st-safe-src="vm.tags.clean" class="table table-striped">
+    <colgroup>
+        <col width="42">
+        <col>
+        <col>
+        <col width="45">
+    </colgroup>
+    <thead>
+        <tr>
+            <th st-sort="id" st-sort-default="true">ID</th>
+            <th st-sort="value">Tag</th>
+            <th st-sort="tag_category_id"  st-sort-default="true" colspan="2">Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.displayed.tags">
+            <td>{{ row.id }}</td>
+            <td>{{ row.value }}</td>
+            <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
+            <td><st-button ng-click="vm.echo(row)"/></td>
+        </tr>
+    </tbody>
+</table>

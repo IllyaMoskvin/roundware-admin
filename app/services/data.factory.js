@@ -13,21 +13,26 @@
             Collection: Collection,
         }
 
-        function Collection( ID_FIELD ) {
+        function Collection( ID_FIELD, WRAPPER ) {
 
-            // See CacheFactory for more info on ID_FIELD
+            // See CacheFactory for more info on ID_FIELD and WRAPPER
 
-            var cache = new CacheFactory.Cache( ID_FIELD || 'id' );
+            var cache = new CacheFactory.Cache( ID_FIELD || 'id', WRAPPER );
+            var filters = {};
 
             // define public interface
             return {
                 list: list,
                 detail: detail,
+                find: find,
                 update: update,
+                filter: filter,
             };
 
 
             function list( url, config ) {
+
+                var config = getConfig( config );
 
                 ApiService.get( url, config ).then( cache.update, cache.error );
 
@@ -39,10 +44,36 @@
             function detail( url, config ) {
 
                 var id = getId( url );
+                var config = getConfig( config );
 
                 ApiService.get( url, config ).then( cache.update, cache.error );
 
                 return cache.detail( id );
+
+            }
+
+
+            // find() is like a soft detail(), meant for static views
+            // it will get() a datum only if it's not cached yet
+            function find( url, config ) {
+
+                var id = getId( url );
+                var config = getConfig( config );
+                var datum = cache.detail( id );
+
+                // Enrich the datum with an extra property: track whether
+                // it is just a stub, or if it contains server data.
+                // See also: CacheFactory.Cache.updateDatum()
+                if( !datum.initialized ) {
+
+                    ApiService.get( url, config ).then( cache.update, cache.error );
+
+                    // Necessary so as to avoid inifinite digest cycles.
+                    datum.initialized = true;
+
+                }
+
+                return datum;
 
             }
 
@@ -72,6 +103,16 @@
             }
 
 
+            // Use this to set persistent param filters for all GET requests
+            // Expects an object of params as per Angular's $http.config
+            // TODO: Additive filters? Currently, it's a `set` situation.
+            function filter( params ) {
+
+                return filters = params || {};
+
+            }
+
+
             function getId( url ) {
 
                 // Assumes that the last part of the URL is the id
@@ -88,6 +129,22 @@
 
             }
 
+
+            function getConfig( config ) {
+
+                // config is an optional argument
+                config = config || {};
+
+                // apply any defined filters
+                angular.merge( config, {
+                    params: filters
+                });
+
+                return config;
+
+            }
+
+
             // TODO: Abstract this into a module, or use existing library?
             function getChanges( clean, dirty ) {
 
@@ -98,6 +155,11 @@
                     // We will use clean as the reference
                     // If dirty contains a property that isn't in clean, ignore it
                     for( var prop in a ) {
+
+                        // Ignore Angular's internal keys
+                        if( prop.substring(0,2) == '$$' ) {
+                            continue;
+                        }
 
                         // We assume that dirty contains this property too
                         // if(typeof b[prop] == 'undefined'){}

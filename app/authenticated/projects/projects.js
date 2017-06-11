@@ -4,13 +4,13 @@
         .module('app')
         .controller('ProjectsController',  Controller);
 
-    Controller.$inject = ['ProjectService', 'Notification'];
+    Controller.$inject = ['ProjectService'];
 
-    function Controller(ProjectService, Notification) {
+    function Controller(ProjectService) {
 
         var vm = this;
 
-        vm.projects = ProjectService.list();
+        vm.projects = ProjectService.list().clean;
 
         return vm;
 
