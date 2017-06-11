@@ -33,14 +33,14 @@
             <tr>
                 <th st-sort="id" st-sort-default="true">ID</th>
                 <th st-sort="value">Tag</th>
-                <th st-sort="tag_categoy_id"  st-sort-default="true" colspan="2">Category</th>
+                <th st-sort="tag_category_id"  st-sort-default="true" colspan="2">Category</th>
             </tr>
         </thead>
     <tbody>
         <tr ng-repeat="row in vm.displayed.tags">
             <td>{{ row.id }}</td>
             <td>{{ row.value }}</td>
-            <td>{{ vm.getCategory( row.tag_categoy_id ).name }}</td>
+            <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
             <td><st-button ng-click="vm.echo(row)"/></td>
         </tr>
     </tbody>

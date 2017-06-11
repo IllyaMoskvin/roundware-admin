@@ -25,7 +25,7 @@
 
         function update() {
 
-            ProjectService.update( vm.project.project_id );
+            ProjectService.update( vm.project.id );
 
         }
 

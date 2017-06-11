@@ -15,7 +15,7 @@
         //
         //     var cache = new CacheFactory.Cache('id');
         //
-        // Be sure to swap 'id' for the actual id field, e.g. project_id
+        // Be sure to swap 'id' for the actual id field, if not `id`
         // In each of the resource's CRUD methods, chain...
         //
         //     .then( cache.update, cache.error )
@@ -33,7 +33,8 @@
 
         function Cache( ID_FIELD, WRAPPER ) {
 
-            // For some resources, this could be e.g. project_id
+            // For some resources, this could be e.g. foobar_id
+            // This has been fixed, but keep it just in case.
             // We are treating it as a constant, essentially.
             ID_FIELD = ID_FIELD || 'id';
 

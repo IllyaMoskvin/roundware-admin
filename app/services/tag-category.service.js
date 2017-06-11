@@ -19,8 +19,6 @@
             update: update,
         };
 
-        // TODO: tag_categoy_id is misspelled
-
         function list() {
 
             return collection.list( 'tagcategories' );
