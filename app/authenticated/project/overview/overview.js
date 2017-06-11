@@ -4,9 +4,9 @@
         .module('app')
         .controller('OverviewController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService', 'Notification'];
+    Controller.$inject = ['$stateParams', 'ProjectService'];
 
-    function Controller($stateParams, ProjectService, Notification) {
+    function Controller($stateParams, ProjectService) {
 
         var vm = this;
 
