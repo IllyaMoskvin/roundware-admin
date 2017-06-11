@@ -5,12 +5,12 @@
         <col>
         <col width="45">
     </colgroup>
-        <thead>
-            <tr>
-                <th st-sort="id" st-sort-default="true">ID</th>
-                <th st-sort="name" colspan="2">Tag Category</th>
-            </tr>
-        </thead>
+    <thead>
+        <tr>
+            <th st-sort="id" st-sort-default="true">ID</th>
+            <th st-sort="name" colspan="2">Tag Category</th>
+        </tr>
+    </thead>
     <tbody>
         <tr ng-repeat="row in vm.displayed.categories">
             <td>{{ row.id }}</td>
@@ -29,13 +29,13 @@
         <col>
         <col width="45">
     </colgroup>
-        <thead>
-            <tr>
-                <th st-sort="id" st-sort-default="true">ID</th>
-                <th st-sort="value">Tag</th>
-                <th st-sort="tag_category_id"  st-sort-default="true" colspan="2">Category</th>
-            </tr>
-        </thead>
+    <thead>
+        <tr>
+            <th st-sort="id" st-sort-default="true">ID</th>
+            <th st-sort="value">Tag</th>
+            <th st-sort="tag_category_id"  st-sort-default="true" colspan="2">Category</th>
+        </tr>
+    </thead>
     <tbody>
         <tr ng-repeat="row in vm.displayed.tags">
             <td>{{ row.id }}</td>
