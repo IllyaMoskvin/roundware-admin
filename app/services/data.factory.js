@@ -156,6 +156,11 @@
                     // If dirty contains a property that isn't in clean, ignore it
                     for( var prop in a ) {
 
+                        // Ignore Angular's internal keys
+                        if( prop.substring(0,2) == '$$' ) {
+                            continue;
+                        }
+
                         // We assume that dirty contains this property too
                         // if(typeof b[prop] == 'undefined'){}
 
