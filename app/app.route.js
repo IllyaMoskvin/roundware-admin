@@ -95,6 +95,21 @@
                 data: {
                     cssClassnames: 'rw-state-define-tags'
                 }
+            })
+            // Not really meant to be entered directly... this should be a modal.
+            .state('project.edit-tag', {
+                url: '/tag/:tag_id',
+                templateUrl: 'authenticated/project/edit-tag/edit-tag.html',
+                controller: 'EditTagController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-edit-tag'
+                },
+                resolve: {
+                    id: function($stateParams) {
+                        return $stateParams.tag_id;
+                    }
+                }
             });
 
     }
