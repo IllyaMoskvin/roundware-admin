@@ -40,7 +40,7 @@
         <tr ng-repeat="row in vm.displayed.tags">
             <td>{{ row.id }}</td>
             <td>{{ row.value }}</td>
-            <td>{{ vm.TagCategoryService.find( row.tag_categoy_id ).clean.name }}</td>
+            <td>{{ vm.getCategory( row.tag_categoy_id ).name }}</td>
             <td><a href="javascript:;" ng-click="console.log( row )" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-edit"></span></a></td>
         </tr>
     </tbody>

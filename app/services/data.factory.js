@@ -23,8 +23,8 @@
             return {
                 list: list,
                 detail: detail,
-                update: update,
                 find: find,
+                update: update,
             };
 
 
@@ -44,6 +44,30 @@
                 ApiService.get( url, config ).then( cache.update, cache.error );
 
                 return cache.detail( id );
+
+            }
+
+
+            // find() is like a soft detail(), meant for static views
+            // it will get() a datum only if it's not cached yet
+            function find( url, config ) {
+
+                var id = getId( url );
+                var datum = cache.detail( id );
+
+                // Enrich the datum with an extra property: track whether
+                // it is just a stub, or if it contains server data.
+                // See also: CacheFactory.Cache.updateDatum()
+                if( !datum.initialized ) {
+
+                    ApiService.get( url, config ).then( cache.update, cache.error );
+
+                    // Necessary so as to avoid inifinite digest cycles.
+                    datum.initialized = true;
+
+                }
+
+                return datum;
 
             }
 
@@ -69,24 +93,6 @@
                 ApiService.patch( url, data, config ).then( cache.update, cache.error );
 
                 return datum;
-
-            }
-
-
-            // find() is like a soft detail(), meant for static views
-            function find( ) {
-
-                // assume that the argument is an id
-                if( arguments.length === 1 ) {
-
-                    var id = arguments[0];
-
-                    return cache.detail( id );
-
-                }
-
-                // TODO: more robust filters
-                console.log( arguments );
 
             }
 

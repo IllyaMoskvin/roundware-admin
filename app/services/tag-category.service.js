@@ -15,8 +15,8 @@
         return {
             list: list,
             detail: detail,
+            find: find,
             update: update,
-            find: collection.find
         };
 
         // TODO: tag_categoy_id is misspelled
@@ -30,6 +30,12 @@
         function detail( id ) {
 
             return collection.detail( 'tagcategories/' + id );
+
+        }
+
+        function find( id ) {
+
+            return collection.find( 'tagcategories/' + id );
 
         }
 

@@ -119,16 +119,23 @@
 
             function updateDatum( newDatum ) {
 
-                // Find the datum in both the clean and dirty data collections
-                // Replace its properties with those from the server
+                // Find the datum in `cache.both` collection.
+                // Get its `clean` and `dirty` sub-objects.
+                // Replace their properties with those from the server.
 
-                // This also updates datums in cache.both,
-                //   since it points to the same objects
+                // This also updates datums in cache.clean and cache.dirty,
+                //   since they point to the same objects.
 
                 var id = newDatum[ ID_FIELD ];
+                var oldDatum = getDatum( id, cache.both );
 
-                angular.extend( getDatum( id, cache.clean ), newDatum );
-                angular.extend( getDatum( id, cache.dirty ), newDatum );
+                angular.extend( oldDatum.clean, newDatum );
+                angular.extend( oldDatum.dirty, newDatum );
+
+                // See also: DataFactory.Collection.find()
+                // Creates tight coupling, but prevents find() making server
+                // calls even after detail() or list() has been called.
+                oldDatum.initialized = true;
 
                 return newDatum;
 

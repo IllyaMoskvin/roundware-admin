@@ -13,7 +13,8 @@
         vm.categories = null;
         vm.tags = null;
 
-        vm.TagCategoryService = TagCategoryService;
+        // Used to retrieve category names in table
+        vm.getCategory = getCategory;
 
         activate();
 
@@ -23,6 +24,12 @@
 
             vm.categories = TagCategoryService.list();
             vm.tags = TagService.list();
+
+        }
+
+        function getCategory( category_id ) {
+
+            return TagCategoryService.find( category_id ).clean;
 
         }
 
