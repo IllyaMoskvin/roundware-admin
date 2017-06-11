@@ -16,6 +16,8 @@
         // Used to retrieve category names in table
         vm.getCategory = getCategory;
 
+        vm.echo = echo;
+
         activate();
 
         return vm;
@@ -31,6 +33,10 @@
 
             return TagCategoryService.find( category_id ).clean;
 
+        }
+
+        function echo(row) {
+            console.log(row);
         }
 
     }
