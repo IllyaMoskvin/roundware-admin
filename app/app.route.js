@@ -4,6 +4,7 @@
         .module('app')
         .config(routing)
         .config(notifications)
+        .run(modals)
         .run(services)
         .run(redirection);
 
@@ -110,6 +111,24 @@
                         return $stateParams.tag_id;
                     }
                 }
+            });
+
+    }
+
+
+    modals.$inject = ['ModalService'];
+
+    function modals( ModalService ) {
+
+        // http://angular-ui.github.io/bootstrap/#!#%2Fmodal
+        ModalService
+            .modal('tag', {
+                templateUrl: 'authenticated/project/edit-tag/edit-tag.html',
+                controller: 'EditTagController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
             });
 
     }
