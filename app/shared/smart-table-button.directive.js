@@ -13,10 +13,6 @@
             template: '<a href="javascript:;" class="btn btn-sm btn-default">'
                     + '<span class="glyphicon" ng-class="icon"></span>'
                     + '</a>',
-            scope: {
-                // We don't need to actually pass this to scope, just use attr
-                // type: '='
-            },
             link: function( scope, element, attr ) {
 
                 switch( attr.type ) {
