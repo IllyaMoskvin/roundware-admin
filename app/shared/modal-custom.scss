@@ -7,3 +7,8 @@ body {
 body.modal-open {
 	overflow: auto;
 }
+
+// Add padding so that we don't have to wrap our forms in modal-body etc.
+.modal-content {
+	padding: 15px;
+}
