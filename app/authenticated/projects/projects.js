@@ -10,7 +10,7 @@
 
         var vm = this;
 
-        vm.projects = ProjectService.list().clean;
+        vm.projects = ProjectService.list().cache.clean;
 
         return vm;
 

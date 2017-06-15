@@ -10,7 +10,7 @@
 
         var vm = this;
 
-        vm.project = ProjectService.detail( $stateParams.id ).clean;
+        vm.project = ProjectService.detail( $stateParams.id ).cache.clean;
 
         activate();
 
