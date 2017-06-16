@@ -49,11 +49,8 @@
 
             // I don't care about "backdrop click" rejections...
             // https://stackoverflow.com/questions/42416570
-            promise.result.then( function( success ) {
-                return success;
-            }, function rejection( error ) {
-                return error;
-            });
+            // In fact, I don't care about unhandled rejections at all!
+            // See app.config(rejections) in app.module.js
 
             return promise;
 

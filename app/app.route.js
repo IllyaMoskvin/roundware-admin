@@ -4,6 +4,7 @@
         .module('app')
         .config(routing)
         .config(notifications)
+        .config(rejections)
         .run(modals)
         .run(services)
         .run(redirection);
@@ -142,6 +143,15 @@
             positionX: 'right',
             positionY: 'bottom',
         });
+
+    }
+
+
+    rejections.$inject = ['$qProvider'];
+
+    function rejections( $qProvider ) {
+
+        $qProvider.errorOnUnhandledRejections(false);
 
     }
 

@@ -5,9 +5,9 @@
         .module('app')
         .factory('DataFactory', Service);
 
-    Service.$inject = ['ApiService', 'CacheFactory'];
+    Service.$inject = ['$q', 'ApiService', 'CacheFactory', 'Notification'];
 
-    function Service(ApiService, CacheFactory) {
+    function Service($q, ApiService, CacheFactory, Notification) {
 
         return {
             Collection: Collection,
@@ -103,9 +103,23 @@
                     // TODO: Remove after it's proven to be sufficiently stable
                     console.log( data );
 
+                    // TODO: Alert user if nothing changed?
+
                 }
 
                 var promise = ApiService.patch( url, data, config ).then( cache.update, cache.error );
+
+                // Alert the user...
+                promise.then(
+                    function( response ) {
+                        Notification.success( { message: 'Changes saved!' } );
+                        return response;
+                    },
+                    function( response ) {
+                        Notification.error( { message: ApiService.error( response ) } );
+                        return $q.reject( response )
+                    }
+                );
 
                 return {
                     promise: promise,

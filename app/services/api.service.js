@@ -77,6 +77,10 @@
         // Meant for feeding messages to Notification
         function error( response ) {
 
+            if( response.status <= 0 ) {
+                return "Cannot reach server";
+            }
+
             if( "detail" in response.data ) {
                 return response.data.detail;
             }
