@@ -24,8 +24,8 @@
 
         function activate() {
 
-            vm.categories = TagCategoryService.list();
-            vm.tags = TagService.list();
+            vm.categories = TagCategoryService.list().cache;
+            vm.tags = TagService.list().cache;
 
         }
 

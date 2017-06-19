@@ -13,13 +13,13 @@
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
     <!-- AngularJS core dependencies -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.min.js"></script>
 
-    <!-- TODO: Decide if Bootstrap's scripts are needed; possibly include angular-ui/bootstrap here -->
+    <!-- angular-ui/bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
 
     <!-- AngularUI Router -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.min.js"></script>
@@ -56,17 +56,20 @@
     <!-- <script src="shared/post-content-type.config.js"></script> -->
     <script src="shared/form-integer.directive.js"></script>
     <script src="shared/smart-table-button.directive.js"></script>
+    <script src="shared/modal-href.directive.js"></script>
 
     <!-- Services -->
     <script src="services/api.service.js"></script>
     <script src="services/auth.service.js"></script>
     <script src="services/cache.factory.js"></script>
     <script src="services/data.factory.js"></script>
+    <script src="services/modal.service.js"></script>
     <script src="services/project.service.js"></script>
     <script src="services/tag.service.js"></script>
     <script src="services/tag-category.service.js"></script>
 
     <!-- We will add other components here -->
+    <script src="modals/edit-tag/edit-tag.js"></script>
     <script src="authenticate/authenticate.js"></script>
     <script src="authenticated/authenticated.js"></script>
     <script src="authenticated/projects/projects.js"></script>

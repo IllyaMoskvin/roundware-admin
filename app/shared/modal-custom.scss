@@ -1,0 +1,14 @@
+// Prevent the body from jumping when modal is open
+body {
+	padding-right:0px !important;
+	margin-right:0px !important;
+}
+
+body.modal-open {
+	overflow: auto;
+}
+
+// Add padding so that we don't have to wrap our forms in modal-body etc.
+.modal-content {
+	padding: 15px;
+}

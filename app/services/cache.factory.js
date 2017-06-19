@@ -5,9 +5,9 @@
         .module('app')
         .factory('CacheFactory', Service);
 
-    Service.$inject = [];
+    Service.$inject = ['$q'];
 
-    function Service() {
+    function Service($q) {
 
         // CacheFactory allows data sharing across controllers.
         // It should be injected into each resource service.
@@ -86,7 +86,7 @@
 
                 console.error( 'Unable to update cache' );
 
-                return response;
+                return $q.reject( response );
 
             }
 

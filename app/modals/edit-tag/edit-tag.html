@@ -1,0 +1,55 @@
+<!-- Tag Editing Form -->
+<form class="form-horizontal">
+
+    <div class="form-group">
+        <label for="value" class="col-sm-2 control-label">Tag</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="value" ng-model="vm.tag.value">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="category" class="col-sm-2 control-label">Category</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="category" ng-model="vm.tag.tag_category_id" integer>
+                <option ng-repeat="option in vm.categories.clean" value="{{option.id}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="description" class="col-sm-2 control-label">Description</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="description" ng-model="vm.tag.description">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="filter" class="col-sm-2 control-label">Filter</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="filter" ng-model="vm.tag.filter">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="data" class="col-sm-2 control-label">Data</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="data" ng-model="vm.tag.data">
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-default"
+                    ng-click="vm.cancel()">Cancel</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-block btn-primary"
+                    ng-click="vm.update()" ng-disabled="vm.updating">Save</button>
+        </div>
+    </div>
+
+</form>

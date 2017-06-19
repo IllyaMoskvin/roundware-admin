@@ -4,6 +4,8 @@
         .module('app')
         .config(routing)
         .config(notifications)
+        .config(rejections)
+        .run(modals)
         .run(services)
         .run(redirection);
 
@@ -100,6 +102,24 @@
     }
 
 
+    modals.$inject = ['ModalService'];
+
+    function modals( ModalService ) {
+
+        // http://angular-ui.github.io/bootstrap/#!#%2Fmodal
+        ModalService
+            .modal('tag', {
+                templateUrl: 'modals/edit-tag/edit-tag.html',
+                controller: 'EditTagController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
+            });
+
+    }
+
+
     notifications.$inject = ['NotificationProvider'];
 
     function notifications( NotificationProvider ) {
@@ -108,6 +128,15 @@
             positionX: 'right',
             positionY: 'bottom',
         });
+
+    }
+
+
+    rejections.$inject = ['$qProvider'];
+
+    function rejections( $qProvider ) {
+
+        $qProvider.errorOnUnhandledRejections(false);
 
     }
 

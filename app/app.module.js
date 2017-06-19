@@ -12,6 +12,7 @@
         'ngStorage',
         'ui-notification',
         'smart-table',
+        'ui.bootstrap',
 
     ]);
 

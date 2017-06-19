@@ -5,9 +5,9 @@
         .module('app')
         .factory('DataFactory', Service);
 
-    Service.$inject = ['ApiService', 'CacheFactory'];
+    Service.$inject = ['$q', 'ApiService', 'CacheFactory', 'Notification'];
 
-    function Service(ApiService, CacheFactory) {
+    function Service($q, ApiService, CacheFactory, Notification) {
 
         return {
             Collection: Collection,
@@ -34,9 +34,13 @@
 
                 var config = getConfig( config );
 
-                ApiService.get( url, config ).then( cache.update, cache.error );
+                var promise = ApiService.get( url, config ).then( cache.update, cache.error );
+                var data = cache.list();
 
-                return cache.list();
+                return {
+                    promise: promise,
+                    cache: data,
+                }
 
             }
 
@@ -46,15 +50,20 @@
                 var id = getId( url );
                 var config = getConfig( config );
 
-                ApiService.get( url, config ).then( cache.update, cache.error );
+                var promise = ApiService.get( url, config ).then( cache.update, cache.error );
+                var datum = cache.detail( id );
 
-                return cache.detail( id );
+                return {
+                    promise: promise,
+                    cache: datum,
+                }
 
             }
 
 
             // find() is like a soft detail(), meant for static views
             // it will get() a datum only if it's not cached yet
+            // very much a convenience function, sans promise handling
             function find( url, config ) {
 
                 var id = getId( url );
@@ -94,11 +103,28 @@
                     // TODO: Remove after it's proven to be sufficiently stable
                     console.log( data );
 
+                    // TODO: Alert user if nothing changed?
+
                 }
 
-                ApiService.patch( url, data, config ).then( cache.update, cache.error );
+                var promise = ApiService.patch( url, data, config ).then( cache.update, cache.error );
 
-                return datum;
+                // Alert the user...
+                promise.then(
+                    function( response ) {
+                        Notification.success( { message: 'Changes saved!' } );
+                        return response;
+                    },
+                    function( response ) {
+                        Notification.error( { message: ApiService.error( response ) } );
+                        return $q.reject( response )
+                    }
+                );
+
+                return {
+                    promise: promise,
+                    cache: datum,
+                }
 
             }
 
