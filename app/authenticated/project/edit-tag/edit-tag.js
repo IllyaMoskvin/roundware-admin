@@ -4,9 +4,9 @@
         .module('app')
         .controller('EditTagController',  Controller);
 
-    Controller.$inject = ['id', 'TagService', 'TagCategoryService'];
+    Controller.$inject = ['$uibModalInstance', 'id', 'TagService', 'TagCategoryService'];
 
-    function Controller(id, TagService, TagCategoryService) {
+    function Controller($uibModalInstance, id, TagService, TagCategoryService) {
 
         var vm = this;
 
@@ -14,6 +14,7 @@
         vm.tag = null;
 
         vm.update = update;
+        vm.cancel = cancel;
 
         activate();
 
@@ -29,6 +30,12 @@
         function update() {
 
             TagService.update( vm.tag.id );
+
+        }
+
+        function cancel() {
+
+            $uibModalInstance.close();
 
         }
 
