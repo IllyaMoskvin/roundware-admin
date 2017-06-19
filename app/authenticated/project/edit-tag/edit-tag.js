@@ -16,6 +16,8 @@
         vm.update = update;
         vm.cancel = cancel;
 
+        vm.updating = false;
+
         activate();
 
         return vm;
@@ -29,7 +31,17 @@
 
         function update() {
 
-            TagService.update( vm.tag.id );
+            vm.updating = true;
+
+            TagService.update( vm.tag.id ).promise.then( function() {
+
+                $uibModalInstance.close();
+
+            }).finally( function() {
+
+                vm.updating = false;
+
+            });
 
         }
 
