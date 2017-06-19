@@ -18,15 +18,6 @@
 
         // app routes
         $stateProvider
-            .state('sandbox', {
-                url: '/sandbox',
-                templateUrl: 'sandbox/sandbox.html',
-                controller: 'SandboxController',
-                controllerAs: 'vm',
-                data: {
-                    cssClassnames: 'rw-state-sandbox'
-                }
-            })
             .state('root', {
                 url: '/',
                 redirectTo: 'projects',
