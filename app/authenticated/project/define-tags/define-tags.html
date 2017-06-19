@@ -41,7 +41,6 @@
             <td>{{ row.id }}</td>
             <td>{{ row.value }}</td>
             <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
-            <!-- <td><st-button ui-sref="project.edit-tag({ tag_id: row.id })"/></td> -->
             <td><st-button modal-href="tag" modal-data="{ id: row.id }"/></td>
         </tr>
     </tbody>
