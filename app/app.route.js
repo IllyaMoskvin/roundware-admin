@@ -99,13 +99,18 @@
 
         // http://angular-ui.github.io/bootstrap/#!#%2Fmodal
         ModalService
-            .modal('tag', {
+            .modal('tag-edit', {
                 templateUrl: 'modals/tag/tag.html',
-                controller: 'TagController',
+                controller: 'EditTagController',
                 controllerAs: 'vm',
                 params: [
                     'id'
                 ]
+            })
+            .modal('tag-new', {
+                templateUrl: 'modals/tag/tag.html',
+                controller: 'NewTagController',
+                controllerAs: 'vm',
             });
 
     }
