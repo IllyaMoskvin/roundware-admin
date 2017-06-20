@@ -16,6 +16,7 @@
             list: list,
             detail: detail,
             update: update,
+            create: create,
             filter: collection.filter
         };
 
@@ -34,6 +35,12 @@
         function update( id, data ) {
 
             return collection.update( 'tags/' + id, data );
+
+        }
+
+        function create( data ) {
+
+            return collection.create( 'tags', data );
 
         }
 

@@ -26,6 +26,7 @@
                 detail: detail,
                 find: find,
                 update: update,
+                create: create,
                 filter: filter,
             };
 
@@ -125,6 +126,33 @@
                     promise: promise,
                     cache: datum,
                 }
+
+            }
+
+
+            // We cannot know if the create() succeeds ahead of time.
+            // Therefore, we cannot return a datum, only a promise.
+            // We can assume it would succeed and create a stub cache entry,
+            //   but that doesn't seem worth the trouble currently.
+            // Use DataService.detail() to get the datum in the resolve!
+            function create( url, data, config ) {
+
+                var promise = ApiService.post( url, data, config ).then( cache.update, cache.error );
+
+                // Alert the user...
+                // TODO: Consolidate w/ alert above?
+                promise.then(
+                    function( response ) {
+                        Notification.success( { message: 'Changes saved!' } );
+                        return response;
+                    },
+                    function( response ) {
+                        Notification.error( { message: ApiService.error( response ) } );
+                        return $q.reject( response )
+                    }
+                );
+
+                return promise;
 
             }
 
