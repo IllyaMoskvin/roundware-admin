@@ -2,7 +2,7 @@
 
     angular
         .module('app')
-        .controller('EditTagController',  Controller);
+        .controller('TagController',  Controller);
 
     Controller.$inject = ['$uibModalInstance', 'id', 'TagService', 'TagCategoryService'];
 
