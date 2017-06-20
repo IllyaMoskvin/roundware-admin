@@ -41,7 +41,9 @@
             <td>{{ row.id }}</td>
             <td>{{ row.value }}</td>
             <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
-            <td><st-button modal-href="tag" modal-data="{ id: row.id }"/></td>
+            <td><st-button modal-href="tag-edit" modal-data="{ id: row.id }"/></td>
         </tr>
     </tbody>
 </table>
+
+<button type="button" class="btn btn-block btn-primary" modal-href="tag-new">Add Tag</button>

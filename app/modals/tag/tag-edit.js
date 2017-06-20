@@ -13,10 +13,10 @@
         vm.categories = null;
         vm.tag = null;
 
-        vm.update = update;
         vm.cancel = cancel;
+        vm.save = save;
 
-        vm.updating = false;
+        vm.saving = false;
 
         activate();
 
@@ -29,9 +29,9 @@
 
         }
 
-        function update() {
+        function save() {
 
-            vm.updating = true;
+            vm.saving = true;
 
             TagService.update( vm.tag.id ).promise.then( function() {
 
@@ -39,7 +39,7 @@
 
             }).finally( function() {
 
-                vm.updating = false;
+                vm.saving = false;
 
             });
 
