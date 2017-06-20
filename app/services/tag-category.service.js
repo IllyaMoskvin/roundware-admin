@@ -17,6 +17,7 @@
             detail: detail,
             find: find,
             update: update,
+            create: create,
         };
 
         function list() {
@@ -40,6 +41,12 @@
         function update( id, data ) {
 
             return collection.update( 'tagcategories/' + id, data );
+
+        }
+
+        function create( data ) {
+
+            return collection.create( 'tagcategories', data );
 
         }
 

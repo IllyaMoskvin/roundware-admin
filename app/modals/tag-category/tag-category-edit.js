@@ -1,0 +1,54 @@
+(function () {
+
+    angular
+        .module('app')
+        .controller('EditTagCategoryController',  Controller);
+
+    Controller.$inject = ['$uibModalInstance', 'id', 'TagCategoryService'];
+
+    function Controller($uibModalInstance, id, TagCategoryService) {
+
+        var vm = this;
+
+        vm.category = null;
+
+        vm.cancel = cancel;
+        vm.save = save;
+
+        vm.saving = false;
+
+        activate();
+
+        return vm;
+
+        function activate() {
+
+            vm.category = TagCategoryService.detail(id).cache.dirty;
+
+        }
+
+        function save() {
+
+            vm.saving = true;
+
+            TagCategoryService.update( vm.category.id ).promise.then( function() {
+
+                $uibModalInstance.close();
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
+
+        }
+
+        function cancel() {
+
+            $uibModalInstance.close();
+
+        }
+
+    }
+
+})();

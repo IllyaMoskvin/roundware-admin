@@ -111,6 +111,19 @@
                 templateUrl: 'modals/tag/tag.html',
                 controller: 'NewTagController',
                 controllerAs: 'vm',
+            })
+            .modal('tag-category-edit', {
+                templateUrl: 'modals/tag-category/tag-category.html',
+                controller: 'EditTagCategoryController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
+            })
+            .modal('tag-category-new', {
+                templateUrl: 'modals/tag-category/tag-category.html',
+                controller: 'NewTagCategoryController',
+                controllerAs: 'vm',
             });
 
     }
