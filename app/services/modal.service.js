@@ -21,6 +21,8 @@
 
             modals[key] = options;
 
+            return this;
+
         }
 
         function open( key, data ) {
