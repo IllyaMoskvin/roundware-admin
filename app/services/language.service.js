@@ -15,6 +15,7 @@
         return {
             list: list,
             detail: detail,
+            find: find,
             update: update,
         };
 
@@ -27,6 +28,12 @@
         function detail( id ) {
 
             return collection.detail( 'languages/' + id );
+
+        }
+
+        function find( id ) {
+
+            return collection.find( 'languages/' + id );
 
         }
 

@@ -15,6 +15,7 @@
         return {
             list: list,
             detail: detail,
+            find: find,
             update: update,
         };
 
@@ -27,6 +28,12 @@
         function detail( id ) {
 
             return collection.detail( 'projects/' + id );
+
+        }
+
+        function find( id ) {
+
+            return collection.find( 'projects/' + id );
 
         }
 
