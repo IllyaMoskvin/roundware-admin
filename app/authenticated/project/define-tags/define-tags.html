@@ -30,13 +30,15 @@
         <col width="42">
         <col>
         <col>
+        <col width="55%">
         <col width="45">
     </colgroup>
     <thead>
         <tr>
             <th st-sort="id" st-sort-default="true">ID</th>
             <th st-sort="value">Tag</th>
-            <th st-sort="tag_category_id"  st-sort-default="true" colspan="2">Category</th>
+            <th st-sort="tag_category_id" st-sort-default="true">Category</th>
+            <th colspan="2">UI Text</th>
         </tr>
     </thead>
     <tbody>
@@ -44,6 +46,7 @@
             <td>{{ row.id }}</td>
             <td>{{ row.value }}</td>
             <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
+            <td>{{ row.description }}</td>
             <td><st-button modal-href="tag-edit" modal-data="{ id: row.id }"/></td>
         </tr>
     </tbody>
