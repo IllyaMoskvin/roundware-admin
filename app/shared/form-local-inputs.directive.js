@@ -15,6 +15,8 @@
             },
             template: `
 
+                <hr/>
+
                 <div class="form-group" ng-repeat="language in getProjectLanguages()">
                     <label class="col-sm-2 control-label">
                         {{ language.name }}
