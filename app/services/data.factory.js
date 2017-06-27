@@ -32,6 +32,7 @@
                 list: list,
                 detail: detail,
                 find: find,
+                inject: inject,
                 update: update,
                 create: create,
                 filter: filter,
@@ -91,6 +92,15 @@
                 }
 
                 return datum;
+
+            }
+
+
+            // inject() is an in-between of detail() and update()
+            // it will update the cache without making a server call
+            function inject( datum ) {
+
+                return cache.update( datum );
 
             }
 
