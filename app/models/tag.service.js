@@ -11,6 +11,16 @@
 
         var collection = new DataFactory.Collection({
             wrapper: 'tags',
+            embedded: [
+                {
+                    field: 'loc_msg_admin',
+                    model: 'LocalizedStringService',
+                },
+                {
+                    field: 'loc_description_admin',
+                    model: 'LocalizedStringService',
+                },
+            ],
         });
 
         // define public interface

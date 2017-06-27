@@ -5,13 +5,13 @@
         .module('app')
         .directive('localInputs', Directive);
 
-    Directive.$inject = ['$filter', '$stateParams', 'ProjectService', 'LanguageService'];
+    Directive.$inject = ['$stateParams', 'ProjectService', 'LanguageService', 'LocalizedStringService'];
 
-    function Directive($filter, $stateParams, ProjectService, LanguageService) {
+    function Directive($stateParams, ProjectService, LanguageService, LocalizedStringService) {
         return {
             restrict: 'E',
             scope: {
-                strings: '=list',
+                stringField: '=list',
             },
             template: `
 
@@ -32,6 +32,27 @@
                 // Use the dirty project to add fields live to Overview screen
                 scope.project = ProjectService.find( $stateParams.id ).dirty;
                 scope.languages = LanguageService.list().cache.clean;
+                scope.strings = [];
+
+                // Populate the string list via ids
+                scope.$watch('stringField', function( ids ) {
+
+                    // Wait until the field is ready...
+                    if( !ids ) {
+                        return false;
+                    }
+
+                    scope.strings = [];
+
+                    ids.forEach( function( id ) {
+                        // TODO: Move this to getString()?
+                        // TODO: Modify find() to allow matching by field?
+                        // TODO: Add language_id to loc str serializer server-side?
+                        scope.strings.push( LocalizedStringService.find( id ).clean );
+                    });
+
+                });
+
 
                 scope.getProjectLanguages = function() {
 

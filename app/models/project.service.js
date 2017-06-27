@@ -9,7 +9,26 @@
 
     function Service(DataFactory) {
 
-        var collection = new DataFactory.Collection();
+        var collection = new DataFactory.Collection({
+            embedded: [
+                {
+                    field: 'demo_stream_message_loc_admin',
+                    model: 'LocalizedStringService',
+                },
+                {
+                    field: 'legal_agreement_loc_admin',
+                    model: 'LocalizedStringService',
+                },
+                {
+                    field: 'sharing_message_loc_admin',
+                    model: 'LocalizedStringService',
+                },
+                {
+                    field: 'out_of_range_message_loc_admin',
+                    model: 'LocalizedStringService',
+                },
+            ],
+        });
 
         // define public interface
         return {

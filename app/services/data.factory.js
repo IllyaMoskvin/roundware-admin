@@ -5,9 +5,9 @@
         .module('app')
         .factory('DataFactory', Service);
 
-    Service.$inject = ['$q', 'ApiService', 'CacheFactory', 'Notification'];
+    Service.$inject = ['$q', '$injector', 'ApiService', 'CacheFactory', 'Notification'];
 
-    function Service($q, ApiService, CacheFactory, Notification) {
+    function Service($q, $injector, ApiService, CacheFactory, Notification) {
 
         return {
             Collection: Collection,
@@ -20,6 +20,7 @@
             var settings = {
                 id_field: options.id_field || 'id',
                 wrapper: options.wrapper || null,
+                embedded: options.embedded || null,
             };
 
             // See CacheFactory for more info on ID_FIELD and WRAPPER
@@ -43,11 +44,14 @@
 
                 var config = getConfig( config );
 
-                var promise = ApiService.get( url, config ).then( cache.update, cache.error );
+                var promise = ApiService.get( url, config )
+                    .then( transformResponse )
+                    .then( cache.update );
+
                 var data = cache.list();
 
                 return {
-                    promise: promise,
+                    // promise: promise,
                     cache: data,
                 }
 
@@ -59,7 +63,10 @@
                 var id = getId( url );
                 var config = getConfig( config );
 
-                var promise = ApiService.get( url, config ).then( cache.update, cache.error );
+                var promise = ApiService.get( url, config )
+                    .then( transformResponse )
+                    .then( cache.update );
+
                 var datum = cache.detail( id );
 
                 return {
@@ -84,7 +91,9 @@
                 // See also: CacheFactory.Cache.updateDatum()
                 if( !datum.initialized ) {
 
-                    ApiService.get( url, config ).then( cache.update, cache.error );
+                    var promise = ApiService.get( url, config )
+                        .then( transformResponse )
+                        .then( cache.update );
 
                     // Necessary so as to avoid inifinite digest cycles.
                     datum.initialized = true;
@@ -121,11 +130,15 @@
                     // TODO: Remove after it's proven to be sufficiently stable
                     console.log( data );
 
+                    return { promise: $q.reject( ) }
+
                     // TODO: Alert user if nothing changed?
 
                 }
 
-                var promise = ApiService.patch( url, data, config ).then( cache.update, cache.error );
+                var promise = ApiService.patch( url, data, config )
+                    .then( transformResponse )
+                    .then( cache.update );
 
                 // Alert the user...
                 promise.then(
@@ -154,7 +167,9 @@
             // Use DataService.detail() to get the datum in the resolve!
             function create( url, data, config ) {
 
-                var promise = ApiService.post( url, data, config ).then( cache.update, cache.error );
+                var promise = ApiService.post( url, data, config )
+                    .then( transformResponse )
+                    .then( cache.update );
 
                 // Alert the user...
                 // TODO: Consolidate w/ alert above?
@@ -212,6 +227,74 @@
                 });
 
                 return config;
+
+            }
+
+
+            function transformResponse( response ) {
+
+                // Determine if we need to unwrap the data
+                if( settings.wrapper && response.data.hasOwnProperty( settings.wrapper ) ) {
+                    response.data = response.data[ settings.wrapper ];
+                }
+
+                // Determine if we are transforming a list, or one datum
+                if( response.data.constructor === Array ) {
+                    transformResponseData( response.data );
+                } else {
+                    transformResponseDatum( response.data );
+                }
+
+                return response;
+
+            }
+
+
+            function transformResponseData( data ) {
+
+                data.forEach( function( datum ) {
+
+                    transformResponseDatum( datum )
+
+                });
+
+            }
+
+
+            function transformResponseDatum( datum ) {
+
+                // Process embedded resources
+                if( settings.embedded ) {
+
+                    settings.embedded.forEach( function( embed ) {
+
+                        // TODO: PATCH currently does not return embedded loc str
+                        if( datum[embed.field] ) {
+
+                            // Add each embedded object to its model's cache
+                            datum[embed.field].forEach( function( resource ) {
+
+                                // TODO: Ensure that the model exposes an inject method!
+                                $injector.get( embed.model ).inject( resource );
+
+                            });
+
+                            // Replace the array of objects w/ array of ids
+                            datum[embed.field] = datum[embed.field].map( function( resource ) {
+
+                                // TODO: Account for id_field?
+                                return resource.id;
+
+                            });
+
+                        }
+
+
+                    });
+
+                }
+
+                return datum;
 
             }
 
