@@ -21,6 +21,16 @@
                     model: 'LocalizedStringService',
                 },
             ],
+            mapped: [
+                {
+                    incoming: 'loc_msg_admin',
+                    outgoing: 'loc_msg',
+                },
+                {
+                    incoming: 'loc_description_admin',
+                    outgoing: 'loc_description',
+                },
+            ],
         });
 
         // define public interface

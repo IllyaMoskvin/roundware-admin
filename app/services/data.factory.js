@@ -21,6 +21,7 @@
                 id_field: options.id_field || 'id',
                 wrapper: options.wrapper || null,
                 embedded: options.embedded || null,
+                mapped: options.mapped || null,
             };
 
             // See CacheFactory for more info on ID_FIELD and WRAPPER
@@ -289,6 +290,21 @@
 
                         }
 
+
+                    });
+
+                }
+
+                // Map incoming fields into outgoing ones
+                // Outgoing field names are the cannonical ones
+                if( settings.mapped ) {
+
+                    settings.mapped.forEach( function( map ) {
+
+                        if( datum[map.incoming] ) {
+                            datum[map.outgoing] = datum[map.incoming];
+                            delete datum[map.incoming];
+                        }
 
                     });
 
