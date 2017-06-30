@@ -11,16 +11,6 @@
 
         var collection = new DataFactory.Collection({
             wrapper: 'tags',
-            embedded: [
-                {
-                    field: 'loc_msg_admin',
-                    model: 'LocalizedStringService',
-                },
-                {
-                    field: 'loc_description_admin',
-                    model: 'LocalizedStringService',
-                },
-            ],
             mapped: [
                 {
                     incoming: 'loc_msg_admin',
@@ -29,6 +19,16 @@
                 {
                     incoming: 'loc_description_admin',
                     outgoing: 'loc_description',
+                },
+            ],
+            embedded: [
+                {
+                    field: 'loc_msg',
+                    model: 'LocalizedStringService',
+                },
+                {
+                    field: 'loc_description',
+                    model: 'LocalizedStringService',
                 },
             ],
         });

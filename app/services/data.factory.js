@@ -131,11 +131,12 @@
                     // TODO: Remove after it's proven to be sufficiently stable
                     console.log( data );
 
-                    return { promise: $q.reject( ) }
-
                     // TODO: Alert user if nothing changed?
 
                 }
+
+                // Keeping this here for testing purposes...
+                return { promise: $q.reject( ) }
 
                 var promise = ApiService.patch( url, data, config )
                     .then( transformResponse )
@@ -264,6 +265,21 @@
 
             function transformResponseDatum( datum ) {
 
+                // Map incoming fields into outgoing ones
+                // Outgoing field names are the cannonical ones
+                if( settings.mapped ) {
+
+                    settings.mapped.forEach( function( map ) {
+
+                        if( datum[map.incoming] ) {
+                            datum[map.outgoing] = datum[map.incoming];
+                            delete datum[map.incoming];
+                        }
+
+                    });
+
+                }
+
                 // Process embedded resources
                 if( settings.embedded ) {
 
@@ -290,21 +306,6 @@
 
                         }
 
-
-                    });
-
-                }
-
-                // Map incoming fields into outgoing ones
-                // Outgoing field names are the cannonical ones
-                if( settings.mapped ) {
-
-                    settings.mapped.forEach( function( map ) {
-
-                        if( datum[map.incoming] ) {
-                            datum[map.outgoing] = datum[map.incoming];
-                            delete datum[map.incoming];
-                        }
 
                     });
 
