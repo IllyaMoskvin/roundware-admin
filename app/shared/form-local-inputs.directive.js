@@ -48,7 +48,7 @@
                         // TODO: Move this to getString()?
                         // TODO: Modify find() to allow matching by field?
                         // TODO: Add language_id to loc str serializer server-side?
-                        scope.strings.push( LocalizedStringService.find( id ).clean );
+                        scope.strings.push( LocalizedStringService.find( id ).dirty );
                     });
 
                 });

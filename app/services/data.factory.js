@@ -135,14 +135,47 @@
 
                 }
 
+                // Update all embedded resources before continuing...
+                if( settings.embedded ) {
+
+                    var promises = [];
+
+                    settings.embedded.forEach( function( embed ) {
+
+                        if( datum.dirty[embed.field] ) {
+
+                            // Update each embedded object
+                            datum.dirty[embed.field].forEach( function( resource ) {
+
+                                var promise = $injector.get( embed.model ).update( resource ).promise;
+
+                                // Add it to the promise queue for resolving
+                                promises.push( promise );
+
+                            });
+
+                        }
+
+                    });
+
+                    // https://stackoverflow.com/questions/21759361/wait-for-all-promises-to-resolve
+                    // TODO: Wait to update main model until all embedded resources have been saved
+                    // TODO: Handle creation of new embedded resources + updating associations
+                    $q.all( promises ).then( function() {
+                        console.log( 'All embedded resources updated!' );
+                    });
+
+                }
+
                 // Keeping this here for testing purposes...
-                return { promise: $q.reject( ) }
+                // return { promise: $q.reject( ) }
 
                 var promise = ApiService.patch( url, data, config )
                     .then( transformResponse )
                     .then( cache.update );
 
                 // Alert the user...
+                // TODO: Don't alert the user if we are updating an embedded model!
                 promise.then(
                     function( response ) {
                         Notification.success( { message: 'Changes saved!' } );
