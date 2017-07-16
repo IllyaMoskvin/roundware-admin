@@ -16,6 +16,7 @@
             list: list,
             detail: detail,
             find: find,
+            inject: inject,
             update: update,
             create: create,
         };
@@ -35,6 +36,12 @@
         function find( id ) {
 
             return collection.find( 'localizedstrings/' + id );
+
+        }
+
+        function inject( datum ) {
+
+            return collection.inject( datum );
 
         }
 

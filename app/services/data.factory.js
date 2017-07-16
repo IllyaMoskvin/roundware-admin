@@ -5,9 +5,9 @@
         .module('app')
         .factory('DataFactory', Service);
 
-    Service.$inject = ['$q', 'ApiService', 'CacheFactory', 'Notification'];
+    Service.$inject = ['$q', '$injector', 'ApiService', 'CacheFactory', 'Notification'];
 
-    function Service($q, ApiService, CacheFactory, Notification) {
+    function Service($q, $injector, ApiService, CacheFactory, Notification) {
 
         return {
             Collection: Collection,
@@ -20,6 +20,8 @@
             var settings = {
                 id_field: options.id_field || 'id',
                 wrapper: options.wrapper || null,
+                embedded: options.embedded || null,
+                mapped: options.mapped || null,
             };
 
             // See CacheFactory for more info on ID_FIELD and WRAPPER
@@ -32,6 +34,7 @@
                 list: list,
                 detail: detail,
                 find: find,
+                inject: inject,
                 update: update,
                 create: create,
                 filter: filter,
@@ -42,11 +45,14 @@
 
                 var config = getConfig( config );
 
-                var promise = ApiService.get( url, config ).then( cache.update, cache.error );
+                var promise = ApiService.get( url, config )
+                    .then( transformResponse )
+                    .then( cache.update );
+
                 var data = cache.list();
 
                 return {
-                    promise: promise,
+                    // promise: promise,
                     cache: data,
                 }
 
@@ -58,7 +64,10 @@
                 var id = getId( url );
                 var config = getConfig( config );
 
-                var promise = ApiService.get( url, config ).then( cache.update, cache.error );
+                var promise = ApiService.get( url, config )
+                    .then( transformResponse )
+                    .then( cache.update );
+
                 var datum = cache.detail( id );
 
                 return {
@@ -83,7 +92,9 @@
                 // See also: CacheFactory.Cache.updateDatum()
                 if( !datum.initialized ) {
 
-                    ApiService.get( url, config ).then( cache.update, cache.error );
+                    var promise = ApiService.get( url, config )
+                        .then( transformResponse )
+                        .then( cache.update );
 
                     // Necessary so as to avoid inifinite digest cycles.
                     datum.initialized = true;
@@ -91,6 +102,15 @@
                 }
 
                 return datum;
+
+            }
+
+
+            // inject() is an in-between of detail() and update()
+            // it will update the cache without making a server call
+            function inject( datum ) {
+
+                return cache.update( datum );
 
             }
 
@@ -115,9 +135,47 @@
 
                 }
 
-                var promise = ApiService.patch( url, data, config ).then( cache.update, cache.error );
+                // Update all embedded resources before continuing...
+                if( settings.embedded ) {
+
+                    var promises = [];
+
+                    settings.embedded.forEach( function( embed ) {
+
+                        if( datum.dirty[embed.field] ) {
+
+                            // Update each embedded object
+                            datum.dirty[embed.field].forEach( function( resource ) {
+
+                                var promise = $injector.get( embed.model ).update( resource ).promise;
+
+                                // Add it to the promise queue for resolving
+                                promises.push( promise );
+
+                            });
+
+                        }
+
+                    });
+
+                    // https://stackoverflow.com/questions/21759361/wait-for-all-promises-to-resolve
+                    // TODO: Wait to update main model until all embedded resources have been saved
+                    // TODO: Handle creation of new embedded resources + updating associations
+                    $q.all( promises ).then( function() {
+                        console.log( 'All embedded resources updated!' );
+                    });
+
+                }
+
+                // Keeping this here for testing purposes...
+                // return { promise: $q.reject( ) }
+
+                var promise = ApiService.patch( url, data, config )
+                    .then( transformResponse )
+                    .then( cache.update );
 
                 // Alert the user...
+                // TODO: Don't alert the user if we are updating an embedded model!
                 promise.then(
                     function( response ) {
                         Notification.success( { message: 'Changes saved!' } );
@@ -144,7 +202,9 @@
             // Use DataService.detail() to get the datum in the resolve!
             function create( url, data, config ) {
 
-                var promise = ApiService.post( url, data, config ).then( cache.update, cache.error );
+                var promise = ApiService.post( url, data, config )
+                    .then( transformResponse )
+                    .then( cache.update );
 
                 // Alert the user...
                 // TODO: Consolidate w/ alert above?
@@ -202,6 +262,89 @@
                 });
 
                 return config;
+
+            }
+
+
+            function transformResponse( response ) {
+
+                // Determine if we need to unwrap the data
+                if( settings.wrapper && response.data.hasOwnProperty( settings.wrapper ) ) {
+                    response.data = response.data[ settings.wrapper ];
+                }
+
+                // Determine if we are transforming a list, or one datum
+                if( response.data.constructor === Array ) {
+                    transformResponseData( response.data );
+                } else {
+                    transformResponseDatum( response.data );
+                }
+
+                return response;
+
+            }
+
+
+            function transformResponseData( data ) {
+
+                data.forEach( function( datum ) {
+
+                    transformResponseDatum( datum )
+
+                });
+
+            }
+
+
+            function transformResponseDatum( datum ) {
+
+                // Map incoming fields into outgoing ones
+                // Outgoing field names are the cannonical ones
+                if( settings.mapped ) {
+
+                    settings.mapped.forEach( function( map ) {
+
+                        if( datum[map.incoming] ) {
+                            datum[map.outgoing] = datum[map.incoming];
+                            delete datum[map.incoming];
+                        }
+
+                    });
+
+                }
+
+                // Process embedded resources
+                if( settings.embedded ) {
+
+                    settings.embedded.forEach( function( embed ) {
+
+                        // TODO: PATCH currently does not return embedded loc str
+                        if( datum[embed.field] ) {
+
+                            // Add each embedded object to its model's cache
+                            datum[embed.field].forEach( function( resource ) {
+
+                                // TODO: Ensure that the model exposes an inject method!
+                                $injector.get( embed.model ).inject( resource );
+
+                            });
+
+                            // Replace the array of objects w/ array of ids
+                            datum[embed.field] = datum[embed.field].map( function( resource ) {
+
+                                // TODO: Account for id_field?
+                                return resource.id;
+
+                            });
+
+                        }
+
+
+                    });
+
+                }
+
+                return datum;
 
             }
 
