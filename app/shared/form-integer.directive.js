@@ -15,6 +15,8 @@
     // TODO: Remove bindings on destroy so they don't fire after element is removed?
     // https://stackoverflow.com/questions/24701705/
 
+    // Note that this doesn't work with checkbox value
+
     function Directive() {
         return {
             require: 'ngModel',

@@ -3,7 +3,7 @@
 
     angular
         .module('app')
-        .factory('ProjectService', Service);
+        .factory('LanguageService', Service);
 
     Service.$inject = ['DataFactory'];
 
@@ -21,25 +21,25 @@
 
         function list() {
 
-            return collection.list( 'projects' );
+            return collection.list( 'languages' );
 
         }
 
         function detail( id ) {
 
-            return collection.detail( 'projects/' + id );
+            return collection.detail( 'languages/' + id );
 
         }
 
         function find( id ) {
 
-            return collection.find( 'projects/' + id );
+            return collection.find( 'languages/' + id );
 
         }
 
         function update( id, data ) {
 
-            return collection.update( 'projects/' + id, data );
+            return collection.update( 'languages/' + id, data );
 
         }
 

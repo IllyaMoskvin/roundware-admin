@@ -130,8 +130,8 @@
                 var id = newDatum[ ID_FIELD ];
                 var oldDatum = getDatum( id, cache.both );
 
-                angular.extend( oldDatum.clean, newDatum );
-                angular.extend( oldDatum.dirty, newDatum );
+                angular.merge( oldDatum.clean, newDatum );
+                angular.merge( oldDatum.dirty, newDatum );
 
                 // See also: DataFactory.Collection.find()
                 // Creates tight coupling, but prevents find() making server

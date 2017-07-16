@@ -4,13 +4,15 @@
         .module('app')
         .controller('OverviewController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService'];
+    Controller.$inject = ['$stateParams', 'ProjectService', 'LanguageService'];
 
-    function Controller($stateParams, ProjectService) {
+    function Controller($stateParams, ProjectService, LanguageService) {
 
         var vm = this;
 
         vm.project = null;
+        vm.languages = null;
+
         vm.update = update;
 
         activate();
@@ -20,6 +22,7 @@
         function activate() {
 
             vm.project = ProjectService.detail( $stateParams.id ).cache.dirty;
+            vm.languages = LanguageService.list().cache.clean;
 
         }
 
