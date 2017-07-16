@@ -33,8 +33,8 @@
             // define public interface
             return {
                 list: list,
-                detail: detail,
                 find: find,
+                detail: detail,
                 inject: inject,
                 update: update,
                 create: create,
@@ -56,25 +56,6 @@
                 return {
                     // promise: promise,
                     cache: data,
-                }
-
-            }
-
-
-            function detail( id, config ) {
-
-                var url = getUrl( id );
-                var config = getConfig( config );
-
-                var promise = ApiService.get( url, config )
-                    .then( transformResponse )
-                    .then( cache.update );
-
-                var datum = cache.detail( id );
-
-                return {
-                    promise: promise,
-                    cache: datum,
                 }
 
             }
@@ -104,6 +85,25 @@
                 }
 
                 return datum;
+
+            }
+
+
+            function detail( id, config ) {
+
+                var url = getUrl( id );
+                var config = getConfig( config );
+
+                var promise = ApiService.get( url, config )
+                    .then( transformResponse )
+                    .then( cache.update );
+
+                var datum = cache.detail( id );
+
+                return {
+                    promise: promise,
+                    cache: datum,
+                }
 
             }
 
@@ -260,6 +260,8 @@
             }
 
 
+            // Strong parallelism w/ DataFactory.Cache.update()
+            // TODO: Determine if this needs refactoring?
             function transformResponse( response ) {
 
                 // Determine if we need to unwrap the data
@@ -342,104 +344,104 @@
 
             }
 
+        }
 
-            // TODO: Abstract this into a module, or use existing library?
-            function getChanges( clean, dirty ) {
+    }
 
-                return compareObjects( clean, dirty, {} );
 
-                function compareObjects( a, b, node ) {
+    // TODO: Abstract this into a module, or use existing library?
+    function getChanges( clean, dirty ) {
 
-                    // We will use clean as the reference
-                    // If dirty contains a property that isn't in clean, ignore it
-                    for( var prop in a ) {
+        return compareObjects( clean, dirty, {} );
 
-                        // Ignore Angular's internal keys
-                        if( prop.substring(0,2) == '$$' ) {
-                            continue;
-                        }
+        function compareObjects( a, b, node ) {
 
-                        // We assume that dirty contains this property too
-                        // if(typeof b[prop] == 'undefined'){}
+            // We will use clean as the reference
+            // If dirty contains a property that isn't in clean, ignore it
+            for( var prop in a ) {
 
-                        // Naive comparison
-                        if( JSON.stringify( a[prop] ) == JSON.stringify( b[prop] ) ) {
-                            continue;
-                        }
+                // Ignore Angular's internal keys
+                if( prop.substring(0,2) == '$$' ) {
+                    continue;
+                }
 
-                        if( isValue( b[prop] ) ){
+                // We assume that dirty contains this property too
+                // if(typeof b[prop] == 'undefined'){}
 
-                            // TODO: parse numeric strings into numbers?
-                            node[prop] = b[prop];
+                // Naive comparison
+                if( JSON.stringify( a[prop] ) == JSON.stringify( b[prop] ) ) {
+                    continue;
+                }
 
-                            continue;
+                if( isValue( b[prop] ) ){
 
-                        }
+                    // TODO: parse numeric strings into numbers?
+                    node[prop] = b[prop];
 
-                        if( isArray( b[prop] ) ){
-                            node[prop] = compareArrays( a[prop], b[prop] );
-                            continue;
-                        }
-
-                        if( isObject( b[prop] ) ) {
-                            compareObjects( a[prop], b[prop], node[prop] );
-                            continue;
-                        }
-
-                    }
-
-                    return node;
+                    continue;
 
                 }
 
-                // This works only for arrays of values, not objects or arrays
-                // Does not care about order of elements
-                function compareArrays( a, b ) {
-
-                    // TODO: Check what happens with numeric strings
-
-                    // ensure that all of the values in a are in b
-                    for( var i in a ) {
-                        if( b.indexOf(i) < 0 ) {
-                            return b;
-                        }
-                    }
-
-                    // ensure that all of the values in b are in a
-                    for( var i in b ) {
-                        if( a.indexOf(i) < 0 ) {
-                            return b;
-                        }
-                    }
-
-                    // otherwise, return undefined
-                    return undefined;
-
+                if( isArray( b[prop] ) ){
+                    node[prop] = compareArrays( a[prop], b[prop] );
+                    continue;
                 }
 
-                function isValue(obj) {
-                    return typeof obj !== 'object' || obj == null;
-                }
-
-                function isArray(obj) {
-                    return {}.toString.apply(obj) === '[object Array]';
-                }
-
-                function isObject(obj) {
-                    return {}.toString.apply(obj) === '[object Object]';
-                }
-
-                // Unused, but might be needed for string -> number
-                function isInt(n){
-                    return Number(n) === n && n % 1 === 0;
-                }
-
-                function isFloat(n){
-                    return Number(n) === n && n % 1 !== 0;
+                if( isObject( b[prop] ) ) {
+                    compareObjects( a[prop], b[prop], node[prop] );
+                    continue;
                 }
 
             }
 
+            return node;
+
+        }
+
+        // This works only for arrays of values, not objects or arrays
+        // Does not care about order of elements
+        function compareArrays( a, b ) {
+
+            // TODO: Check what happens with numeric strings
+
+            // ensure that all of the values in a are in b
+            for( var i in a ) {
+                if( b.indexOf(i) < 0 ) {
+                    return b;
+                }
+            }
+
+            // ensure that all of the values in b are in a
+            for( var i in b ) {
+                if( a.indexOf(i) < 0 ) {
+                    return b;
+                }
+            }
+
+            // otherwise, return undefined
+            return undefined;
+
+        }
+
+        function isValue(obj) {
+            return typeof obj !== 'object' || obj == null;
+        }
+
+        function isArray(obj) {
+            return {}.toString.apply(obj) === '[object Array]';
+        }
+
+        function isObject(obj) {
+            return {}.toString.apply(obj) === '[object Object]';
+        }
+
+        // Unused, but might be needed for string -> number
+        function isInt(n){
+            return Number(n) === n && n % 1 === 0;
+        }
+
+        function isFloat(n){
+            return Number(n) === n && n % 1 !== 0;
         }
 
     }
