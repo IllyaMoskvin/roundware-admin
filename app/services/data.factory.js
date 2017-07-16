@@ -18,6 +18,7 @@
             var options = options || {};
 
             var settings = {
+                route: options.route || 'resources',
                 id_field: options.id_field || 'id',
                 wrapper: options.wrapper || null,
                 embedded: options.embedded || null,
@@ -41,8 +42,9 @@
             };
 
 
-            function list( url, config ) {
+            function list( config ) {
 
+                var url = getUrl();
                 var config = getConfig( config );
 
                 var promise = ApiService.get( url, config )
@@ -59,9 +61,9 @@
             }
 
 
-            function detail( url, config ) {
+            function detail( id, config ) {
 
-                var id = getId( url );
+                var url = getUrl( id );
                 var config = getConfig( config );
 
                 var promise = ApiService.get( url, config )
@@ -81,9 +83,9 @@
             // find() is like a soft detail(), meant for static views
             // it will get() a datum only if it's not cached yet
             // very much a convenience function, sans promise handling
-            function find( url, config ) {
+            function find( id, config ) {
 
-                var id = getId( url );
+                var url = getUrl( id );
                 var config = getConfig( config );
                 var datum = cache.detail( id );
 
@@ -115,9 +117,9 @@
             }
 
 
-            function update( url, data, config ) {
+            function update( id, data, config ) {
 
-                var id = getId( url );
+                var url = getUrl( id );
                 var datum = cache.detail( id );
 
                 // Omit data to submit changed fields in dirty
@@ -234,19 +236,11 @@
             }
 
 
-            function getId( url ) {
+            function getUrl( id ) {
 
-                // Assumes that the last part of the URL is the id
-                var id = url.substr( url.lastIndexOf('/') + 1 );
+                var url = [ settings.route, id ];
 
-                // TODO: URL should not contain query string
-                // GET params should be defined by config.params
-                // ...but just to be safe, drop anything after ?
-
-                // TODO: Anticipate trailing forwardslash
-
-                // Ensure that it's numeric
-                return parseInt( id );
+                return url.join('/');
 
             }
 

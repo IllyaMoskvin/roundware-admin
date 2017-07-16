@@ -9,7 +9,8 @@
 
     function Service(DataFactory) {
 
-        var collection = new DataFactory.Collection({
+        return new DataFactory.Collection({
+            route: 'projects',
             mapped: [
                 {
                     incoming: 'demo_stream_message_loc_admin',
@@ -47,38 +48,6 @@
                 },
             ],
         });
-
-        // define public interface
-        return {
-            list: list,
-            detail: detail,
-            find: find,
-            update: update,
-        };
-
-        function list() {
-
-            return collection.list( 'projects' );
-
-        }
-
-        function detail( id ) {
-
-            return collection.detail( 'projects/' + id );
-
-        }
-
-        function find( id ) {
-
-            return collection.find( 'projects/' + id );
-
-        }
-
-        function update( id, data ) {
-
-            return collection.update( 'projects/' + id, data );
-
-        }
 
     }
 
