@@ -136,6 +136,7 @@
         NotificationProvider.setOptions({
             positionX: 'right',
             positionY: 'bottom',
+            replaceMessage: true,
         });
 
     }
