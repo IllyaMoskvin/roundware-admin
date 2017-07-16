@@ -24,7 +24,7 @@
             })
             .state('authenticate', {
                 url: '/authenticate',
-                templateUrl: 'authenticate/authenticate.html',
+                templateUrl: 'states/authenticate/authenticate.html',
                 controller: 'AuthenticateController',
                 controllerAs: 'vm',
                 data: {
@@ -35,7 +35,7 @@
             .state('authenticated', {
                 abstract: true,
                 // Omit URL so that it's not prepended to everything
-                templateUrl: 'authenticated/authenticated.html',
+                templateUrl: 'states/authenticated/authenticated.html',
                 controller: 'AuthenticatedController',
                 controllerAs: 'vm',
                 data: {
@@ -45,7 +45,7 @@
             .state('projects', {
                 url: '/projects',
                 parent: 'authenticated',
-                templateUrl: 'authenticated/projects/projects.html',
+                templateUrl: 'states/authenticated/projects/projects.html',
                 controller: 'ProjectsController',
                 controllerAs: 'vm',
                 data: {
@@ -58,7 +58,7 @@
                 abstract: true,
                 url: '/project/:id',
                 parent: 'authenticated',
-                templateUrl: 'authenticated/project/project.html',
+                templateUrl: 'states/authenticated/project/project.html',
                 controller: 'ProjectController',
                 controllerAs: 'vm',
                 data: {
@@ -73,7 +73,7 @@
             })
             .state('project.overview', {
                 url: '/overview',
-                templateUrl: 'authenticated/project/overview/overview.html',
+                templateUrl: 'states/authenticated/project/overview/overview.html',
                 controller: 'OverviewController',
                 controllerAs: 'vm',
                 data: {
@@ -82,7 +82,7 @@
             })
             .state('project.define-tags', {
                 url: '/define-tags',
-                templateUrl: 'authenticated/project/define-tags/define-tags.html',
+                templateUrl: 'states/authenticated/project/define-tags/define-tags.html',
                 controller: 'DefineTagsController',
                 controllerAs: 'vm',
                 data: {
