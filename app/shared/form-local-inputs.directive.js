@@ -12,10 +12,13 @@
             restrict: 'E',
             scope: {
                 stringField: '=list',
+                title: '@',
             },
             template: `
 
                 <hr/>
+
+                <div class="form-group text-center"><strong>{{ title }}</strong></div>
 
                 <div class="form-group" ng-repeat="language in getProjectLanguages()">
                     <label class="col-sm-2 control-label">
