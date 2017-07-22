@@ -11,7 +11,8 @@
         return {
             restrict: 'E',
             scope: {
-                stringField: '=list',
+                model: '=',
+                field: '@',
                 title: '@',
             },
             template: `
@@ -38,20 +39,29 @@
                 scope.strings = [];
 
                 // Populate the string list via ids
-                scope.$watch('stringField', function( ids ) {
+                scope.$watch('model.' + scope.field, function( items ) {
 
                     // Wait until the field is ready...
-                    if( !ids ) {
+                    if( !items ) {
                         return false;
                     }
 
                     scope.strings = [];
 
-                    ids.forEach( function( id ) {
+                    items.forEach( function( item ) {
+
                         // TODO: Move this to getString()?
                         // TODO: Modify find() to allow matching by field?
                         // TODO: Add language_id to loc str serializer server-side?
-                        scope.strings.push( LocalizedStringService.find( id ).dirty );
+
+                        // Check to see if this is an id or an object
+                        // Objects are used by the "new" form controller
+                        if( typeof item === 'object' ) {
+                            scope.strings.push( item );
+                        } else {
+                            scope.strings.push( LocalizedStringService.find( item ).dirty );
+                        }
+
                     });
 
                 });
@@ -80,13 +90,39 @@
                     // We need to return the object, not the string it contains
                     // We should be using Array.find for this, but no IE support
 
+                    if( !scope.model[scope.field] ) {
+                        scope.model[scope.field] = [];
+                    }
+
                     var matches = scope.strings.filter( function( string ) {
                         return string.language === language.language_code;
                     });
 
+                    if( matches.length < 1 ) {
+
+                        // Create a dummy string
+                        var string = {
+                            language: language.language_code,
+                        };
+
+                        scope.model[scope.field].push( string );
+
+                        // For some reason, $watch isn't tiggering
+                        scope.strings.push( string );
+
+                        return string;
+
+                    }
+
                     return matches[0];
 
                 }
+
+                scope.$on('$destroy', function() {
+
+                    // TODO: Clean up unsaved strings..?
+
+                });
 
             }
         }
