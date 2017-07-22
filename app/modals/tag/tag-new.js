@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewTagController',  Controller);
 
-    Controller.$inject = ['$uibModalInstance', 'TagService', 'TagCategoryService'];
+    Controller.$inject = ['$uibModalInstance', '$stateParams', 'TagService', 'TagCategoryService'];
 
-    function Controller($uibModalInstance, TagService, TagCategoryService) {
+    function Controller($uibModalInstance, $stateParams, TagService, TagCategoryService) {
 
         var vm = this;
 
@@ -25,7 +25,9 @@
         function activate() {
 
             vm.categories = TagCategoryService.list().cache;
-            vm.tag = {};
+            vm.tag = {
+                project_id: $stateParams.id,
+            };
 
         }
 
