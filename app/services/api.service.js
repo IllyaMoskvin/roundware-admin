@@ -20,6 +20,7 @@
             get: get,
             post: post,
             patch: patch,
+            delete: remove,
             error: error,
         };
 
@@ -74,6 +75,16 @@
             return $http.patch( url, data, config );
 
         }
+
+
+        function remove( url, data, config ) {
+
+            url = getFullUrl( url );
+
+            return $http.delete( url, data, config );
+
+        }
+
 
         // Return errors in a standardized format
         // Meant for feeding messages to Notification

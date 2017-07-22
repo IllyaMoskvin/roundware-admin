@@ -38,6 +38,7 @@
                 inject: inject,
                 update: update,
                 create: create,
+                delete: remove,
                 filter: filter,
             };
 
@@ -222,6 +223,14 @@
                 );
 
                 return promise;
+
+
+            // delete is a reserved word
+            function remove( id ) {
+
+                var url = getUrl( id );
+
+                return ApiService.delete( url );
 
             }
 
