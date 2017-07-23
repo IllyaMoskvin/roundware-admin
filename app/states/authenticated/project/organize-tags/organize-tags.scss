@@ -27,12 +27,17 @@
 			padding-left: 30px;
 		}
 
+		.angular-ui-tree-node {
+			margin: 10px 0;
+		}
+
 		// TODO: Separate handle into dedicated element?
 		.angular-ui-tree-handle {
 			background: #f8faff;
 			border: 1px solid #dae2ea;
 			color: #7c9eb2;
 			padding: 10px 10px;
+			margin: 10px 0;
 		}
 
 		.angular-ui-tree-handle:hover {
