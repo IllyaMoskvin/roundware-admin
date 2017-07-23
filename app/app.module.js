@@ -13,6 +13,7 @@
         'ui-notification',
         'smart-table',
         'ui.bootstrap',
+        'ui.tree',
 
     ]);
 
