@@ -4,9 +4,9 @@
         .module('app')
         .controller('OrganizeTagsController', Controller);
 
-    Controller.$inject = ['$scope', 'TagService', 'TagCategoryService', 'TagRelationshipService'];
+    Controller.$inject = ['$scope', 'TagService', 'TagCategoryService', 'TagRelationshipService', 'Notification'];
 
-    function Controller($scope, TagService, TagCategoryService, TagRelationshipService) {
+    function Controller($scope, TagService, TagCategoryService, TagRelationshipService, Notification) {
 
         var vm = this;
 
@@ -24,6 +24,8 @@
         };
 
         vm.getTag = getTag;
+
+        vm.saving = false;
 
         activate();
 
@@ -83,6 +85,24 @@
             relationship.tag_id = event.source.cloneModel.id;
 
             console.log( relationship );
+
+            // Save the tag relationship to server
+            vm.saving = true;
+
+            TagRelationshipService.create( relationship ).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
+
+            // TODO: Prevent drop if that tag has already been nested under the destination?
+
+            // TODO: Temporarily add the relationship to the destination?
+            // TODO: If so, set dest.index to the last position?
 
             return false;
 
