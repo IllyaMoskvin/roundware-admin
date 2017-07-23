@@ -88,6 +88,15 @@
                 data: {
                     cssClassnames: 'rw-state-define-tags'
                 }
+            })
+            .state('project.organize-tags', {
+                url: '/organize-tags',
+                templateUrl: 'states/authenticated/project/organize-tags/organize-tags.html',
+                controller: 'OrganizeTagsController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-organize-tags'
+                }
             });
 
     }
