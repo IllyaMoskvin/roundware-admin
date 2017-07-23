@@ -1,0 +1,31 @@
+<div class="rw-define-tags">
+
+    <div ui-tree data-nodrop-enabled="true" data-clone-enabled="true">
+        <ol ui-tree-nodes="" ng-model="vm.tags">
+            <li ng-repeat="tag in vm.tags" ui-tree-node>
+                {{ tag.value }}
+            </li>
+        </ol>
+    </div>
+
+    <hr/>
+
+    <div ui-tree>
+        <ol ui-tree-nodes="" ng-model="vm.tree">
+            <li ng-repeat="node in vm.tree" ui-tree-node ng-include="'relationship-node.html'">
+                {{ tag.value }}
+            </li>
+        </ol>
+    </div>
+
+    <!-- Nested node template for tag relationships -->
+    <script type="text/ng-template" id="relationship-node.html">
+        <div ui-tree-handle>
+            {{ vm.getTag( node.tag_id ).value }}
+        </div>
+        <ol ui-tree-nodes="" ng-model="node.nodes">
+            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
+        </ol>
+    </script>
+
+</div>
