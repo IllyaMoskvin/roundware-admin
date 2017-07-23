@@ -1,6 +1,6 @@
 <div class="rw-define-tags">
 
-    <div ui-tree data-nodrop-enabled="true" data-clone-enabled="true">
+    <div ui-tree="vm.tagTreeOptions" data-nodrop-enabled="true" data-clone-enabled="true">
         <ol ui-tree-nodes="" ng-model="vm.tags">
             <li ng-repeat="tag in vm.tags" ui-tree-node>
                 {{ tag.value }}

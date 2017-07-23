@@ -14,7 +14,14 @@
         vm.categories = null;
         vm.tags = null;
 
+        // Only the relationship tree needs a dedicated array
         vm.tree = [];
+
+        // Even though nodes will be dropped into relationships,
+        // beforeDrop for tags needs to be configured on the tag tree
+        vm.tagTreeOptions = {
+            beforeDrop: tagBeforeDrop,
+        };
 
         vm.getTag = getTag;
 
@@ -51,6 +58,20 @@
 
                 console.log( vm.tree );
             }
+
+        }
+
+
+        function tagBeforeDrop( event ) {
+
+            // TODO: Determine which tree was the destination
+            // TODO: Ignore if the node was dropped in the tags tree
+            // TODO: Modify event.source.cloneModel to match TagRelationship model
+            // TODO: Determine dest parent node + set parent_id accordingly
+
+            console.log( event );
+
+            return false;
 
         }
 
