@@ -18,7 +18,7 @@
 
         function activate() {
 
-            TagService.filter({
+            TagService.setDefaultParams({
                 project_id: $stateParams.id
             });
 

@@ -4,9 +4,9 @@
         .module('app')
         .controller('OverviewController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService', 'LanguageService'];
+    Controller.$inject = ['$stateParams', 'ProjectService', 'LanguageService', 'Notification'];
 
-    function Controller($stateParams, ProjectService, LanguageService) {
+    function Controller($stateParams, ProjectService, LanguageService, Notification) {
 
         var vm = this;
 
@@ -28,7 +28,9 @@
 
         function update() {
 
-            ProjectService.update( vm.project.id );
+            ProjectService.update( vm.project.id ).promise.then( function() {
+                Notification.success( { message: 'Changes saved!' } );
+            });
 
         }
 

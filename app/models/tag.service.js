@@ -12,13 +12,16 @@
         return new DataFactory.Collection({
             route: 'tags',
             wrapper: 'tags',
+            refresh: true,
             mapped: [
                 {
                     incoming: 'loc_msg_admin',
+                    stored: 'loc_msg',
                     outgoing: 'loc_msg',
                 },
                 {
                     incoming: 'loc_description_admin',
+                    stored: 'loc_description',
                     outgoing: 'loc_description',
                 },
             ],

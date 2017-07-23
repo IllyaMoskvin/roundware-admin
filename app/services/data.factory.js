@@ -5,9 +5,9 @@
         .module('app')
         .factory('DataFactory', Service);
 
-    Service.$inject = ['$q', '$injector', 'ApiService', 'CacheFactory', 'Notification'];
+    Service.$inject = ['$q', '$injector', 'ApiService', 'CacheFactory'];
 
-    function Service($q, $injector, ApiService, CacheFactory, Notification) {
+    function Service($q, $injector, ApiService, CacheFactory) {
 
         return {
             Collection: Collection,
@@ -17,21 +17,26 @@
 
             var options = options || {};
 
+            if(!options.route) {
+                throw 'Missing route in model definition!';
+            }
+
             var settings = {
-                route: options.route || 'resources',
-                id_field: options.id_field || 'id',
+                route: options.route,
                 wrapper: options.wrapper || null,
-                embedded: options.embedded || null,
+                refresh: options.refresh || false,
                 mapped: options.mapped || null,
+                embedded: options.embedded || null,
+                ignored: options.ignored || null,
             };
 
-            // See CacheFactory for more info on ID_FIELD and WRAPPER
-
-            var cache = new CacheFactory.Cache( settings.id_field, settings.wrapper );
-            var filters = {};
+            var cache = new CacheFactory.Cache( );
+            var defaultParams = {};
 
             // define public interface
             return {
+
+                // actions
                 list: list,
                 find: find,
                 detail: detail,
@@ -39,7 +44,10 @@
                 update: update,
                 create: create,
                 delete: remove,
-                filter: filter,
+
+                // settings
+                setDefaultParams: setDefaultParams,
+
             };
 
 
@@ -55,7 +63,7 @@
                 var data = cache.list();
 
                 return {
-                    // promise: promise,
+                    promise: promise,
                     cache: data,
                 }
 
@@ -118,81 +126,28 @@
             }
 
 
-            function update( id, data, config ) {
+            function update( id, newDatum, config ) {
 
                 var url = getUrl( id );
-                var datum = cache.detail( id );
+                var config = getConfig( config );
 
-                // Omit data to submit changed fields in dirty
-                // For hardening, passing datum or datum.dirty will also trigger this
-                if( !data || data === datum || data === datum.dirty ) {
+                var oldDatum = cache.detail( id );
 
-                    // DRF accepts PATCHes w/ only changed fields
-                    // An empty object means no changes
-                    data = getChanges( datum.clean, datum.dirty );
-
-                    // TODO: Remove after it's proven to be sufficiently stable
-                    console.log( data );
-
-                    // TODO: Alert user if nothing changed?
-
+                if(!newDatum || newDatum === oldDatum ) {
+                    newDatum = oldDatum.dirty;
                 }
 
-                // Update all embedded resources before continuing...
-                if( settings.embedded ) {
+                var promise = processRequest( newDatum, function( processedDatum ) {
 
-                    var promises = [];
+                    return ApiService.patch( url, processedDatum, config )
+                        .then( transformResponse )
+                        .then( cache.update )
 
-                    settings.embedded.forEach( function( embed ) {
-
-                        if( datum.dirty[embed.field] ) {
-
-                            // Update each embedded object
-                            datum.dirty[embed.field].forEach( function( resource ) {
-
-                                var promise = $injector.get( embed.model ).update( resource ).promise;
-
-                                // Add it to the promise queue for resolving
-                                promises.push( promise );
-
-                            });
-
-                        }
-
-                    });
-
-                    // https://stackoverflow.com/questions/21759361/wait-for-all-promises-to-resolve
-                    // TODO: Wait to update main model until all embedded resources have been saved
-                    // TODO: Handle creation of new embedded resources + updating associations
-                    $q.all( promises ).then( function() {
-                        console.log( 'All embedded resources updated!' );
-                    });
-
-                }
-
-                // Keeping this here for testing purposes...
-                // return { promise: $q.reject( ) }
-
-                var promise = ApiService.patch( url, data, config )
-                    .then( transformResponse )
-                    .then( cache.update );
-
-                // Alert the user...
-                // TODO: Don't alert the user if we are updating an embedded model!
-                promise.then(
-                    function( response ) {
-                        Notification.success( { message: 'Changes saved!' } );
-                        return response;
-                    },
-                    function( response ) {
-                        Notification.error( { message: ApiService.error( response ) } );
-                        return $q.reject( response )
-                    }
-                );
+                });
 
                 return {
                     promise: promise,
-                    cache: datum,
+                    cache: oldDatum,
                 }
 
             }
@@ -200,29 +155,25 @@
 
             // We cannot know if the create() succeeds ahead of time.
             // Therefore, we cannot return a datum, only a promise.
-            // We can assume it would succeed and create a stub cache entry,
-            //   but that doesn't seem worth the trouble currently.
-            // Use DataService.detail() to get the datum in the resolve!
-            function create( url, data, config ) {
+            function create( datum, config ) {
 
-                var promise = ApiService.post( url, data, config )
-                    .then( transformResponse )
-                    .then( cache.update );
+                var url = getUrl();
+                var config = getConfig( config );
 
-                // Alert the user...
-                // TODO: Consolidate w/ alert above?
-                promise.then(
-                    function( response ) {
-                        Notification.success( { message: 'Changes saved!' } );
-                        return response;
-                    },
-                    function( response ) {
-                        Notification.error( { message: ApiService.error( response ) } );
-                        return $q.reject( response )
-                    }
-                );
+                var promise = processRequest( datum, function( processedDatum ) {
 
-                return promise;
+                    return ApiService.post( url, processedDatum, config )
+                        .then( transformResponse )
+                        .then( cache.update )
+
+                });
+
+                return {
+                    promise: promise,
+                    cache: datum,
+                };
+
+            }
 
 
             // delete is a reserved word
@@ -230,17 +181,24 @@
 
                 var url = getUrl( id );
 
-                return ApiService.delete( url );
+                var promise = ApiService.delete( url ).then( function() {
+                    return cache.delete( id );
+                });
+
+                return {
+                    promise: promise,
+                    cache: null,
+                }
 
             }
 
 
-            // Use this to set persistent param filters for all GET requests
+            // Use this to set persistent params for all GET requests
             // Expects an object of params as per Angular's $http.config
-            // TODO: Additive filters? Currently, it's a `set` situation.
-            function filter( params ) {
+            // TODO: Additive params? Currently, it's a `set` situation.
+            function setDefaultParams( params ) {
 
-                return filters = params || {};
+                return defaultParams = params || {};
 
             }
 
@@ -259,9 +217,9 @@
                 // config is an optional argument
                 config = config || {};
 
-                // apply any defined filters
+                // apply any defined params
                 angular.merge( config, {
-                    params: filters
+                    params: defaultParams
                 });
 
                 return config;
@@ -269,87 +227,368 @@
             }
 
 
-            // Strong parallelism w/ DataFactory.Cache.update()
-            // TODO: Determine if this needs refactoring?
-            function transformResponse( response ) {
+            function unwrapData( input, wrapper ) {
+
+                // For convenience, omit wrapper if settings.wrapper is set
+                if( !wrapper && settings && settings.wrapper ) {
+                    wrapper = settings.wrapper;
+                }
+
+                // Determine if this is response or response.data
+                // This might fail if response.data (i.e. resource) has these properties too.
+                // Checking for two should be enough, for now.
+                if( input.hasOwnProperty( 'data' ) && input.hasOwnProperty( 'status' ) ) {
+                    input = input.data;
+                }
 
                 // Determine if we need to unwrap the data
-                if( settings.wrapper && response.data.hasOwnProperty( settings.wrapper ) ) {
-                    response.data = response.data[ settings.wrapper ];
+                if( wrapper && input.hasOwnProperty( wrapper ) ) {
+                    input = input[ wrapper ];
                 }
 
-                // Determine if we are transforming a list, or one datum
-                if( response.data.constructor === Array ) {
-                    transformResponseData( response.data );
-                } else {
-                    transformResponseDatum( response.data );
-                }
-
-                return response;
+                // Note that input is being transformed in place
+                return input;
 
             }
 
 
+            // Transform incoming data from server
+            function transformResponse( input ) {
+
+                var data = unwrapData( input );
+
+                // Determine if we are processing a list
+                if( data.constructor === Array ) {
+                    return transformResponseData( data );
+                }
+
+                // Assume that otherwise, we are processing one datum
+                return transformResponseDatum( data );
+
+            }
+
+
+            // There's no reason why this would fail, currently,
+            // so we just return the data, not a promise
             function transformResponseData( data ) {
 
-                data.forEach( function( datum ) {
+                data.forEach( transformResponseDatum );
 
-                    transformResponseDatum( datum )
-
-                });
+                return data;
 
             }
 
-
+            // These functions modify the datum in place + return it
             function transformResponseDatum( datum ) {
 
-                // Map incoming fields into outgoing ones
-                // Outgoing field names are the cannonical ones
                 if( settings.mapped ) {
-
-                    settings.mapped.forEach( function( map ) {
-
-                        if( datum[map.incoming] ) {
-                            datum[map.outgoing] = datum[map.incoming];
-                            delete datum[map.incoming];
-                        }
-
-                    });
-
+                    transformResponseMapped( datum, settings.mapped );
                 }
 
-                // Process embedded resources
                 if( settings.embedded ) {
-
-                    settings.embedded.forEach( function( embed ) {
-
-                        // TODO: PATCH currently does not return embedded loc str
-                        if( datum[embed.field] ) {
-
-                            // Add each embedded object to its model's cache
-                            datum[embed.field].forEach( function( resource ) {
-
-                                // TODO: Ensure that the model exposes an inject method!
-                                $injector.get( embed.model ).inject( resource );
-
-                            });
-
-                            // Replace the array of objects w/ array of ids
-                            datum[embed.field] = datum[embed.field].map( function( resource ) {
-
-                                // TODO: Account for id_field?
-                                return resource.id;
-
-                            });
-
-                        }
-
-
-                    });
-
+                    transformResponseIncludes( datum, settings.embedded );
                 }
 
                 return datum;
+
+            }
+
+
+            // Map incoming fields into outgoing ones
+            // Outgoing field names thus become the cannonical ones
+            // This modifies the datum in place + returns it
+            function transformResponseMapped( datum, mappedFields ) {
+
+                mappedFields.forEach( function( field ) {
+
+                    if( field.incoming == field.stored ) {
+                        return;
+                    }
+
+                    if( datum[ field.incoming ] ) {
+                        datum[ field.stored ] = datum[ field.incoming ];
+                        delete datum[ field.incoming ];
+                    }
+
+                });
+
+                return datum;
+
+            }
+
+            // This modifies the datum in place + returns it
+            function transformResponseIncludes( datum, includes ) {
+
+                includes.forEach( function( include ) {
+
+                    // Skip this include if the datum doesn't have this field
+                    if( !datum[ include.field ] ) {
+                        return;
+                    }
+
+                    // Add each embedded object to its model's cache
+                    datum[ include.field ].forEach( function( subdatum ) {
+                        $injector.get( include.model ).inject( subdatum );
+                    });
+
+                    // Replace the array of objects w/ array of ids
+                    datum[ include.field ] = datum[ include.field ].map( function( subdatum ) {
+                        return subdatum.id;
+                    });
+
+                });
+
+                return datum;
+
+            }
+
+
+            // Request is an outgoing create or update
+            // It MUST return a promise!
+            function processRequest( datum, callback ) {
+
+                var includes;
+
+                // Start the promise chain
+                var promise = $q.when( true );
+
+                // Update all embedded resources before continuing...
+                if( settings.embedded ) {
+
+                    includes = processIncludes( datum, settings.embedded );
+
+                    promise = $q.all( [ promise, includes.promise ] );
+
+                }
+
+                // Transform mapped fields from cached into outgoing
+                promise = promise.then( function() {
+
+                    if( settings.mapped ) {
+                        processRequestMapped( datum, settings.mapped );
+                    }
+
+                });
+
+                // Wait on existing promises to execute, then process this datum
+                promise = promise.then( function() {
+
+                    // callback ought to return a promise
+                    // it's expected to be either patch() or post() on ApiService
+                    return callback( datum );
+
+                });
+
+                // Restore mapped fields from outgoing to stored, regardless of success
+                promise = promise.finally( function( response ) {
+
+                    if( settings.mapped ) {
+                        cleanupRequestMapped( datum, settings.mapped );
+                    }
+
+                    // We pass along the callback response so we can get the new id below
+                    return response;
+
+                });
+
+                // Retrive the resource again if settings.refresh is set
+                // Roundware has a lot of problems with _admin fields
+                // DO NOT set admin=1 for POST or PATCH requests!
+                promise = promise.then( function( response ) {
+
+                    if( settings.refresh ) {
+
+                        return detail( response.id ).promise;
+
+                    }
+
+                    return response;
+
+                });
+
+                // If anything up to here fails, delete all created resources
+                promise = promise.then( null, function( response ) {
+
+                    var deferred = $q.defer();
+
+                    if( includes ) {
+
+                        // This returns a promise, i.e. delete all includes
+                        cleanupIncludes( datum, includes.created ).then( function() {
+                            deferred.reject( response );
+                        });
+
+                    } else {
+
+                        // Just reject the promise outright...
+                        deferred.reject( response );
+
+                    }
+
+                    return deferred.promise;
+
+                });
+
+                return promise;
+
+            }
+
+
+            function processRequestMapped( datum, mappedFields ) {
+
+                mappedFields.forEach( function( field ) {
+
+                    if( field.stored == field.outgoing ) {
+                        return;
+                    }
+
+                    if( datum[ field.stored ] ) {
+                        datum[ field.outgoing ] = datum[ field.stored ];
+                        delete datum[ field.stored ];
+                    }
+
+                });
+
+                return datum;
+
+            }
+
+
+            function cleanupRequestMapped( datum, mappedFields ) {
+
+                mappedFields.forEach( function( field ) {
+
+                    if( field.outgoing == field.stored ) {
+                        return;
+                    }
+
+                    if( datum[ field.outgoing ] ) {
+                        datum[ field.stored ] = datum[ field.outgoing ];
+                        delete datum[ field.outgoing ];
+                    }
+
+                });
+
+                return datum;
+
+            }
+
+
+            // This function does not modify the outgoing datum directly,
+            // But it does call activateIncludes, which will swap objects for ids
+            function processIncludes( datum, includes ) {
+
+                var promises = [];
+                var created = [];
+
+                includes.forEach( function( include ) {
+
+                    // Skip include if the datum doesn't have this field
+                    if( !datum[ include.field ] ) {
+                        return;
+                    }
+
+                    // Update each embedded object
+                    datum[ include.field ].forEach( function( resource, index ) {
+
+                        var promise;
+
+                        if( typeof resource === 'object' ) {
+
+                            // This is an object that needs to be created serverside
+                            promise = $injector.get( include.model ).create( resource ).promise;
+
+                            // If all subresources are created and updated successfully,
+                            // swap objects for their ids, before saving the main model.
+
+                            // If any subresource or the main model fails to be saved,
+                            // delete all created subresources and reset the main model.
+
+                            promise = promise.then( function( subdatum ) {
+
+                                created.push({
+                                    id: subdatum.id,
+                                    model: include.model,
+                                    field: include.field,
+                                    original: resource,
+                                    index: index,
+                                });
+
+                                return true;
+
+                            });
+
+                        } else {
+
+                            // This is an id reference to an existing subresource that should be updated
+                            promise = $injector.get( include.model ).update( resource ).promise;
+
+                        }
+
+                        // Add it to the promise queue for resolving
+                        promises.push( promise );
+
+                    });
+
+                });
+
+
+                // Activate the includes here, once they are all saved successfully
+                var promise = $q.all( promises ).then( function() {
+
+                    return activateIncludes( datum, created );
+
+                });
+
+                // https://stackoverflow.com/questions/21759361/wait-for-all-promises-to-resolve
+                return {
+                    promise: promise,
+                    created: created,
+                };
+
+            }
+
+            // This function modifies the outgoing datum in place
+            // It swaps objects for ids in includes fields
+            function activateIncludes( datum, created ) {
+
+                created.forEach( function( item ) {
+
+                    datum[ item.field ][ item.index ] = item.id;
+
+                });
+
+                return datum;
+
+            }
+
+            // This function modifies the outgoing datum in place
+            // It deletes created includes from server, and swaps ids w/ the original objects
+            function cleanupIncludes( datum, created ) {
+
+                var promises = [];
+
+                created.forEach( function( item ) {
+
+                    var promise;
+
+                    // Delete the resource from the server
+                    promise = $injector.get( item.model ).delete( item.id ).promise;
+
+                    // Afterwards, replace the id w/ the original object
+                    promise = promise.then( function() {
+
+                        datum[ item.field ][ item.index ] = item.original;
+
+                    });
+
+                    promises.push( promise );
+
+                });
+
+                var promise = $q.all( promises );
+
+                return promise;
 
             }
 
@@ -358,6 +597,7 @@
     }
 
 
+    // TODO: Always mark embedded fields as dirty, so that those models get checked!
     // TODO: Abstract this into a module, or use existing library?
     function getChanges( clean, dirty ) {
 

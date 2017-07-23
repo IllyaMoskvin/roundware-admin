@@ -77,7 +77,7 @@
                     }
 
                     return scope.languages.filter( function( language ) {
-                        return valid_ids.indexOf( language.id ) > -1;
+                        return valid_ids.indexOf( parseInt( language.id ) ) > -1;
                     });
 
                 };
@@ -102,6 +102,7 @@
 
                         // Create a dummy string
                         var string = {
+                            localized_string: '',
                             language: language.language_code,
                         };
 

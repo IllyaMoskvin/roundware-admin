@@ -10,46 +10,16 @@
     function Service($q) {
 
         // CacheFactory allows data sharing across controllers.
-        // It should be injected into each resource service.
-        // Then, create a new instance of Cache, like so:
-        //
-        //     var cache = new CacheFactory.Cache('id');
-        //
-        // Be sure to swap 'id' for the actual id field, if not `id`
-        // In each of the resource's CRUD methods, chain...
-        //
-        //     .then( cache.update, cache.error )
-        //
-        // ...after calling the relevant ApiService method, and...
-        //
-        //     return cache.list( editable )
-        //     return cache.detail( editable )
-        //
-        // ...in those CRUD methods.
+        // Each resource service uses it via DataFactory.
 
         return {
             Cache: Cache,
         }
 
-        function Cache( ID_FIELD, WRAPPER ) {
-
-            // For some resources, this could be e.g. foobar_id
-            // This has been fixed, but keep it just in case.
-            // We are treating it as a constant, essentially.
-            ID_FIELD = ID_FIELD || 'id';
-
-            // Some resources, e.g. tags are wrapped in an object
-            // WRAPPER is the property that contains our data
-            // If it is omitted, assume data array is the root element
+        function Cache( ) {
 
             // Each item in cache.both is { clean: {}, dirty: {} }
             // It is up to the view or the controller to choose one
-
-            // For convenience, you can also do...
-            //
-            //     list().dirty, list().clean
-            //
-            // ...to get an array of non-nested datums on a list level
 
             var cache = {
                 clean: [],
@@ -58,25 +28,34 @@
             };
 
             return {
-                update: update,
-                error: error,
                 list: list,
                 detail: detail,
+                update: update,
+                delete: remove,
             };
 
+
+            function list( ) {
+
+                return cache;
+
+            }
+
+
+            function detail( id ) {
+
+                var datum = getDatum( id, cache.both );
+
+                if(!datum) {
+                    datum = addDatum( id, cache.both );
+                }
+
+                return datum;
+
+            }
+
+
             function update( input ) {
-
-                // Determine if this is response.data or just data
-                // This might fail if response.data has all these properties too
-                // Checking for two should be enough
-                if( input.hasOwnProperty( 'data' ) && input.hasOwnProperty( 'status' ) ) {
-                    input = input.data;
-                }
-
-                // Determine if we need to unwrap the data
-                if( WRAPPER && input.hasOwnProperty( WRAPPER ) ) {
-                    input = input[ WRAPPER ];
-                }
 
                 // Determine if we are updating all data
                 if( input.constructor === Array ) {
@@ -89,36 +68,9 @@
             }
 
 
-            function error( response ) {
-
-                console.error( 'Unable to update cache' );
-
-                return $q.reject( response );
-
-            }
-
-
-            function list( ) {
-
-                return cache;
-
-            }
-
-
-            function detail( id ) {
-
-                return getDatum( id, cache.both );
-
-            }
-
-
             function updateData( data ) {
 
-                angular.forEach( data, function( datum, i ) {
-
-                    updateDatum( datum );
-
-                });
+                angular.forEach( data, updateDatum );
 
                 return cache;
 
@@ -132,17 +84,18 @@
                 // Replace their properties with those from the server.
 
                 // This also updates datums in cache.clean and cache.dirty,
-                //   since they point to the same objects.
+                // since they point to the same objects.
 
-                var id = newDatum[ ID_FIELD ];
-                var oldDatum = getDatum( id, cache.both );
+                var id = newDatum.id;
+                var oldDatum = detail( id, cache.both );
 
+                // http://davidcai.github.io/blog/posts/copy-vs-extend-vs-merge/
                 angular.merge( oldDatum.clean, newDatum );
                 angular.merge( oldDatum.dirty, newDatum );
 
                 // See also: DataFactory.Collection.find()
-                // Creates tight coupling, but prevents find() making server
-                // calls even after detail() or list() has been called.
+                // Creates tight coupling, but prevents find() making server calls
+                // after detail() or list() has been called, but not yet resolved.
                 oldDatum.initialized = true;
 
                 return newDatum;
@@ -150,23 +103,69 @@
             }
 
 
+            // Returns a promise!
+            function remove( id ) {
+
+                var deferred = $q.defer();
+
+                // Cast id to int for comparison
+                var id = parseInt( id );
+
+                var result = {
+                    clean: removeFrom( id, cache.clean ),
+                    dirty: removeFrom( id, cache.dirty ),
+                    both: removeFrom( id, cache.both ),
+                };
+
+                if( result.clean && result.dirty && result.both ) {
+                    deferred.resolve( result );
+                } else {
+                    deferred.reject( result );
+                }
+
+                return deferred;
+
+                function removeFrom( id, source ) {
+
+                    for( var i = 0; i < source.length; i++ ) {
+                        if( source[i].id == id ) {
+                            source.splice(i, 1);
+                            return true;
+                        }
+                    }
+
+                    return false;
+
+                }
+
+            }
+
+
             function getDatum( id, source ) {
 
-                // Ensure id is an integer
-                id = parseInt( id );
+                // Cast id to int for comparison
+                var id = parseInt( id );
 
                 // Search for existing datum
                 for( var i = 0; i < source.length; i++ ) {
 
-                    // Assumes that an id is set on all items
+                    // Assumes that id is set on all items
                     if( source[i].id == id ) {
+
                         return source[i];
+
                     }
 
                 }
 
-                // If the datum wasn't found,
-                // add it to all the arrays
+                return null;
+
+            }
+
+
+            function addDatum( id, source ) {
+
+                id = parseInt( id );
 
                 var clean = {};
                 var dirty = {};
@@ -175,10 +174,10 @@
                     dirty: dirty,
                 };
 
-                // I'd like to ignore ID_FIELD when possible
-                clean[ID_FIELD] = clean.id = id;
-                dirty[ID_FIELD] = dirty.id = id;
-                both[ID_FIELD] = both.id = id;
+                // TODO: Account for custom id fields?
+                clean.id = id;
+                dirty.id = id;
+                both.id = id;
 
                 cache.clean.push( clean );
                 cache.dirty.push( dirty );

@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewTagController',  Controller);
 
-    Controller.$inject = ['$uibModalInstance', '$stateParams', 'TagService', 'TagCategoryService'];
+    Controller.$inject = ['$uibModalInstance', '$stateParams', 'TagService', 'TagCategoryService', 'Notification'];
 
-    function Controller($uibModalInstance, $stateParams, TagService, TagCategoryService) {
+    function Controller($uibModalInstance, $stateParams, TagService, TagCategoryService, Notification) {
 
         var vm = this;
 
@@ -35,7 +35,9 @@
 
             vm.saving = true;
 
-            TagService.create( vm.tag ).then( function() {
+            TagService.create( vm.tag ).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
 
                 $uibModalInstance.close();
 
