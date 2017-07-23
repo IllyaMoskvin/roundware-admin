@@ -1,6 +1,6 @@
 <div class="rw-define-tags">
 
-    <div ui-tree="vm.tagTreeOptions" data-nodrop-enabled="true" data-clone-enabled="true">
+    <div ui-tree="vm.tagTreeOptions" id="rw-tree-tags" data-nodrop-enabled="true" data-clone-enabled="true">
         <ol ui-tree-nodes="" ng-model="vm.tags">
             <li ng-repeat="tag in vm.tags" ui-tree-node>
                 {{ tag.value }}
@@ -10,7 +10,7 @@
 
     <hr/>
 
-    <div ui-tree>
+    <div ui-tree id="rw-tree-tag-relationships">
         <ol ui-tree-nodes="" ng-model="vm.tree">
             <li ng-repeat="node in vm.tree" ui-tree-node ng-include="'relationship-node.html'">
                 {{ tag.value }}
@@ -23,7 +23,7 @@
         <div ui-tree-handle>
             {{ vm.getTag( node.tag_id ).value }}
         </div>
-        <ol ui-tree-nodes="" ng-model="node.nodes">
+        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
             <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
         </ol>
     </script>

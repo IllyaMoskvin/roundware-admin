@@ -64,12 +64,25 @@
 
         function tagBeforeDrop( event ) {
 
-            // TODO: Determine which tree was the destination
-            // TODO: Ignore if the node was dropped in the tags tree
-            // TODO: Modify event.source.cloneModel to match TagRelationship model
-            // TODO: Determine dest parent node + set parent_id accordingly
+            var relationship = {};
 
-            console.log( event );
+            // Determine which tree was the destination
+            var dest = event.dest.nodesScope.$treeScope.$element.attr('id');
+
+            // Ignore if the node was dropped in the tags tree
+            if( dest == 'rw-tree-tags' ) {
+                return false;
+            }
+
+            // Determine dest parent node + set parent_id accordingly.
+            // If node is being dropped directly into the root of the tree,
+            // parent_id will be set to undefined due to absence of data attr.
+            relationship.parent_id = event.dest.nodesScope.$element.attr('data-parent-id');
+
+            // Get tag info from event.source.cloneModel
+            relationship.tag_id = event.source.cloneModel.id;
+
+            console.log( relationship );
 
             return false;
 
