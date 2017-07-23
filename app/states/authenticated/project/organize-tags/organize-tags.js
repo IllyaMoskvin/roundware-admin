@@ -20,7 +20,12 @@
         // Even though nodes will be dropped into relationships,
         // beforeDrop for tags needs to be configured on the tag tree
         vm.tagTreeOptions = {
+            beforeDrag: beforeDrag,
             beforeDrop: tagBeforeDrop,
+        };
+
+        vm.relationshipTreeOptions = {
+            beforeDrag: beforeDrag,
         };
 
         vm.getTag = getTag;
@@ -60,6 +65,14 @@
 
                 console.log( vm.tree );
             }
+
+        }
+
+
+        function beforeDrag( event ) {
+
+            // Prevent dragging if there's an ongoing server operation
+            return !vm.saving;
 
         }
 
