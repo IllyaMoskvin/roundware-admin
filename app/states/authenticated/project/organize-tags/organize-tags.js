@@ -41,9 +41,16 @@
 
             $scope.$watch( 'vm.relationships', nestRelationships, true );
 
-            vm.relationships = TagRelationshipService.list().cache.clean;
-            vm.categories = TagCategoryService.list().cache.clean;
-            vm.tags = TagService.list().cache.clean;
+            // Load tags first to avoid duplicate server calls
+            var request = TagService.list();
+
+            request.promise.then( function() {
+
+                vm.tags = request.cache.clean;
+                vm.categories = TagCategoryService.list().cache.clean;
+                vm.relationships = TagRelationshipService.list().cache.clean;
+
+            });
 
         }
 
@@ -57,8 +64,20 @@
 
         function nestRelationships( items, old ) {
 
+            if( !items ) {
+                return;
+            }
+
+            // Let's make tag accessible directly
+            // This should make it easier to access the tag's loc strs
+            items.forEach( function( item, index ) {
+                item.tag = vm.getTag( item.tag_id );
+            });
+
+            // Convert from flat to nested
             var nested = convert( items );
 
+            // TODO: Determine what causes this?
             if( typeof nested !== 'undefined' ) {
 
                 vm.tree = nested.nodes;
@@ -115,7 +134,10 @@
             // TODO: Prevent drop if that tag has already been nested under the destination?
 
             // TODO: Temporarily add the relationship to the destination?
+            // event.source.cloneModel = relationship;
+
             // TODO: If so, set dest.index to the last position?
+            // event.dest.index = event.dest.nodesScope.childNodes().length - 1;
 
             return false;
 
@@ -126,16 +148,21 @@
         function convert( array ){
             var map = {};
             for(var i = 0; i < array.length; i++) {
-                var obj = array[i];
+
+                // Cloning is necessary to avoid triggering $watch
+                var obj = angular.merge({}, array[i]);
+
                 if(!(obj.id in map)){
                     map[obj.id] = obj;
                     map[obj.id].nodes = [];
                 }
 
+                // TODO: This appears to be dead code?
                 if(typeof map[obj.id].id == 'undefined'){
                     map[obj.id].id = obj.id;
                     map[obj.id].tag_id = obj.tag_id;
                     map[obj.id].parent_id = obj.parent_id;
+                    // console.log( map[obj.id] );
                 }
 
                 var parent = obj.parent_id || '-';

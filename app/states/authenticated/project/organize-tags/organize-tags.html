@@ -21,7 +21,7 @@
     <!-- Nested node template for tag relationships -->
     <script type="text/ng-template" id="relationship-node.html">
         <div ui-tree-handle>
-            {{ vm.getTag( node.tag_id ).value }}
+            {{ node.tag.value }}
         </div>
         <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
             <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
