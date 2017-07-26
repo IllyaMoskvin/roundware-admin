@@ -21,7 +21,15 @@
     <!-- Nested node template for tag relationships -->
     <script type="text/ng-template" id="relationship-node.html">
         <div ui-tree-handle>
-            {{ node.tag.value }}
+
+            <span>{{ node.tag.value }}</span>
+
+            <button data-nodrag
+                class="btn btn-xs btn-default pull-right"
+                modal-href="tag-edit"
+                modal-data="{ id: node.tag.id }"
+            ><span class="glyphicon glyphicon-edit"></span></button>
+
         </div>
         <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
             <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
