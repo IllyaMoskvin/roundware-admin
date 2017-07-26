@@ -29,6 +29,7 @@
         };
 
         vm.getTag = getTag;
+        vm.deleteRelationship = deleteRelationship;
 
         vm.saving = false;
 
@@ -61,6 +62,24 @@
 
         }
 
+        // Delete cascades serverside:
+        // See roundware/rw/migrations/0016_tags_uigroups_api2.py#L74
+        function deleteRelationship( node ) {
+
+            vm.saving = true;
+
+            TagRelationshipService.delete( node.id ).promise.then( function() {
+
+                Notification.warning( { message: 'Relationship(s) deleted!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
+
+        }
+
 
         function nestRelationships( items, old ) {
 
@@ -77,13 +96,9 @@
             // Convert from flat to nested
             var nested = convert( items );
 
-            // TODO: Determine what causes this?
-            if( typeof nested !== 'undefined' ) {
-
-                vm.tree = nested.nodes;
-
-                console.log( vm.tree );
-            }
+            // nested becomes undefined if the array is empty
+            // This resets tree if the last item is deleted
+            vm.tree = nested ? nested.nodes : [];
 
         }
 
