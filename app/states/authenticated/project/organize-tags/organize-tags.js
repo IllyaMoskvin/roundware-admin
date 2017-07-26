@@ -28,7 +28,6 @@
             beforeDrag: beforeDrag,
         };
 
-        vm.getTag = getTag;
         vm.deleteRelationship = deleteRelationship;
 
         vm.saving = false;
@@ -56,12 +55,6 @@
         }
 
 
-        function getTag( tag_id ) {
-
-            return TagService.find( tag_id ).clean;
-
-        }
-
         // Delete cascades serverside:
         // See roundware/rw/migrations/0016_tags_uigroups_api2.py#L74
         function deleteRelationship( node ) {
@@ -83,14 +76,18 @@
 
         function nestRelationships( items, old ) {
 
+            // Do nothing if there's nothing to parse
             if( !items ) {
                 return;
             }
 
-            // Let's make tag accessible directly
-            // This should make it easier to access the tag's loc strs
+            // Cloning is necessary to avoid triggering $watch
+            items = angular.merge([], items);
+
+            // Let's make tag accessible directly: this makes
+            // it easier to access the tag's localized strings
             items.forEach( function( item, index ) {
-                item.tag = vm.getTag( item.tag_id );
+                item.tag = TagService.find( item.tag_id ).clean;
             });
 
             // Convert from flat to nested
@@ -154,6 +151,8 @@
             // TODO: If so, set dest.index to the last position?
             // event.dest.index = event.dest.nodesScope.childNodes().length - 1;
 
+            // We wait for the server to return + update the relationship collection
+            // When this happens, $watch ensures that the tree gets updated as well
             return false;
 
         }
@@ -161,34 +160,29 @@
 
         // Adapted from https://stackoverflow.com/a/31715170/1943591
         function convert( array ){
+
             var map = {};
-            for(var i = 0; i < array.length; i++) {
 
-                // Cloning is necessary to avoid triggering $watch
-                var obj = angular.merge({}, array[i]);
+            array.forEach( function( obj ) {
 
-                if(!(obj.id in map)){
+                if(!(obj.id in map)) {
                     map[obj.id] = obj;
                     map[obj.id].nodes = [];
                 }
 
-                // TODO: This appears to be dead code?
-                if(typeof map[obj.id].id == 'undefined'){
-                    map[obj.id].id = obj.id;
-                    map[obj.id].tag_id = obj.tag_id;
-                    map[obj.id].parent_id = obj.parent_id;
-                    // console.log( map[obj.id] );
-                }
-
                 var parent = obj.parent_id || '-';
+
                 if(!(parent in map)){
                     map[parent] = {};
                     map[parent].nodes = [];
                 }
 
-                map[parent].nodes.push(map[obj.id]);
-            }
+                map[parent].nodes.push( map[obj.id] );
+
+            });
+
             return map['-'];
+
         }
 
     }
