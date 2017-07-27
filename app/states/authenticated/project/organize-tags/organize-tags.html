@@ -12,7 +12,17 @@
 
     <hr/>
 
-    <div ui-tree="vm.tagTreeOptions" id="rw-tree-tags" data-nodrop-enabled="true" data-clone-enabled="true">
+    <div ng-show="vm.tagTree.length < 1">
+        <p ng-show="!vm.loaded">Loading tags...</p>
+        <p ng-show="vm.loaded && vm.show_category == 0">It appears that you haven't defined any tags yet.</p>
+        <p ng-show="vm.loaded && vm.show_category != 0">No tags found for this category.</p>
+    </div>
+
+    <div ng-show="vm.tagTree.length > 0"
+         id="rw-tree-tags"
+         ui-tree="vm.tagTreeOptions"
+         data-nodrop-enabled="true"
+         data-clone-enabled="true">
 
         <ol ui-tree-nodes="" ng-model="vm.tagTree">
             <li ng-repeat="tag in vm.tagTree" ui-tree-node>

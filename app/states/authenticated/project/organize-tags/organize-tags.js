@@ -35,6 +35,7 @@
 
         vm.deleteRelationship = deleteRelationship;
 
+        vm.loaded = false;
         vm.saving = false;
 
         activate();
@@ -57,6 +58,8 @@
                 vm.tags = request.cache.clean;
                 vm.categories = TagCategoryService.list().cache.clean;
                 vm.relationships = TagRelationshipService.list().cache.clean;
+
+                vm.loaded = true;
 
             });
 
