@@ -26,6 +26,7 @@
 
         vm.relationshipTreeOptions = {
             beforeDrag: beforeDrag,
+            beforeDrop: relationshipBeforeDrop,
         };
 
         vm.deleteRelationship = deleteRelationship;
@@ -158,6 +159,39 @@
 
             // We wait for the server to return + update the relationship collection
             // When this happens, $watch ensures that the tree gets updated as well
+            return false;
+
+        }
+
+
+        function relationshipBeforeDrop( event ) {
+
+            // This is the "enhanced" relationship, not the one in the cache
+            // To avoid updating extraneous fields, don't send it directly
+            var id = event.source.nodeScope.$modelValue.id;
+
+            // Determine dest parent node + set parent_id accordingly, same as above
+            // Unlike above, we need to convert undefined to null, so DRF accepts it
+            var parent_id = event.dest.nodesScope.$element.attr('data-parent-id') || null;
+
+            // Save the tag relationship to server
+            vm.saving = true;
+
+            TagRelationshipService.update( id, {
+
+                parent_id: parent_id
+
+            }).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
+
+            // Again, wait for server update to cascade to tree
             return false;
 
         }
