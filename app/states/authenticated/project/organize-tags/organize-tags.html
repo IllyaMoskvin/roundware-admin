@@ -1,11 +1,25 @@
 <div class="rw-organize-tags">
 
+    <div class="form-group row">
+        <label for="category" class="col-sm-2 control-label">Category</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="category" ng-model="vm.show_category" integer>
+                <option value="0">All</option>
+                <option ng-repeat="option in vm.categories" value="{{option.id}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <hr/>
+
     <div ui-tree="vm.tagTreeOptions" id="rw-tree-tags" data-nodrop-enabled="true" data-clone-enabled="true">
-        <ol ui-tree-nodes="" ng-model="vm.tags">
-            <li ng-repeat="tag in vm.tags" ui-tree-node>
+
+        <ol ui-tree-nodes="" ng-model="vm.tagTree">
+            <li ng-repeat="tag in vm.tagTree" ui-tree-node>
                 {{ tag.value }}
             </li>
         </ol>
+
     </div>
 
     <hr/>

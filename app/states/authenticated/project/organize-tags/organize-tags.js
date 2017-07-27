@@ -14,7 +14,11 @@
         vm.categories = null;
         vm.tags = null;
 
-        // Only the relationship tree needs a dedicated array
+        // Filters for the trees
+        vm.show_category = 0; // 0 = all
+
+        // Dedicated arrays for the trees
+        vm.tagTree = [];
         vm.relationshipTree = [];
 
         // Even though nodes will be dropped into relationships,
@@ -40,7 +44,10 @@
 
         function activate() {
 
+            $scope.$watch( 'vm.tags', nestTags, true );
             $scope.$watch( 'vm.relationships', nestRelationships, true );
+
+            $scope.$watch( 'vm.show_category', nestTags, true );
 
             // Load tags first to avoid duplicate server calls
             var request = TagService.list();
@@ -70,6 +77,32 @@
 
                 vm.saving = false;
 
+            });
+
+        }
+
+
+        function nestTags( nv, ov ) {
+
+            // Function is triggered by changes in show_categories
+            // Therefore we need to grab the tags directly, not from arg
+            // Cloning is necessary to avoid triggering $watch
+            var tags = angular.merge([], vm.tags);
+
+            // Do nothing if there's nothing to parse
+            if( !tags ) {
+                return;
+            }
+
+            // Special case for wildcard
+            if( vm.show_category == 0) {
+                vm.tagTree = tags;
+                return;
+            }
+
+            // Filter items by currently active category
+            vm.tagTree = tags.filter( function( tag ) {
+                return tag.tag_category_id == vm.show_category;
             });
 
         }
