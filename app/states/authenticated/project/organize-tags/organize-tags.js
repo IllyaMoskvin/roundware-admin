@@ -4,11 +4,13 @@
         .module('app')
         .controller('OrganizeTagsController', Controller);
 
-    Controller.$inject = ['$scope', 'TagService', 'TagCategoryService', 'TagRelationshipService', 'Notification'];
+    Controller.$inject = ['$scope', 'LanguageService', 'TagService', 'TagCategoryService', 'TagRelationshipService', 'Notification'];
 
-    function Controller($scope, TagService, TagCategoryService, TagRelationshipService, Notification) {
+    function Controller($scope, LanguageService, TagService, TagCategoryService, TagRelationshipService, Notification) {
 
         var vm = this;
+
+        vm.languages = null;
 
         vm.relationships = null;
         vm.categories = null;
@@ -16,6 +18,7 @@
 
         // Filters for the trees
         vm.show_category = 0; // 0 = all
+        vm.show_language = 'en'; // English, default language? See migration #18.
 
         // Dedicated arrays for the trees
         vm.tagTree = [];
@@ -49,11 +52,16 @@
             $scope.$watch( 'vm.relationships', nestRelationships, true );
 
             $scope.$watch( 'vm.show_category', nestTags, true );
+            $scope.$watch( 'vm.show_language', nestRelationships, true );
 
             // Load tags first to avoid duplicate server calls
             var request = TagService.list();
 
+            // TODO: Refactor this to be cleaner
             request.promise.then( function() {
+
+                // TODO: Only show this project's languages
+                vm.languages = LanguageService.list().cache.clean;
 
                 vm.tags = request.cache.clean;
                 vm.categories = TagCategoryService.list().cache.clean;
@@ -112,6 +120,9 @@
 
 
         function nestRelationships( items, old ) {
+
+            // Function might be triggered by changes in show_languages
+            var items = vm.relationships;
 
             // Do nothing if there's nothing to parse
             if( !items ) {
