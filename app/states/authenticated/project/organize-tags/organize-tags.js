@@ -15,7 +15,7 @@
         vm.tags = null;
 
         // Only the relationship tree needs a dedicated array
-        vm.tree = [];
+        vm.relationshipTree = [];
 
         // Even though nodes will be dropped into relationships,
         // beforeDrop for tags needs to be configured on the tag tree
@@ -101,7 +101,7 @@
 
             // nested becomes undefined if the array is empty
             // This resets tree if the last item is deleted
-            vm.tree = nested ? nested.nodes : [];
+            vm.relationshipTree = nested ? nested.nodes : [];
 
         }
 

@@ -11,8 +11,8 @@
     <hr/>
 
     <div ui-tree="vm.relationshipTreeOptions" id="rw-tree-tag-relationships">
-        <ol ui-tree-nodes="" ng-model="vm.tree">
-            <li ng-repeat="node in vm.tree" ui-tree-node ng-include="'relationship-node.html'">
+        <ol ui-tree-nodes="" ng-model="vm.relationshipTree">
+            <li ng-repeat="node in vm.relationshipTree" ui-tree-node ng-include="'relationship-node.html'">
                 {{ tag.value }}
             </li>
         </ol>
