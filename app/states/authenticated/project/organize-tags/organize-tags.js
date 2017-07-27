@@ -87,11 +87,16 @@
             // Let's make tag accessible directly: this makes
             // it easier to access the tag's localized strings
             items.forEach( function( item, index ) {
-                item.tag = TagService.find( item.tag_id ).clean;
+
+                var tag = TagService.find( item.tag_id ).clean;
+
+                // Copy the tag to avoid modifying original
+                item.tag = angular.merge({}, tag);
+
             });
 
             // Convert from flat to nested
-            var nested = convert( items );
+            var nested = flat2nested( items );
 
             // nested becomes undefined if the array is empty
             // This resets tree if the last item is deleted
@@ -159,7 +164,7 @@
 
 
         // Adapted from https://stackoverflow.com/a/31715170/1943591
-        function convert( array ){
+        function flat2nested( array ){
 
             var map = {};
 
@@ -168,6 +173,11 @@
                 if(!(obj.id in map)) {
                     map[obj.id] = obj;
                     map[obj.id].nodes = [];
+                }
+
+                // TODO: Figure out how this works? Fixes unsorted.
+                if(typeof map[obj.id].id == 'undefined'){
+                    map[obj.id] = angular.merge( map[obj.id], obj );
                 }
 
                 var parent = obj.parent_id || '-';
