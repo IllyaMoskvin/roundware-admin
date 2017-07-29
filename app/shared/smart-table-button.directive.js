@@ -10,7 +10,7 @@
     function Directive() {
         return {
             restrict: 'E',
-            template: '<a href="javascript:;" class="btn btn-sm btn-default">'
+            template: '<a href="javascript:;" class="btn btn-sm btn-default btn-square">'
                     + '<span class="glyphicon" ng-class="icon"></span>'
                     + '</a>',
             link: function( scope, element, attr ) {
