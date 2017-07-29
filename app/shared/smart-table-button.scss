@@ -1,0 +1,17 @@
+.btn-square {
+
+	&.btn-sm {
+		padding: 5px 8px;
+		border-radius: 5px;
+	}
+
+	&.btn-xs {
+		padding: 2px 5px;
+		margin: 0 2px;
+	}
+
+	.glyphicon-remove {
+		vertical-align: text-top;
+	}
+
+}

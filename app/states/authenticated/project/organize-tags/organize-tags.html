@@ -1,0 +1,84 @@
+<div class="rw-organize-tags">
+
+    <!-- Filter tags by category -->
+    <div class="form-group row">
+        <label for="category" class="col-sm-2 control-label">Category</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="category" ng-model="vm.show_category" integer>
+                <option value="0">All</option>
+                <option ng-repeat="option in vm.categories" value="{{option.id}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <hr/>
+
+    <!-- Give the user feedback when the tag tree is empty -->
+    <div ng-show="vm.tagTree.length < 1">
+        <p ng-show="!vm.loaded">Loading tags...</p>
+        <p ng-show="vm.loaded && vm.show_category == 0">It appears that you haven't defined any tags yet.</p>
+        <p ng-show="vm.loaded && vm.show_category != 0">No tags found for this category.</p>
+    </div>
+
+    <!-- Tag tree (filtered) -->
+    <div ng-show="vm.tagTree.length > 0"
+         id="rw-tree-tags"
+         ui-tree="vm.tagTreeOptions"
+         data-nodrop-enabled="true"
+         data-clone-enabled="true">
+
+        <ol ui-tree-nodes="" ng-model="vm.tagTree">
+            <li ng-repeat="tag in vm.tagTree" ui-tree-node>
+                {{ tag.value }}
+            </li>
+        </ol>
+
+    </div>
+
+    <hr/>
+
+    <!-- Select language for localized strings display -->
+    <div class="form-group row">
+        <label for="language" class="col-sm-2 control-label">Language</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="language" ng-model="vm.show_language">
+                <option ng-repeat="option in vm.languages" value="{{option.language_code}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Tag relationship tree -->
+    <div ui-tree="vm.relationshipTreeOptions" id="rw-tree-tag-relationships">
+        <ol ui-tree-nodes="" ng-model="vm.relationshipTree">
+            <li ng-repeat="node in vm.relationshipTree" ui-tree-node ng-include="'relationship-node.html'"></li>
+        </ol>
+    </div>
+
+    <!-- Nested node template for tag relationships -->
+    <script type="text/ng-template" id="relationship-node.html">
+        <div ui-tree-handle>
+
+            <span>{{ node.tag.value }}</span>
+
+            <local-string language-code="vm.show_language" string-ids="node.tag.loc_msg" class="text-muted"></local-string>
+
+            <!-- TODO: Use the button directive here? -->
+
+            <button data-nodrag
+                class="btn btn-xs btn-default btn-square pull-right"
+                modal-href="tag-edit"
+                modal-data="{ id: node.tag.id }"
+            ><span class="glyphicon glyphicon-edit"></span></button>
+
+            <button data-nodrag
+                class="btn btn-xs btn-default btn-square pull-right"
+                ng-click="vm.deleteRelationship( node )"
+            ><span class="glyphicon glyphicon-remove"></span></button>
+
+        </div>
+        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
+            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
+        </ol>
+    </script>
+
+</div>

@@ -34,6 +34,10 @@
     <!-- angular-smart-table -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-smart-table/2.1.8/smart-table.min.js"></script>
 
+    <!-- angular-ui-tree -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.22.5/angular-ui-tree.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.22.5/angular-ui-tree.min.js"></script>
+
     <!-- Site-specific styles, compiled from SCSS using grunt -->
     <link href="app.css" rel="stylesheet">
 
@@ -59,6 +63,7 @@
     <script src="shared/modal-href.directive.js"></script>
     <script src="shared/check-list.directive.js"></script>
     <script src="shared/form-local-inputs.directive.js"></script>
+    <script src="shared/static-local-string.directive.js"></script>
 
     <!-- Services -->
     <script src="services/api.service.js"></script>
@@ -73,6 +78,7 @@
     <script src="models/project.service.js"></script>
     <script src="models/tag.service.js"></script>
     <script src="models/tag-category.service.js"></script>
+    <script src="models/tag-relationship.service.js"></script>
 
     <!-- Modals -->
     <script src="modals/tag/tag-edit.js"></script>
@@ -87,6 +93,7 @@
     <script src="states/authenticated/project/project.js"></script>
     <script src="states/authenticated/project/overview/overview.js"></script>
     <script src="states/authenticated/project/define-tags/define-tags.js"></script>
+    <script src="states/authenticated/project/organize-tags/organize-tags.js"></script>
 
     <!-- Load the app itself last -->
     <script src="app.route.js"></script>
