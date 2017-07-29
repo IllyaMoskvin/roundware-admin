@@ -97,6 +97,15 @@
                 data: {
                     cssClassnames: 'rw-state-organize-tags'
                 }
+            })
+            .state('project.build-ui', {
+                url: '/build-ui',
+                templateUrl: 'states/authenticated/project/build-ui/build-ui.html',
+                controller: 'BuildUiController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-build-ui'
+                }
             });
 
     }
