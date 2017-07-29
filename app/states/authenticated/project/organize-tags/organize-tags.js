@@ -95,7 +95,7 @@
 
         function nestTags( nv, ov ) {
 
-            // Function is triggered by changes in show_categories
+            // Function might be triggered by changes in show_categories
             // Therefore we need to grab the tags directly, not from arg
             // Cloning is necessary to avoid triggering $watch
             var tags = angular.merge([], vm.tags);
@@ -180,8 +180,6 @@
 
             // Get tag info from event.source.cloneModel
             relationship.tag_id = event.source.cloneModel.id;
-
-            console.log( relationship );
 
             // Save the tag relationship to server
             vm.saving = true;
