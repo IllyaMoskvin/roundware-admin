@@ -1,3 +1,4 @@
+<!-- UI Mode select -->
 <div class="form-group row">
     <div class="col-sm-2">
         <p class="form-control-static"><strong>UI Mode</strong></p>
@@ -11,4 +12,38 @@
 
         </div>
     </div>
+</div>
+
+<hr/>
+
+<!-- UI Groups -->
+<div id="rw-tree-ui-groups"
+     ui-tree
+     data-nodrop-enabled="true"
+     data-clone-enabled="true">
+
+    <ol ui-tree-nodes="" ng-model="vm.groupTree">
+        <li ng-repeat="group in vm.groupTree" ui-tree-node>
+            <p>{{ group.name }}</p>
+            <p>Category: {{ group.tag_category.name }}</p>
+        </li>
+    </ol>
+
+</div>
+
+<hr/>
+
+<!-- UI Items -->
+<div id="rw-tree-ui-items"
+     ui-tree
+     data-nodrop-enabled="true"
+     data-clone-enabled="true">
+
+    <ol ui-tree-nodes="" ng-model="vm.itemTree">
+        <li ng-repeat="item in vm.itemTree" ui-tree-node>
+            <p>Group: {{ item.ui_group_id }}</p>
+            <p>Tag: {{ item.tag.value }}</p>
+        </li>
+    </ol>
+
 </div>
