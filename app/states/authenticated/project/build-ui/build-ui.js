@@ -32,7 +32,7 @@
         ];
 
         // Currently active mode
-        vm.mode = vm.ui_modes[0].value;
+        vm.mode = vm.ui_modes[1].value;
 
         activate();
 
@@ -132,6 +132,17 @@
                 });
 
                 return groups.length > 0;
+
+            });
+
+            // Add the groups to items for reference
+            items.forEach( function( item, index ) {
+
+                var group = UiGroupService.find( item.ui_group_id ).clean;
+
+                // Copy the group to avoid modifying original
+                // TODO: Does this interfere w/ binding re: edits of groups
+                item.group = angular.merge({}, group);
 
             });
 

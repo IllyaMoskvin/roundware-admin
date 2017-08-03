@@ -41,7 +41,7 @@
 
     <ol ui-tree-nodes="" ng-model="vm.itemTree">
         <li ng-repeat="item in vm.itemTree" ui-tree-node>
-            <p>Group: {{ item.ui_group_id }}</p>
+            <p>Group index [id]: {{ item.group.index }} [{{ item.group.id }}]</p>
             <p>Tag: {{ item.tag.value }}</p>
         </li>
     </ol>
