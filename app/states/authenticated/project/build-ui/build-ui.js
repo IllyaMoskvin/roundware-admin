@@ -4,9 +4,9 @@
         .module('app')
         .controller('BuildUiController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', 'UiGroupService', 'UiItemService', 'TagCategoryService', 'TagService'];
+    Controller.$inject = ['$scope', '$q', 'UiGroupService', 'UiItemService', 'TagCategoryService', 'TagService', 'Notification'];
 
-    function Controller($scope, $q, UiGroupService, UiItemService, TagCategoryService, TagService) {
+    function Controller($scope, $q, UiGroupService, UiItemService, TagCategoryService, TagService, Notification) {
 
         var vm = this;
 
@@ -24,6 +24,7 @@
         vm.itemTreeOptions = {
             accept: itemTreeAccept,
             dropped: itemTreeDropped,
+            beforeDrag: beforeDrag,
         };
 
         // TODO: Avoid hard-coding this, serverside?
@@ -40,6 +41,8 @@
 
         // Currently active mode
         vm.mode = vm.ui_modes[1].value;
+
+        vm.saving = false;
 
         activate();
 
@@ -94,13 +97,18 @@
 
         function nestGroups() {
 
-            // Cloning is necessary to avoid triggering $watch
-            var groups = angular.merge([], vm.ui_groups);
-
-            // Do nothing if there's nothing to parse
-            if( groups.length < 1 ) {
+            // Do nothing if there are pending requests
+            if( vm.saving ) {
                 return;
             }
+
+            // Do nothing if there's nothing to parse
+            if( !vm.ui_groups || vm.ui_groups.length < 1 ) {
+                return;
+            }
+
+            // Cloning is necessary to avoid triggering $watch
+            var groups = angular.merge([], vm.ui_groups);
 
             // Filter groups by currently active ui mode
             groups = groups.filter( function( group ) {
@@ -125,13 +133,18 @@
 
         function nestItems() {
 
-            // Cloning is necessary to avoid triggering $watch
-            var items = angular.merge([], vm.ui_items);
-
-            // Do nothing if there's nothing to parse
-            if( items.length < 1 ) {
+            // Do nothing if there are pending requests
+            if( vm.saving ) {
                 return;
             }
+
+            // Do nothing if there's nothing to parse
+            if( !vm.ui_items || vm.ui_items.length < 1 ) {
+                return;
+            }
+
+            // Cloning is necessary to avoid triggering $watch
+            var items = angular.merge([], vm.ui_items);
 
             // Filter items by currently active ui groups.
             // Since nestGroups() has been called first,
@@ -184,6 +197,14 @@
         }
 
 
+        function beforeDrag( event ) {
+
+            // Prevent dragging if there's an ongoing server operation
+            return !vm.saving;
+
+        }
+
+
         // We want to allow UI Items to be re-ordered w/in their heirarchy,
         // but not be moved outside of their "cannonical" parent (UI Item)
         function itemTreeAccept( sourceNodeScope, destNodesScope, destIndex ) {
@@ -200,8 +221,14 @@
         // Now, we need to reorder all of that parent-node's children
         function itemTreeDropped( event ) {
 
+            // Do nothing if the position hasn't changed
+            if( event.dest.index == event.source.index ) {
+                return;
+            }
+
             var nodes = event.dest.nodesScope.childNodes();
 
+            // Intermediate step to gather up the data we need
             var items = nodes.map( function( node ) {
 
                 return {
@@ -211,26 +238,30 @@
 
             });
 
-            // Start building promise chain
-            var promise = $q.when(true);
+            // Save the UI Items to server
+            vm.saving = true;
 
-            items.forEach( function( item ) {
+            var promises = items.map( function( item ) {
 
-                // Append the update to promise chain
-                promise.then( function( ) {
+                return UiItemService.update( item.id, {
 
-                    return UiItemService.update( item.id, {
+                    // Roundware's indexes are 1-based
+                    index: item.index + 1
 
-                        // Roundware's indexes are 1-based
-                        index: item.index + 1
-
-                    }).promise;
-
-                });
+                }).promise;
 
             });
 
-            // TODO: Alert the user on success
+            // Alert the user on success
+            $q.all( promises ).then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
 
         }
 
