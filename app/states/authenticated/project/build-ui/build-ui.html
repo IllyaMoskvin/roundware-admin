@@ -36,7 +36,7 @@
     <hr/>
 
     <!-- UI Items -->
-    <div id="rw-tree-ui-items" ui-tree>
+    <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
 
         <ol ui-tree-nodes="" ng-model="vm.itemTree">
             <li ng-repeat="node in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
@@ -49,7 +49,7 @@
         <div ui-tree-handle>
             <span>{{ node.group.index }} / {{ node.index }} / {{ node.tag.value }}</span>
         </div>
-        <ol ui-tree-nodes="" ng-model="node.nodes">
+        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
             <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'ui-item-node.html'"></li>
         </ol>
     </script>

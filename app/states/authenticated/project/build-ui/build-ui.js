@@ -16,8 +16,15 @@
         vm.categories = null;
         vm.tags = null;
 
+        // Dedicated arrays for the trees
         vm.groupTree = [];
         vm.itemTree = [];
+
+        // Options for the trees
+        vm.itemTreeOptions = {
+            accept: itemTreeAccept,
+            dropped: itemTreeDropped,
+        };
 
         // TODO: Avoid hard-coding this, serverside?
         vm.ui_modes = [
@@ -175,6 +182,58 @@
             vm.itemTree = nested ? nested.nodes : [];
 
         }
+
+
+        // We want to allow UI Items to be re-ordered w/in their heirarchy,
+        // but not be moved outside of their "cannonical" parent (UI Item)
+        function itemTreeAccept( sourceNodeScope, destNodesScope, destIndex ) {
+
+            var parent_id = sourceNodeScope.$modelValue.parent_id;
+
+            var dest_id = destNodesScope.$element.attr('data-parent-id') || null;
+
+            return parent_id == dest_id;
+
+        }
+
+        // We ensured that the item can only be dropped within its parent
+        // Now, we need to reorder all of that parent-node's children
+        function itemTreeDropped( event ) {
+
+            var nodes = event.dest.nodesScope.childNodes();
+
+            var items = nodes.map( function( node ) {
+
+                return {
+                    id: node.$modelValue.id,
+                    index: node.index(),
+                }
+
+            });
+
+            // Start building promise chain
+            var promise = $q.when(true);
+
+            items.forEach( function( item ) {
+
+                // Append the update to promise chain
+                promise.then( function( ) {
+
+                    return UiItemService.update( item.id, {
+
+                        // Roundware's indexes are 1-based
+                        index: item.index + 1
+
+                    }).promise;
+
+                });
+
+            });
+
+            // TODO: Alert the user on success
+
+        }
+
 
         // Adapted from https://stackoverflow.com/a/31715170/1943591
         function flat2nested( array ){
