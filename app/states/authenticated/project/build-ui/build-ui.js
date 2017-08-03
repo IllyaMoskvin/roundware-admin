@@ -167,10 +167,44 @@
                 item.tag = TagService.find( item.tag_id ).clean;
             });
 
-            vm.itemTree = items;
+            // Convert from flat to nested
+            var nested = flat2nested( items );
 
-            // TODO: Only show items for currently active groups? (ui_group_id)
-            // TODO: Nest items w/ respect to ui groups
+            // nested becomes undefined if the array is empty
+            // This resets tree if the last item is deleted
+            vm.itemTree = nested ? nested.nodes : [];
+
+        }
+
+        // Adapted from https://stackoverflow.com/a/31715170/1943591
+        function flat2nested( array ){
+
+            var map = {};
+
+            array.forEach( function( obj ) {
+
+                if(!(obj.id in map)) {
+                    map[obj.id] = obj;
+                    map[obj.id].nodes = [];
+                }
+
+                // TODO: Figure out how this works? Fixes unsorted.
+                if(typeof map[obj.id].id == 'undefined'){
+                    map[obj.id] = angular.merge( map[obj.id], obj );
+                }
+
+                var parent = obj.parent_id || '-';
+
+                if(!(parent in map)){
+                    map[parent] = {};
+                    map[parent].nodes = [];
+                }
+
+                map[parent].nodes.push( map[obj.id] );
+
+            });
+
+            return map['-'];
 
         }
 
