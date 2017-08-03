@@ -100,6 +100,11 @@
                 return group.ui_mode == vm.mode;
             });
 
+            // Sort groups by their indexes
+            groups.sort( function( a, b ) {
+                return a.index - b.index;
+            });
+
             // Add tag_category (titles) to ease rendering
             groups.forEach( function( group ) {
                 group.tag_category = TagCategoryService.find( group.tag_category_id ).clean;
@@ -143,6 +148,17 @@
                 // Copy the group to avoid modifying original
                 // TODO: Does this interfere w/ binding re: edits of groups
                 item.group = angular.merge({}, group);
+
+            });
+
+            // Sort items by (1) its group's index, (2) its own index
+            items.sort( function( a, b ) {
+
+                if( a.group.index == b.group.index ) {
+                    return a.index - b.index;
+                }
+
+                return a.group.index - b.group.index;
 
             });
 
