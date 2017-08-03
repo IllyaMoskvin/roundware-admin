@@ -34,16 +34,23 @@
 <hr/>
 
 <!-- UI Items -->
-<div id="rw-tree-ui-items"
-     ui-tree
-     data-nodrop-enabled="true"
-     data-clone-enabled="true">
+<div id="rw-tree-ui-items" ui-tree>
 
     <ol ui-tree-nodes="" ng-model="vm.itemTree">
-        <li ng-repeat="item in vm.itemTree" ui-tree-node>
-            <p>Group index [id]: {{ item.group.index }} [{{ item.group.id }}]</p>
-            <p>Tag: {{ item.tag.value }}</p>
-        </li>
+        <li ng-repeat="item in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
     </ol>
 
 </div>
+
+<!-- Nested node template for UI Items -->
+<script type="text/ng-template" id="ui-item-node.html">
+    <div ui-tree-handle>
+
+        <p>Group index [id]: {{ item.group.index }} [{{ item.group.id }}]</p>
+        <p>Tag: {{ item.tag.value }}</p>
+
+    </div>
+    <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
+        <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'ui-item-node.html'"></li>
+    </ol>
+</script>
