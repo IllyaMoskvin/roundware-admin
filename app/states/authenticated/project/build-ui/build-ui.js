@@ -21,6 +21,12 @@
         vm.itemTree = [];
 
         // Options for the trees
+        vm.groupTreeOptions = {
+            // TODO: Prevent UI Items from being dropped here
+            dropped: groupTreeDropped,
+            beforeDrag: beforeDrag,
+        };
+
         vm.itemTreeOptions = {
             accept: itemTreeAccept,
             dropped: itemTreeDropped,
@@ -209,6 +215,8 @@
         // but not be moved outside of their "cannonical" parent (UI Item)
         function itemTreeAccept( sourceNodeScope, destNodesScope, destIndex ) {
 
+            // TODO: Prevent UI Groups from being dropped here
+
             var parent_id = sourceNodeScope.$modelValue.parent_id;
 
             var dest_id = destNodesScope.$element.attr('data-parent-id') || null;
@@ -262,6 +270,34 @@
                 vm.saving = false;
 
             });
+
+        }
+
+
+        function groupTreeDropped( event ) {
+
+            // Do nothing if the position hasn't changed
+            if( event.dest.index == event.source.index ) {
+                return;
+            }
+
+            var nodes = event.dest.nodesScope.childNodes();
+
+            // Intermediate step to gather up the data we need
+            var groups = nodes.map( function( node ) {
+
+                return {
+                    id: node.$modelValue.id,
+                    index: node.index(),
+                }
+
+            });
+
+            console.log( JSON.stringify( groups ) );
+
+            // TODO: Add modal to confirm reorder
+            // TODO: Save new indexes to server
+            // TODO: Delete all *relevant* UI Items on reorder
 
         }
 

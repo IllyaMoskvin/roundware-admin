@@ -19,15 +19,15 @@
     <hr/>
 
     <!-- UI Groups -->
-    <div id="rw-tree-ui-groups"
-         ui-tree
-         data-nodrop-enabled="true"
-         data-clone-enabled="true">
+    <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
 
         <ol ui-tree-nodes="" ng-model="vm.groupTree">
             <li ng-repeat="group in vm.groupTree" ui-tree-node>
-                <p>{{ group.name }}</p>
-                <p>Category: {{ group.tag_category.name }}</p>
+
+                <div ui-tree-handle>
+                    <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
+                </div>
+
             </li>
         </ol>
 
