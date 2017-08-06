@@ -13,6 +13,9 @@
             route: 'uigroups',
             wrapper: 'ui_groups',
             refresh: true,
+            ignored: [
+                'header_text_loc',
+            ],
             mapped: [
                 {
                     incoming: 'header_text_loc_admin',

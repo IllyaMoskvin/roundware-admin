@@ -281,6 +281,10 @@
             // These functions modify the datum in place + return it
             function transformResponseDatum( datum ) {
 
+                if( settings.ignored ) {
+                    transformResponseIgnored( datum, settings.ignored );
+                }
+
                 if( settings.mapped ) {
                     transformResponseMapped( datum, settings.mapped );
                 }
@@ -293,6 +297,20 @@
 
             }
 
+            // Remove a field from the response, before anything else happens.
+            // This is useful to prevent conflicts when a reponse has a field
+            // with the same name as one of our `stored` fields defined in `mapped`
+            function transformResponseIgnored( datum, ignoredFields ) {
+
+                ignoredFields.forEach( function( field ) {
+
+                    delete datum[ field ];
+
+                });
+
+                return datum;
+
+            }
 
             // Map incoming fields into outgoing ones
             // Outgoing field names thus become the cannonical ones
