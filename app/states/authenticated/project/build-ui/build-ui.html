@@ -18,40 +18,52 @@
 
     <hr/>
 
-    <!-- UI Groups -->
-    <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
+    <div class="row">
 
-        <ol ui-tree-nodes="" ng-model="vm.groupTree">
-            <li ng-repeat="group in vm.groupTree" ui-tree-node>
+        <!-- UI Groups -->
+        <div class="col-xs-6">
 
-                <div ui-tree-handle>
-                    <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
+            <!-- UI Group Tree -->
+            <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
 
-                    <!-- TODO: Use the button directive here? -->
+                <ol ui-tree-nodes="" ng-model="vm.groupTree">
+                    <li ng-repeat="group in vm.groupTree" ui-tree-node>
 
-                    <button data-nodrag
-                        class="btn btn-xs btn-default btn-square pull-right"
-                        modal-href="ui-group-edit"
-                        modal-data="{ id: group.id }"
-                    ><span class="glyphicon glyphicon-edit"></span></button>
+                        <div ui-tree-handle>
+                            <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
 
-                </div>
+                            <!-- TODO: Use the button directive here? -->
 
-            </li>
-        </ol>
+                            <button type="button" data-nodrag
+                                class="btn btn-xs btn-default btn-square pull-right"
+                                modal-href="ui-group-edit"
+                                modal-data="{ id: group.id }"
+                            ><span class="glyphicon glyphicon-edit"></span></button>
+
+                        </div>
+
+                    </li>
+                </ol>
+
+            </div>
+
+        </div>
+
+        <!-- UI Items -->
+        <div class="col-xs-6">
+
+            <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
+
+                <ol ui-tree-nodes="" ng-model="vm.itemTree">
+                    <li ng-repeat="node in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
+                </ol>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <hr/>
-
-    <!-- UI Items -->
-    <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
-
-        <ol ui-tree-nodes="" ng-model="vm.itemTree">
-            <li ng-repeat="node in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
-        </ol>
-
-    </div>
 
     <!-- Nested node template for UI Items -->
     <script type="text/ng-template" id="ui-item-node.html">
