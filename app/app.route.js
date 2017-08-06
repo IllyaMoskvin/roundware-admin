@@ -150,6 +150,15 @@
                 params: [
                     'id'
                 ]
+            })
+            .modal('ui-group-new', {
+                templateUrl: 'modals/ui-group/ui-group.html',
+                controller: 'NewUiGroupController',
+                controllerAs: 'vm',
+                params: [
+                    'index',
+                    'ui_mode',
+                ]
             });
 
     }
