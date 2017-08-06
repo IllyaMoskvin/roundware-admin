@@ -1,0 +1,60 @@
+<form class="form-horizontal">
+
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="name" ng-model="vm.group.name">
+        </div>
+    </div>
+
+    <!-- TODO: Auto-fill this from parent controller -->
+    <div class="form-group">
+        <label for="ui_mode" class="col-sm-2 control-label">UI Mode</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="ui_mode" ng-model="vm.group.ui_mode">
+                <!-- TODO: Avoid hard-coding these serverside? -->
+                <option value="listen">Listen</option>
+                <option value="speak">Speak</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="category" class="col-sm-2 control-label">Category</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="category" ng-model="vm.group.tag_category_id" integer>
+                <option ng-repeat="option in vm.categories.clean" value="{{option.id}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- TODO: Don't hard-code these? -->
+    <div class="form-group">
+        <label for="select" class="col-sm-2 control-label">Select Methods</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="select" ng-model="vm.group.select">
+                <option value="single">single</option>
+                <option value="multi">multi</option>
+                <option value="min_one">multi_at_least_one</option>
+            </select>
+        </div>
+    </div>
+
+
+    <local-inputs model="vm.group" field="header_text_loc" title="Header Text"></local-inputs>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-default"
+                    ng-click="vm.cancel()">Cancel</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-block btn-primary"
+                    ng-click="vm.save()" ng-disabled="vm.saving">Save</button>
+        </div>
+    </div>
+
+</form>

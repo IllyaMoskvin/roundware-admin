@@ -26,6 +26,15 @@
 
                 <div ui-tree-handle>
                     <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
+
+                    <!-- TODO: Use the button directive here? -->
+
+                    <button data-nodrag
+                        class="btn btn-xs btn-default btn-square pull-right"
+                        modal-href="ui-group-edit"
+                        modal-data="{ id: group.id }"
+                    ><span class="glyphicon glyphicon-edit"></span></button>
+
                 </div>
 
             </li>

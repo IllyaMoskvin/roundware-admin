@@ -142,6 +142,14 @@
                 templateUrl: 'modals/tag-category/tag-category.html',
                 controller: 'NewTagCategoryController',
                 controllerAs: 'vm',
+            })
+            .modal('ui-group-edit', {
+                templateUrl: 'modals/ui-group/ui-group.html',
+                controller: 'EditUiGroupController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
             });
 
     }
