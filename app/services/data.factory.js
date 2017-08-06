@@ -501,6 +501,11 @@
 
                 includes.forEach( function( include ) {
 
+                    // Skip include if ignore_on_save is set
+                    if( include.ignore_on_save ) {
+                        return;
+                    }
+
                     // Skip include if the datum doesn't have this field
                     if( !datum[ include.field ] ) {
                         return;

@@ -31,6 +31,7 @@
                 {
                     field: 'ui_items',
                     model: 'UiItemService',
+                    ignore_on_save: true,
                 },
             ],
         });
