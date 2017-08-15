@@ -10,11 +10,11 @@
 
         var vm = this;
 
-        vm.ui_groups = null;
-        vm.ui_items = null;
-
         vm.categories = null;
         vm.tags = null;
+
+        vm.ui_groups = null;
+        vm.ui_items = null;
 
         // Dedicated arrays for the trees
         vm.groupTree = [];
@@ -62,33 +62,21 @@
 
             $scope.$watch( 'vm.mode', nestBoth, true );
 
-            // Load tags first to avoid duplicate server calls
-            // TODO: Loading tag categories first may also help
-            var tagRequest = TagService.list();
-            var categoryRequest = TagCategoryService.list();
+            // Desired load order: tag categories, tags, groups, items
+            $q.all({
+                'categories': TagCategoryService.list().promise,
+                'tags': TagService.list().promise,
+                'ui_groups': UiGroupService.list().promise,
+                'ui_items': UiItemService.list().promise,
+            }).then( function( caches ) {
 
-            // TODO: Refactor this to be cleaner
-            $q.all([
-                tagRequest.promise,
-                categoryRequest.promise,
-            ]).then( function() {
+                vm.categories = caches.categories.clean;
+                vm.tags = caches.tags.clean;
 
-                vm.tags = tagRequest.cache.clean;
-                vm.categories = categoryRequest.cache.clean;
-
-                var groupRequest = UiGroupService.list();
-
-                groupRequest.promise.then( function() {
-
-                    vm.ui_groups = groupRequest.cache.clean;
-                    vm.ui_items = UiItemService.list().cache.clean;
-
-                });
+                vm.ui_groups = caches.ui_groups.clean;
+                vm.ui_items = caches.ui_items.clean;
 
             });
-
-            // Desired load order: tag categories, tags, groups, items
-            // TODO: Modify DataFactory to return cache on list() resolve
 
         }
 

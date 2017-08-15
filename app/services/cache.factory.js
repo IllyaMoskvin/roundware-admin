@@ -98,7 +98,7 @@
                 // after detail() or list() has been called, but not yet resolved.
                 oldDatum.initialized = true;
 
-                return newDatum;
+                return oldDatum;
 
             }
 
