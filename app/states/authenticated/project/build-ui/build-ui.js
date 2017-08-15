@@ -48,6 +48,8 @@
         // Currently active mode
         vm.mode = vm.ui_modes[1].value;
 
+        vm.deleteItem = deleteItem;
+
         vm.saving = false;
 
         activate();
@@ -286,6 +288,25 @@
             // TODO: Add modal to confirm reorder
             // TODO: Save new indexes to server
             // TODO: Delete all *relevant* UI Items on reorder
+
+        }
+
+
+        // Delete cascades serverside:
+        // See roundware/rw/migrations/0016_tags_uigroups_api2.py#L59
+        function deleteItem( node ) {
+
+            vm.saving = true;
+
+            UiItemService.delete( node.id ).promise.then( function() {
+
+                Notification.warning( { message: 'UI Item deleted!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
 
         }
 

@@ -75,6 +75,11 @@
     <script type="text/ng-template" id="ui-item-node.html">
         <div ui-tree-handle>
             <span>{{ node.group.index }} / {{ node.index }} / {{ node.tag.value }}</span>
+            <button type="button" data-nodrag
+                class="btn btn-xs btn-default btn-square pull-right"
+                ng-click="vm.deleteItem( node )"
+            ><span class="glyphicon glyphicon-remove"></span></button>
+
         </div>
         <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
             <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'ui-item-node.html'"></li>
