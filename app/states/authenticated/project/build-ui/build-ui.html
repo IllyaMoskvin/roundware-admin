@@ -40,6 +40,11 @@
                                 modal-data="{ id: group.id }"
                             ><span class="glyphicon glyphicon-edit"></span></button>
 
+                            <button type="button" data-nodrag
+                                class="btn btn-xs btn-default btn-square pull-right"
+                                ng-click="vm.deleteGroup( group )"
+                            ><span class="glyphicon glyphicon-remove"></span></button>
+
                         </div>
 
                     </li>

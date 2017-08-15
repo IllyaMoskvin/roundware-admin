@@ -48,6 +48,7 @@
         // Currently active mode
         vm.mode = vm.ui_modes[1].value;
 
+        vm.deleteGroup = deleteGroup;
         vm.deleteItem = deleteItem;
 
         vm.saving = false;
@@ -288,6 +289,25 @@
             // TODO: Add modal to confirm reorder
             // TODO: Save new indexes to server
             // TODO: Delete all *relevant* UI Items on reorder
+
+        }
+
+
+        // Deleting UI Groups will also delete UI Items serverside
+        // TODO: Delete UI Items clientside?
+        function deleteGroup( node ) {
+
+            vm.saving = true;
+
+            UiGroupService.delete( node.id ).promise.then( function() {
+
+                Notification.warning( { message: 'UI Group deleted!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
 
         }
 
