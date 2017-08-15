@@ -34,7 +34,7 @@
             link: function( scope, element, attr ) {
 
                 // Use the dirty project to add fields live to Overview screen
-                scope.project = ProjectService.find( $stateParams.id ).dirty;
+                scope.project = ProjectService.find( $stateParams.id ).cache.dirty;
                 scope.languages = LanguageService.list().cache.clean;
                 scope.strings = [];
 
@@ -59,7 +59,7 @@
                         if( typeof item === 'object' ) {
                             scope.strings.push( item );
                         } else {
-                            scope.strings.push( LocalizedStringService.find( item ).dirty );
+                            scope.strings.push( LocalizedStringService.find( item ).cache.dirty );
                         }
 
                     });

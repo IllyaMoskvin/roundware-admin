@@ -140,7 +140,7 @@
             // it easier to access the tag's localized strings
             items.forEach( function( item, index ) {
 
-                var tag = TagService.find( item.tag_id ).clean;
+                var tag = TagService.find( item.tag_id ).cache.clean;
 
                 // Copy the tag to avoid modifying original
                 item.tag = angular.merge({}, tag);

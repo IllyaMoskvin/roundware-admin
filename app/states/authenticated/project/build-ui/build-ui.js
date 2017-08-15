@@ -119,7 +119,7 @@
 
             // Add tag_category (titles) to ease rendering
             groups.forEach( function( group ) {
-                group.tag_category = TagCategoryService.find( group.tag_category_id ).clean;
+                group.tag_category = TagCategoryService.find( group.tag_category_id ).cache.clean;
             });
 
             // Update the tree for rendering
@@ -160,7 +160,7 @@
             // Add the groups to items for reference
             items.forEach( function( item, index ) {
 
-                var group = UiGroupService.find( item.ui_group_id ).clean;
+                var group = UiGroupService.find( item.ui_group_id ).cache.clean;
 
                 // Copy the group to avoid modifying original
                 // TODO: Does this interfere w/ binding re: edits of groups
@@ -181,7 +181,7 @@
 
             // Add tag (titles) to ease rendering
             items.forEach( function( item ) {
-                item.tag = TagService.find( item.tag_id ).clean;
+                item.tag = TagService.find( item.tag_id ).cache.clean;
             });
 
             // Convert from flat to nested

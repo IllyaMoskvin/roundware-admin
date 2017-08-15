@@ -72,28 +72,41 @@
 
             // find() is like a soft detail(), meant for static views
             // it will get() a datum only if it's not cached yet
-            // very much a convenience function, sans promise handling
             function find( id, config ) {
 
                 var url = getUrl( id );
                 var config = getConfig( config );
                 var datum = cache.detail( id );
 
+                var deferred = $q.defer();
+
                 // Enrich the datum with an extra property: track whether
                 // it is just a stub, or if it contains server data.
                 // See also: CacheFactory.Cache.updateDatum()
                 if( !datum.initialized ) {
 
-                    var promise = ApiService.get( url, config )
+                    ApiService.get( url, config )
                         .then( transformResponse )
-                        .then( cache.update );
+                        .then( cache.update )
+                        .then( function( cache ) {
+
+                            deferred.resolve( cache );
+
+                        });
 
                     // Necessary so as to avoid inifinite digest cycles.
                     datum.initialized = true;
 
+                } else {
+
+                    deferred.resolve( datum );
+
                 }
 
-                return datum;
+                return {
+                    promise: deferred.promise,
+                    cache: datum,
+                }
 
             }
 

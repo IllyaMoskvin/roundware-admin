@@ -28,7 +28,7 @@
 
                     // TODO: Use promise chains?
                     scope.strings = scope.string_ids.map( function( string_id ) {
-                        return LocalizedStringService.find( string_id ).clean;
+                        return LocalizedStringService.find( string_id ).cache.clean;
                     });
 
                 });
