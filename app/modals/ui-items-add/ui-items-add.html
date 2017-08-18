@@ -1,0 +1,63 @@
+<form class="form-horizontal">
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>Parent UI Item</th>
+                <td>[{{ vm.parent_ui_item.id }}] {{ vm.getTag( vm.parent_ui_item.tag_id ).value }}</td>
+            </tr>
+            <tr>
+                <th>UI Group</th>
+                <td>[{{ vm.ui_group.id }}] {{ vm.ui_group.name }}</td>
+            </tr>
+            <tr>
+                <th>Tag Category</th>
+                <td>[{{ vm.category.id }}] {{ vm.category.name }}</td>
+            </tr>
+            <tr>
+                <th>Sibling UI Items</th>
+                <td>
+                    <div ng-repeat="ui_item in vm.ui_items">
+                        [{{ vm.getTag( ui_item.tag_id ).id }}] {{ vm.getTag( ui_item.tag_id ).value }}
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr/>
+
+    <div ng-show="vm.tags && vm.tags.length < 1">
+        <p>There's no tags left to nest. Try adding more tags to the "{{ vm.category.name }}" category.</p>
+    </div>
+
+    <div ng-show="vm.tags.length > 0">
+
+        <div class="form-group text-center"><strong>Select UI Items to Add</strong></div>
+
+        <div class="checkbox" ng-repeat="tag in vm.tags">
+            <label>
+                <input type="checkbox" value="{{tag.id}}"
+                 check-list="vm.selected_tag_ids" check-integer
+                > {{tag.value}}
+            </label>
+        </div>
+
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-default"
+                    ng-click="vm.cancel()">Cancel</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-block btn-primary"
+                    ng-click="vm.save()" ng-disabled="vm.saving">Save</button>
+        </div>
+    </div>
+
+</form>
+

@@ -159,6 +159,14 @@
                     'index',
                     'ui_mode',
                 ]
+            })
+            .modal('ui-items-add-to-item', {
+                templateUrl: 'modals/ui-items-add/ui-items-add.html',
+                controller: 'AddItemsToItemController',
+                controllerAs: 'vm',
+                params: [
+                    'parent_ui_item',
+                ]
             });
 
     }

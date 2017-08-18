@@ -79,11 +79,21 @@
     <!-- Nested node template for UI Items -->
     <script type="text/ng-template" id="ui-item-node.html">
         <div ui-tree-handle>
+
             <span>{{ node.group.index }} / {{ node.index }} / {{ node.tag.value }}</span>
+
             <button type="button" data-nodrag
                 class="btn btn-xs btn-default btn-square pull-right"
                 ng-click="vm.deleteItem( node )"
             ><span class="glyphicon glyphicon-remove"></span></button>
+
+            <!-- TODO: Pass id of this ui_item to be used as the parent id of the new ui_items -->
+            <button type="button" data-nodrag
+                class="btn btn-xs btn-default btn-square pull-right"
+                modal-href="ui-items-add-to-item"
+                modal-data="{ parent_ui_item: node }"
+                ng-show="node.group.index < vm.max_index"
+            ><span class="glyphicon glyphicon-plus"></span></button>
 
         </div>
         <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">

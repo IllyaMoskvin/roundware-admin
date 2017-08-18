@@ -48,6 +48,10 @@
         // Currently active mode
         vm.mode = vm.ui_modes[1].value;
 
+        // Track the highest index among displayed UI Groups
+        // Used for hiding the `ui-items-add-to-item` button
+        vm.max_index = null;
+
         vm.deleteGroup = deleteGroup;
         vm.deleteItem = deleteItem;
 
@@ -116,6 +120,10 @@
             groups.sort( function( a, b ) {
                 return a.index - b.index;
             });
+
+            // Assume (1) that the last group has the highest index
+            // and (2) there is no duplicate indexes among the groups
+            vm.max_index = groups[ groups.length - 1 ].index;
 
             // Add tag_category (titles) to ease rendering
             groups.forEach( function( group ) {
