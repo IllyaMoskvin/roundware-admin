@@ -22,7 +22,7 @@
 
         // Options for the trees
         vm.groupTreeOptions = {
-            // TODO: Prevent UI Items from being dropped here
+            accept: groupTreeAccept,
             dropped: groupTreeDropped,
             beforeDrag: beforeDrag,
         };
@@ -210,11 +210,32 @@
         }
 
 
+        function groupTreeAccept( sourceNodeScope, destNodesScope, destIndex ) {
+
+            // Determine which tree was the source
+            var source = sourceNodeScope.$treeScope.$element.attr('id');
+
+            // Reject if the node came from the ui-item tree
+            if( source == 'rw-tree-ui-items' ) {
+                return false;
+            }
+
+            return true;
+
+        }
+
+
         // We want to allow UI Items to be re-ordered w/in their heirarchy,
         // but not be moved outside of their "cannonical" parent (UI Item)
         function itemTreeAccept( sourceNodeScope, destNodesScope, destIndex ) {
 
-            // TODO: Prevent UI Groups from being dropped here
+            // Determine which tree was the source
+            var source = sourceNodeScope.$treeScope.$element.attr('id');
+
+            // Reject if the node came from the ui-group tree
+            if( source == 'rw-tree-ui-groups' ) {
+                return false;
+            }
 
             var parent_id = sourceNodeScope.$modelValue.parent_id;
 
@@ -223,6 +244,7 @@
             return parent_id == dest_id;
 
         }
+
 
         // We ensured that the item can only be dropped within its parent
         // Now, we need to reorder all of that parent-node's children
