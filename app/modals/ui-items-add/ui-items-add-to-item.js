@@ -17,7 +17,7 @@
         vm.selected_tag_ids = [];
 
         vm.ui_group = null
-        vm.ui_items = null;
+        vm.sibling_ui_items = null;
 
         vm.category = null;
         vm.tags = null;
@@ -39,7 +39,7 @@
 
             UiGroupService.list().promise.then( function( cache ) {
 
-                var ui_groups = cache.clean;
+                var ui_groups = angular.extend([], cache.clean);
 
                 // Sort the UI Groups by index
                 ui_groups.sort( function( a, b ) {
@@ -65,7 +65,7 @@
 
             }).then( function( cache ) {
 
-                var ui_items = cache.clean;
+                var ui_items = angular.extend([], cache.clean);
 
                 // Get only the UI Items which belong to this UI Group
                 ui_items = ui_items.filter( function( ui_item ) {
@@ -77,8 +77,13 @@
                     return ui_item.parent_id == parent_ui_item.id;
                 });
 
+                // Sort the UI Items by index
+                ui_items.sort( function( a, b ) {
+                    return a.index - b.index;
+                });
+
                 // Save the UI Items to controller. We'll use them to filter Tags
-                vm.ui_items = ui_items;
+                vm.sibling_ui_items = ui_items;
 
                 // Find the TagCategory of the current UI Group
                 return TagCategoryService.find( vm.ui_group.tag_category_id ).promise;
@@ -93,7 +98,7 @@
 
             }).then( function( cache ) {
 
-                var tags = cache.clean;
+                var tags = angular.extend([], cache.clean);
 
                 // Filter Tags by the current Tag Category
                 tags = tags.filter( function( tag ) {
@@ -103,7 +108,7 @@
                 // Filter Tags to remove any already assoc. w/ sibling UI Items
                 tags = tags.filter( function( tag ) {
 
-                    var match = vm.ui_items.find( function( ui_item ) {
+                    var match = vm.sibling_ui_items.find( function( ui_item ) {
                         return ui_item.tag_id == tag.id;
                     });
 
@@ -141,8 +146,8 @@
             vm.saving = true;
 
             // Get highest index of sibling UI Items
-            if( vm.ui_items && vm.ui_items.length > 0 ) {
-                max_index = vm.ui_items[ vm.ui_items.length - 1 ].index;
+            if( vm.sibling_ui_items && vm.sibling_ui_items.length > 0 ) {
+                max_index = vm.sibling_ui_items[ vm.sibling_ui_items.length - 1 ].index;
             } else {
                 max_index = 0;
             }

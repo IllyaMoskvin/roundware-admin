@@ -167,6 +167,14 @@
                 params: [
                     'parent_ui_item',
                 ]
+            })
+            .modal('ui-items-add-to-group', {
+                templateUrl: 'modals/ui-items-add/ui-items-add.html',
+                controller: 'AddItemsToGroupController',
+                controllerAs: 'vm',
+                params: [
+                    'ui_group',
+                ]
             });
 
     }

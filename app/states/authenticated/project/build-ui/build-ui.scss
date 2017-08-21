@@ -2,6 +2,15 @@
 
 	#rw-tree-ui-groups {
 
+		[ui-tree-handle] > span {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			display: inline-block;
+			width: calc( 100% - 100px );
+		}
+
 	}
 
 	#rw-tree-ui-items {

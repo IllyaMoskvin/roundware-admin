@@ -33,6 +33,11 @@
                             <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
 
                             <!-- TODO: Use the button directive here? -->
+                            <button type="button" data-nodrag
+                                class="btn btn-xs btn-default btn-square pull-right"
+                                modal-href="ui-items-add-to-group"
+                                modal-data="{ ui_group: group }"
+                            ><span class="glyphicon glyphicon-plus"></span></button>
 
                             <button type="button" data-nodrag
                                 class="btn btn-xs btn-default btn-square pull-right"
@@ -87,7 +92,6 @@
                 ng-click="vm.deleteItem( node )"
             ><span class="glyphicon glyphicon-remove"></span></button>
 
-            <!-- TODO: Pass id of this ui_item to be used as the parent id of the new ui_items -->
             <button type="button" data-nodrag
                 class="btn btn-xs btn-default btn-square pull-right"
                 modal-href="ui-items-add-to-item"

@@ -2,23 +2,31 @@
 
     <table class="table table-bordered">
         <tbody>
-            <tr>
+            <tr ng-if="vm.parent_ui_item">
                 <th>Parent UI Item</th>
                 <td>[{{ vm.parent_ui_item.id }}] {{ vm.getTag( vm.parent_ui_item.tag_id ).value }}</td>
             </tr>
-            <tr>
+            <tr ng-if="vm.ui_group">
                 <th>UI Group</th>
                 <td>[{{ vm.ui_group.id }}] {{ vm.ui_group.name }}</td>
             </tr>
-            <tr>
+            <tr ng-if="vm.category">
                 <th>Tag Category</th>
                 <td>[{{ vm.category.id }}] {{ vm.category.name }}</td>
             </tr>
-            <tr>
+            <tr ng-if="vm.parent_ui_items">
+                <th>Parent UI Items</th>
+                <td>
+                    <div ng-repeat="ui_item in vm.parent_ui_items">
+                        [{{ ui_item.id }}] [{{ vm.getTag( ui_item.tag_id ).id }}] {{ vm.getTag( ui_item.tag_id ).value }}
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="vm.sibling_ui_items">
                 <th>Sibling UI Items</th>
                 <td>
-                    <div ng-repeat="ui_item in vm.ui_items">
-                        [{{ vm.getTag( ui_item.tag_id ).id }}] {{ vm.getTag( ui_item.tag_id ).value }}
+                    <div ng-repeat="ui_item in vm.sibling_ui_items">
+                        [{{ ui_item.id }}] [{{ vm.getTag( ui_item.tag_id ).id }}] {{ vm.getTag( ui_item.tag_id ).value }}
                     </div>
                 </td>
             </tr>
@@ -26,6 +34,10 @@
     </table>
 
     <hr/>
+
+    <div ng-show="!vm.tags">
+        <p>Loading tags...</p>
+    </div>
 
     <div ng-show="vm.tags && vm.tags.length < 1">
         <p>There's no tags left to nest. Try adding more tags to the "{{ vm.category.name }}" category.</p>
@@ -39,7 +51,7 @@
             <label>
                 <input type="checkbox" value="{{tag.id}}"
                  check-list="vm.selected_tag_ids" check-integer
-                > {{tag.value}}
+                > [{{ tag.id }}] {{tag.value}}
             </label>
         </div>
 
