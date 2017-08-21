@@ -70,9 +70,41 @@
 
             function updateData( data ) {
 
+                // Update cache for each datum present in the response
                 angular.forEach( data, updateDatum );
 
+                // Remove any cached datums that aren't present in the response
+                // This assumes that list() returns the *entire* dataset for the resource
+                filterInPlace( cache.both, filterDatum );
+                filterInPlace( cache.clean, filterDatum );
+                filterInPlace( cache.dirty, filterDatum );
+
                 return cache;
+
+                function filterDatum( oldDatum ) {
+
+                    var matches = data.filter(function( newDatum ) {
+                        return newDatum.id == oldDatum.id;
+                    });
+
+                    return matches.length > 0
+
+                }
+
+                // https://stackoverflow.com/questions/37318808
+                function filterInPlace(a, condition, thisArg) {
+                    var j = 0, squeezing = false;
+
+                    a.forEach( function(e, i) {
+                        if (condition.call(thisArg, e, i, a)) {
+                            if (squeezing) a[j] = e;
+                            j++;
+                        } else squeezing = true;
+                    });
+
+                    a.length = j;
+                    return a;
+                }
 
             }
 
