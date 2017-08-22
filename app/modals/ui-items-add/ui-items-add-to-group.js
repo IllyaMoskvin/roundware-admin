@@ -46,6 +46,11 @@
 
                 var ui_groups = angular.extend([], cache.clean);
 
+                // Filter UI Groups by this group's UI Mode
+                ui_groups = ui_groups.filter( function( ui_group ) {
+                    return ui_group.ui_mode == vm.ui_group.ui_mode;
+                });
+
                 // Sort the UI Groups by index, descending
                 ui_groups.sort( function( a, b ) {
                     return b.index - a.index;
