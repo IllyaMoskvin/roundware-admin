@@ -194,8 +194,20 @@
 
                 var url = getUrl( id );
 
-                var promise = ApiService.delete( url ).then( function() {
+                var promise = ApiService.delete( url ).then( null, function( response ) {
+
+                    // Recover from 404s caused by serverside cascade
+                    if( response.status == 404 ) {
+                        return true;
+                    }
+
+                    // ...but reject all other errors
+                    return $q.reject( response );
+
+                }).finally( function() {
+
                     return cache.delete( id );
+
                 });
 
                 return {
