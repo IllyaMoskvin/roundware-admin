@@ -6,13 +6,15 @@
             <col width="42">
             <col>
             <col>
+            <col>
             <col width="45">
         </colgroup>
         <thead>
             <tr>
                 <th st-sort="id" st-sort-default="true">ID</th>
                 <th st-sort="filename" colspan="1">File</th>
-                <th colspan="2">Tags</th>
+                <th>Tags</th>
+                <th colspan="2">Created</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +28,7 @@
                         {{ vm.getTag( tag_id ).value }}{{ $last ? '' : ', ' }}
                     </span>
                 </td>
+                <td>{{ row.created }}</td>
                 <!-- TODO: Replace w/ ui-sref to edit asset form -->
                 <td><st-button modal-href="tag-category-edit" modal-data="{ id: row.id }"/></td>
             </tr>
