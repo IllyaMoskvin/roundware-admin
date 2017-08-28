@@ -11,7 +11,8 @@
 
         // config is optional, defaults to vagrant setup
         var settings = {
-            url: "http://localhost:8888/api/2/"
+            base: "http://localhost:8888",
+            path: "/api/2/",
         };
 
         // define public interface
@@ -22,6 +23,8 @@
             patch: patch,
             delete: remove,
             error: error,
+
+            getBaseUrl: getBaseUrl,
         };
 
         function init( config ) {
@@ -35,8 +38,17 @@
 
             }
 
-            // Add trailing slash to the url, if it's missing
-            settings.url = settings.url.replace(/\/?$/, '/');
+            // Remove trailing slash from base, if needed
+            settings.base = settings.base.replace(/\/$/, "");
+
+            // Add leading slash to path, if needed
+            settings.path = settings.path.replace(/^\/?/, "/");
+
+            // Add trailing slash to path, if it's missing
+            settings.path = settings.path.replace(/\/?$/, '/');
+
+            // Save full url
+            settings.full = settings.base + settings.path;
 
         }
 
@@ -113,8 +125,20 @@
             // append trailing slash, if it's missing
             url = url.replace(/\/?$/, '/');
 
+            // prepend the (full) base url
+            url = settings.full + url;
+
+            return url;
+
+        }
+
+        function getBaseUrl( url ) {
+
+            // add leading slash, if it's missing
+            url = url.replace(/^\/?/g, '/');
+
             // prepend the base url
-            url = settings.url + url;
+            url = settings.base + url;
 
             return url;
 

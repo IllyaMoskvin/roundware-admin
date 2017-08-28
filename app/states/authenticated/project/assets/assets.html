@@ -1,7 +1,35 @@
 <div class="rw-assets">
 
-    <ol>
-        <li ng-repeat="asset in vm.assets">{{ asset.filename }}</li>
-    </ol>
+    <!-- Assets Table -->
+    <table st-table="vm.displayed.assets" st-safe-src="vm.assets" class="table table-striped">
+        <colgroup>
+            <col width="42">
+            <col>
+            <col>
+            <col width="45">
+        </colgroup>
+        <thead>
+            <tr>
+                <th st-sort="id" st-sort-default="true">ID</th>
+                <th st-sort="filename" colspan="1">File</th>
+                <th colspan="2">Tags</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in vm.displayed.assets">
+                <td>{{ row.id }}</td>
+                <td>
+                    <a href="{{ vm.getFileUrl( row.file ) }}">{{ row.filename }}</a>
+                </td>
+                <td>
+                    <span ng-repeat="tag_id in row.tag_ids">
+                        {{ vm.getTag( tag_id ).value }}{{ $last ? '' : ', ' }}
+                    </span>
+                </td>
+                <!-- TODO: Replace w/ ui-sref to edit asset form -->
+                <td><st-button modal-href="tag-category-edit" modal-data="{ id: row.id }"/></td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
