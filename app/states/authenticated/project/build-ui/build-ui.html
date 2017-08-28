@@ -1,0 +1,108 @@
+<div class="rw-build-ui">
+
+    <!-- UI Mode select -->
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <p class="form-control-static"><strong>UI Mode</strong></p>
+        </div>
+        <div class="col-sm-10">
+            <div class="btn-group pull-right" data-toggle="buttons">
+
+                <label class="btn btn-primary" ng-repeat="mode in vm.ui_modes" ng-class="{'active': vm.mode == mode.value}">
+                    <input type="radio" ng-model="vm.mode" value="{{ mode.value }}"> {{ mode.label }}
+                </label>
+
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+
+        <!-- UI Groups -->
+        <div class="col-xs-6">
+
+            <!-- UI Group Tree -->
+            <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
+
+                <ol ui-tree-nodes="" ng-model="vm.groupTree">
+                    <li ng-repeat="group in vm.groupTree" ui-tree-node>
+
+                        <div ui-tree-handle>
+                            <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
+
+                            <!-- TODO: Use the button directive here? -->
+                            <button type="button" data-nodrag
+                                class="btn btn-xs btn-default btn-square pull-right"
+                                modal-href="ui-items-add-to-group"
+                                modal-data="{ ui_group: group }"
+                            ><span class="glyphicon glyphicon-plus"></span></button>
+
+                            <button type="button" data-nodrag
+                                class="btn btn-xs btn-default btn-square pull-right"
+                                modal-href="ui-group-edit"
+                                modal-data="{ id: group.id }"
+                            ><span class="glyphicon glyphicon-edit"></span></button>
+
+                            <button type="button" data-nodrag
+                                class="btn btn-xs btn-default btn-square pull-right"
+                                ng-click="vm.deleteGroup( group )"
+                            ><span class="glyphicon glyphicon-remove"></span></button>
+
+                        </div>
+
+                    </li>
+                </ol>
+
+            </div>
+
+            <button type="button"
+                class="btn btn-block btn-primary"
+                modal-href="ui-group-new"
+                modal-data="{ index: vm.groupTree.length + 1, ui_mode: vm.mode }"
+            >Add UI Group</button>
+
+        </div>
+
+        <!-- UI Items -->
+        <div class="col-xs-6">
+
+            <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
+
+                <ol ui-tree-nodes="" ng-model="vm.itemTree">
+                    <li ng-repeat="node in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
+                </ol>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Nested node template for UI Items -->
+    <script type="text/ng-template" id="ui-item-node.html">
+        <div ui-tree-handle>
+
+            <span>{{ node.group.index }} / {{ node.index }} / {{ node.tag.value }}</span>
+
+            <button type="button" data-nodrag
+                class="btn btn-xs btn-default btn-square pull-right"
+                ng-click="vm.deleteItem( node )"
+            ><span class="glyphicon glyphicon-remove"></span></button>
+
+            <button type="button" data-nodrag
+                class="btn btn-xs btn-default btn-square pull-right"
+                modal-href="ui-items-add-to-item"
+                modal-data="{ parent_ui_item: node }"
+                ng-show="node.group.index < vm.max_index"
+            ><span class="glyphicon glyphicon-plus"></span></button>
+
+        </div>
+        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
+            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'ui-item-node.html'"></li>
+        </ol>
+    </script>
+
+</div>

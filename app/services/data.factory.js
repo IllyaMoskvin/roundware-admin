@@ -72,28 +72,41 @@
 
             // find() is like a soft detail(), meant for static views
             // it will get() a datum only if it's not cached yet
-            // very much a convenience function, sans promise handling
             function find( id, config ) {
 
                 var url = getUrl( id );
                 var config = getConfig( config );
                 var datum = cache.detail( id );
 
+                var deferred = $q.defer();
+
                 // Enrich the datum with an extra property: track whether
                 // it is just a stub, or if it contains server data.
                 // See also: CacheFactory.Cache.updateDatum()
                 if( !datum.initialized ) {
 
-                    var promise = ApiService.get( url, config )
+                    ApiService.get( url, config )
                         .then( transformResponse )
-                        .then( cache.update );
+                        .then( cache.update )
+                        .then( function( cache ) {
+
+                            deferred.resolve( cache );
+
+                        });
 
                     // Necessary so as to avoid inifinite digest cycles.
                     datum.initialized = true;
 
+                } else {
+
+                    deferred.resolve( datum );
+
                 }
 
-                return datum;
+                return {
+                    promise: deferred.promise,
+                    cache: datum,
+                }
 
             }
 
@@ -181,8 +194,20 @@
 
                 var url = getUrl( id );
 
-                var promise = ApiService.delete( url ).then( function() {
+                var promise = ApiService.delete( url ).then( null, function( response ) {
+
+                    // Recover from 404s caused by serverside cascade
+                    if( response.status == 404 ) {
+                        return true;
+                    }
+
+                    // ...but reject all other errors
+                    return $q.reject( response );
+
+                }).finally( function() {
+
                     return cache.delete( id );
+
                 });
 
                 return {
@@ -281,6 +306,10 @@
             // These functions modify the datum in place + return it
             function transformResponseDatum( datum ) {
 
+                if( settings.ignored ) {
+                    transformResponseIgnored( datum, settings.ignored );
+                }
+
                 if( settings.mapped ) {
                     transformResponseMapped( datum, settings.mapped );
                 }
@@ -293,6 +322,20 @@
 
             }
 
+            // Remove a field from the response, before anything else happens.
+            // This is useful to prevent conflicts when a reponse has a field
+            // with the same name as one of our `stored` fields defined in `mapped`
+            function transformResponseIgnored( datum, ignoredFields ) {
+
+                ignoredFields.forEach( function( field ) {
+
+                    delete datum[ field ];
+
+                });
+
+                return datum;
+
+            }
 
             // Map incoming fields into outgoing ones
             // Outgoing field names thus become the cannonical ones
@@ -482,6 +525,11 @@
                 var created = [];
 
                 includes.forEach( function( include ) {
+
+                    // Skip include if ignore_on_save is set
+                    if( include.ignore_on_save ) {
+                        return;
+                    }
 
                     // Skip include if the datum doesn't have this field
                     if( !datum[ include.field ] ) {

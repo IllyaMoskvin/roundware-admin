@@ -29,7 +29,7 @@
 
         function getCategory( category_id ) {
 
-            return TagCategoryService.find( category_id ).clean;
+            return TagCategoryService.find( category_id ).cache.clean;
 
         }
 

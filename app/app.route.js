@@ -97,6 +97,15 @@
                 data: {
                     cssClassnames: 'rw-state-organize-tags'
                 }
+            })
+            .state('project.build-ui', {
+                url: '/build-ui',
+                templateUrl: 'states/authenticated/project/build-ui/build-ui.html',
+                controller: 'BuildUiController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-build-ui'
+                }
             });
 
     }
@@ -132,6 +141,44 @@
             .modal('tag-category-new', {
                 templateUrl: 'modals/tag-category/tag-category.html',
                 controller: 'NewTagCategoryController',
+                controllerAs: 'vm',
+            })
+            .modal('ui-group-edit', {
+                templateUrl: 'modals/ui-group/ui-group.html',
+                controller: 'EditUiGroupController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
+            })
+            .modal('ui-group-new', {
+                templateUrl: 'modals/ui-group/ui-group.html',
+                controller: 'NewUiGroupController',
+                controllerAs: 'vm',
+                params: [
+                    'index',
+                    'ui_mode',
+                ]
+            })
+            .modal('ui-items-add-to-item', {
+                templateUrl: 'modals/ui-items-add/ui-items-add.html',
+                controller: 'AddItemsToItemController',
+                controllerAs: 'vm',
+                params: [
+                    'parent_ui_item',
+                ]
+            })
+            .modal('ui-items-add-to-group', {
+                templateUrl: 'modals/ui-items-add/ui-items-add.html',
+                controller: 'AddItemsToGroupController',
+                controllerAs: 'vm',
+                params: [
+                    'ui_group',
+                ]
+            })
+            .modal('ui-group-confirm-reorder', {
+                templateUrl: 'modals/ui-group/confirm-reorder.html',
+                controller: 'ConfirmGenericController',
                 controllerAs: 'vm',
             });
 

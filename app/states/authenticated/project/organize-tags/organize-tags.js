@@ -4,9 +4,9 @@
         .module('app')
         .controller('OrganizeTagsController', Controller);
 
-    Controller.$inject = ['$scope', 'LanguageService', 'TagService', 'TagCategoryService', 'TagRelationshipService', 'Notification'];
+    Controller.$inject = ['$q', '$scope', 'LanguageService', 'TagService', 'TagCategoryService', 'TagRelationshipService', 'Notification'];
 
-    function Controller($scope, LanguageService, TagService, TagCategoryService, TagRelationshipService, Notification) {
+    function Controller($q, $scope, LanguageService, TagService, TagCategoryService, TagRelationshipService, Notification) {
 
         var vm = this;
 
@@ -54,18 +54,22 @@
             $scope.$watch( 'vm.show_category', nestTags, true );
             $scope.$watch( 'vm.show_language', nestRelationships, true );
 
-            // Load tags first to avoid duplicate server calls
-            var request = TagService.list();
-
-            // TODO: Refactor this to be cleaner
-            request.promise.then( function() {
+            // Desired load order: tags, everything else
+            $q.all({
+                'tags': TagService.list().promise,
+                'languages': LanguageService.list().promise,
+                'categories': TagCategoryService.list().promise,
+                'relationships': TagRelationshipService.list().promise,
+            }).then( function( caches ) {
 
                 // TODO: Only show this project's languages
-                vm.languages = LanguageService.list().cache.clean;
+                vm.languages = caches.languages.clean;
 
-                vm.tags = request.cache.clean;
-                vm.categories = TagCategoryService.list().cache.clean;
-                vm.relationships = TagRelationshipService.list().cache.clean;
+                vm.tags = caches.tags.clean;
+                vm.categories = caches.categories.clean;
+                vm.relationships = caches.relationships.clean;
+
+            }).finally( function() {
 
                 vm.loaded = true;
 
@@ -136,7 +140,7 @@
             // it easier to access the tag's localized strings
             items.forEach( function( item, index ) {
 
-                var tag = TagService.find( item.tag_id ).clean;
+                var tag = TagService.find( item.tag_id ).cache.clean;
 
                 // Copy the tag to avoid modifying original
                 item.tag = angular.merge({}, tag);

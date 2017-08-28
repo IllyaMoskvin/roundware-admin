@@ -4,9 +4,9 @@
         .module('app')
         .controller('ProjectController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService'];
+    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService'];
 
-    function Controller($stateParams, ProjectService, TagService) {
+    function Controller($stateParams, ProjectService, TagService, UiGroupService) {
 
         var vm = this;
 
@@ -19,6 +19,10 @@
         function activate() {
 
             TagService.setDefaultParams({
+                project_id: $stateParams.id
+            });
+
+            UiGroupService.setDefaultParams({
                 project_id: $stateParams.id
             });
 
