@@ -14,6 +14,7 @@
         'smart-table',
         'ui.bootstrap',
         'ui.tree',
+        'btorfs.multiselect',
 
     ]);
 

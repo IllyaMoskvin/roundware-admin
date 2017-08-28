@@ -1,9 +1,24 @@
 <div class="rw-asset">
 
-    <h3 ng-if="vm.asset.id">Edit Asset #{{ vm.asset.id }}</h3>
+    <h1 ng-if="vm.asset.id">Edit Asset #{{ vm.asset.id }}</h1>
+
+    <hr/>
 
     <!-- Asset Editing Form -->
     <form class="form-horizontal">
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Tags</label>
+            <div class="col-sm-10">
+                <multiselect
+                    ng-if="vm.selected_tags"
+                    ng-model="vm.selected_tags"
+                    options="vm.tags"
+                    id-prop="id"
+                    display-prop="value">
+                </multiselect>
+            </div>
+        </div>
 
         <local-inputs model="vm.asset" field="loc_description" title="Description"></local-inputs>
 
