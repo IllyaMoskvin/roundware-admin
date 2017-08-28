@@ -148,21 +148,15 @@
 
             parent_ui_items.forEach( function( parent_ui_item ) {
 
-                console.log( parent_ui_item );
-
                 // Get all siblings that are nested under this specific parent UI Item
                 var current_sibling_ui_items = vm.sibling_ui_items.filter( function( sibling_ui_item ) {
                     return sibling_ui_item.parent_id == parent_ui_item.id;
                 });
 
-                console.log( current_sibling_ui_items );
-
                 // Get all the Tag ids that are already nested via UI Items under this parent
                 var present_tag_ids = current_sibling_ui_items.map( function( sibling_ui_item ) {
                     return sibling_ui_item.tag_id;
                 });
-
-                console.log( present_tag_ids );
 
                 // Filter the selected tags to exclude those that already have UI Items here
                 var absent_tag_ids = vm.selected_tag_ids.filter( function( selected_tag_id ) {

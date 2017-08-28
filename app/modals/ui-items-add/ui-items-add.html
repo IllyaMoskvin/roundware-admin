@@ -14,6 +14,10 @@
                 <th>Tag Category</th>
                 <td>[{{ vm.category.id }}] {{ vm.category.name }}</td>
             </tr>
+            <tr ng-if="vm.parent_ui_group_id">
+                <th>Parent UI Group ID</th>
+                <td>[{{vm.parent_ui_group_id}}]</td>
+            </tr>
             <tr ng-if="vm.parent_ui_items">
                 <th>Parent UI Items</th>
                 <td>

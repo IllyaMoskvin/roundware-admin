@@ -41,14 +41,19 @@
 
                 var ui_groups = angular.extend([], cache.clean);
 
-                // Sort the UI Groups by index
-                ui_groups.sort( function( a, b ) {
-                    return a.index - b.index;
-                });
-
                 // Find the UI Group of the parent_ui_item
                 var parent_ui_group = ui_groups.find( function( ui_group ) {
                     return ui_group.id == parent_ui_item.ui_group_id;
+                });
+
+                // Filter UI Groups by the parent group's UI Mode
+                ui_groups = ui_groups.filter( function( ui_group ) {
+                    return ui_group.ui_mode == parent_ui_group.ui_mode;
+                });
+
+                // Sort the UI Groups by index
+                ui_groups.sort( function( a, b ) {
+                    return a.index - b.index;
                 });
 
                 // Find the UI Group w/ an index subsequent to the parent_ui_group
