@@ -106,6 +106,15 @@
                 data: {
                     cssClassnames: 'rw-state-build-ui'
                 }
+            })
+            .state('project.assets', {
+                url: '/assets',
+                templateUrl: 'states/authenticated/project/assets/assets.html',
+                controller: 'AssetsController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-assets'
+                }
             });
 
     }
