@@ -1,0 +1,43 @@
+<div class="rw-asset">
+
+    <h3 ng-if="vm.asset.id">Edit Asset #{{ vm.asset.id }}</h3>
+
+    <!-- Asset Editing Form -->
+    <form class="form-horizontal">
+
+        <local-inputs model="vm.asset" field="loc_description" title="Description"></local-inputs>
+
+        <!-- TODO: Determine why this isn't appearing in the Django Roundware admin page? -->
+        <!-- <local-inputs model="vm.asset" field="loc_alt_text" title="Alt Text"></local-inputs> -->
+
+        <hr/>
+
+        <!-- TODO: Replace w/ Leaflet map -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Location</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="latitude" ng-model="vm.asset.latitude">
+            </div>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="longitude" ng-model="vm.asset.longitude">
+            </div>
+        </div>
+
+        <hr/>
+
+        <!-- Save and Cancel buttons -->
+        <div class="row">
+            <div class="col-xs-6">
+                <button type="button" class="btn btn-default"
+                        ng-click="vm.cancel()">Cancel</button>
+
+            </div>
+            <div class="col-xs-6">
+                <button type="submit" class="btn btn-block btn-primary"
+                        ng-click="vm.save()" ng-disabled="vm.saving">Save</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

@@ -30,7 +30,7 @@
                 </td>
                 <td>{{ row.created }}</td>
                 <!-- TODO: Replace w/ ui-sref to edit asset form -->
-                <td><st-button modal-href="tag-category-edit" modal-data="{ id: row.id }"/></td>
+                <td><st-button ui-sref="project.asset({ asset_id: row.id })"/></td>
             </tr>
         </tbody>
     </table>

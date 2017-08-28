@@ -115,6 +115,16 @@
                 data: {
                     cssClassnames: 'rw-state-assets'
                 }
+            })
+            // Inherits from project to use its ui-view, but belongs to assets
+            .state('project.asset', {
+                url: '/assets/:asset_id',
+                templateUrl: 'states/authenticated/project/assets/asset/asset.html',
+                controller: 'AssetController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-asset'
+                }
             });
 
     }

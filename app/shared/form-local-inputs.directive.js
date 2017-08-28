@@ -90,6 +90,11 @@
                     // We need to return the object, not the string it contains
                     // We should be using Array.find for this, but no IE support
 
+                    // Wait until model is available
+                    if( !scope.model ) {
+                        return null;
+                    }
+
                     if( !scope.model[scope.field] ) {
                         scope.model[scope.field] = [];
                     }
