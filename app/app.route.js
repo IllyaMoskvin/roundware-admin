@@ -175,6 +175,11 @@
                 params: [
                     'ui_group',
                 ]
+            })
+            .modal('ui-group-confirm-reorder', {
+                templateUrl: 'modals/ui-group/confirm-reorder.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
             });
 
     }

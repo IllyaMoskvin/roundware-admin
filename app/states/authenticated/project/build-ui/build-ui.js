@@ -4,9 +4,9 @@
         .module('app')
         .controller('BuildUiController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', 'UiGroupService', 'UiItemService', 'TagCategoryService', 'TagService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', 'UiGroupService', 'UiItemService', 'TagCategoryService', 'TagService', 'ModalService', 'Notification'];
 
-    function Controller($scope, $q, UiGroupService, UiItemService, TagCategoryService, TagService, Notification) {
+    function Controller($scope, $q, UiGroupService, UiItemService, TagCategoryService, TagService, ModalService, Notification) {
 
         var vm = this;
 
@@ -105,10 +105,15 @@
 
             // Do nothing if there's nothing to parse
             if( !vm.ui_groups || vm.ui_groups.length < 1 ) {
+
+                // This resets the UI Group tree when the last group is deleted
+                vm.groupTree = [];
+
                 return;
+
             }
 
-            // Cloning is necessary to avoid triggering $watch
+            // Deep-copy the UI Groups to avoid modifying the originals
             var groups = angular.merge([], vm.ui_groups);
 
             // Filter groups by currently active ui mode
@@ -126,6 +131,7 @@
             vm.max_index = groups[ groups.length - 1 ].index;
 
             // Add tag_category (titles) to ease rendering
+            // Only do this if you've deep-copied the groups!
             groups.forEach( function( group ) {
                 group.tag_category = TagCategoryService.find( group.tag_category_id ).cache.clean;
             });
@@ -145,10 +151,15 @@
 
             // Do nothing if there's nothing to parse
             if( !vm.ui_items || vm.ui_items.length < 1 ) {
+
+                // This resets the UI Item tree when the last item is deleted
+                vm.itemTree = [];
+
                 return;
+
             }
 
-            // Cloning is necessary to avoid triggering $watch
+            // Deep-copy the items to avoid modifying originals
             var items = angular.merge([], vm.ui_items);
 
             // Filter items by currently active ui groups.
@@ -188,6 +199,7 @@
             });
 
             // Add tag (titles) to ease rendering
+            // Only do this if you've deep-copied the items previously!
             items.forEach( function( item ) {
                 item.tag = TagService.find( item.tag_id ).cache.clean;
             });
@@ -305,20 +317,106 @@
             var nodes = event.dest.nodesScope.childNodes();
 
             // Intermediate step to gather up the data we need
-            var groups = nodes.map( function( node ) {
+            var new_ui_groups = nodes.map( function( node ) {
 
                 return {
                     id: node.$modelValue.id,
-                    index: node.index(),
+                    index: node.index() + 1,
+                    // Roundware indexes are 1-based
                 }
 
             });
 
-            console.log( JSON.stringify( groups ) );
+            // TODO: Don't use groupTree for this, since it's semantically wrong
+            // Basically, we need an array of UI Groups filtered by the current UI Mode
+            var old_ui_groups = vm.groupTree;
 
-            // TODO: Add modal to confirm reorder
-            // TODO: Save new indexes to server
-            // TODO: Delete all *relevant* UI Items on reorder
+            // Find the lowest index among the changed UI Groups
+            var indexes = old_ui_groups.reduce( function( results, old_ui_group ) {
+
+                var new_ui_group = new_ui_groups.find( function( ui_group ) {
+                    return ui_group.id == old_ui_group.id;
+                });
+
+                if( new_ui_group.index != old_ui_group.index ) {
+                    results.push( new_ui_group.index );
+                }
+
+                return results;
+
+            }, []);
+
+            // This might happen if the indexes weren't updated since last reorder
+            if( indexes.length < 1 ) {
+                Notification.info( { message: 'Nothing changed..?' } );
+                return false;
+            }
+
+            // Everything at or above this index should be nuked
+            var min_index = Math.min.apply( null, indexes );
+
+            // Find all old UI Groups w/ indexes at or above this one
+            var affected_ui_groups = old_ui_groups.filter( function( ui_group ) {
+                return ui_group.index >= min_index;
+            });
+
+            // Extract just the UI Group ids
+            var affected_ui_group_ids = affected_ui_groups.map( function( ui_group ) {
+                return ui_group.id;
+            });
+
+            // Find all UI Items that belong to these UI Groups
+            var affected_ui_items = vm.ui_items.filter( function( ui_item ) {
+                return affected_ui_group_ids.includes( ui_item.ui_group_id );
+            });
+
+            // Update new (projected) UI Groups to just include those that changed
+            new_ui_groups = new_ui_groups.filter( function( new_ui_group ) {
+                return affected_ui_group_ids.includes( new_ui_group.id );
+            });
+
+            // Launch modal to confirm reorder
+            // TODO: Only show modal when there's actually some affected UI Items
+            ModalService.open('ui-group-confirm-reorder').result.then( function() {
+
+                vm.saving = true;
+
+                // Save all affected UI Groups to server
+                var ui_group_promises = new_ui_groups.map( function( ui_group ) {
+                    return UiGroupService.update( ui_group.id, ui_group ).promise;
+                });
+
+                // Delete all affected UI Items from server
+                var ui_item_promises = affected_ui_items.map( function( ui_item ) {
+                    return UiItemService.delete( ui_item.id ).promise;
+                    // TODO: Recover from 404 responses, for items missing due to cascade?
+                });
+
+                var promises = [].concat( ui_group_promises, ui_item_promises );
+
+                return $q.all( promises );
+
+            }).finally( function() {
+
+                // Quick'n'dirty workaround for 404s
+                return $q.all({
+
+                    'ui_items': UiItemService.list().promise,
+                    'ui_groups': UiGroupService.list().promise,
+
+                });
+
+            }).finally( function( caches ) {
+
+                // Turn off saving before updating vm
+                vm.saving = false;
+
+                // TODO: Watch doesn't pick up the changes, so do this manually..?
+                nestBoth();
+
+                Notification.warning( { message: 'All changes saved!' } );
+
+            });
 
         }
 

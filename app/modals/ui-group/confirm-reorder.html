@@ -1,0 +1,17 @@
+<!-- TODO: Only delete UI Items for groups with an index that's equal to or higher than the index of that group, which was affected and has the lowest index -->
+
+<p>Reordering UI Groups will cause the UI Item tree for this UI Mode to be partially reset.</p>
+
+<p>Are you sure you want to reorder?</p>
+
+<div class="row">
+    <div class="col-xs-6">
+        <button type="button" class="btn btn-default"
+                ng-click="vm.cancel()">Cancel</button>
+
+    </div>
+    <div class="col-xs-6">
+        <button type="submit" class="btn btn-block btn-primary"
+                ng-click="vm.confirm()">Confirm</button>
+    </div>
+</div>
