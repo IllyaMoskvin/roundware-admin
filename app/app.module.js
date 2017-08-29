@@ -17,6 +17,7 @@
         'btorfs.multiselect',
         'nemLogging',
         'ui-leaflet',
+        'rzModule',
 
     ]);
 
