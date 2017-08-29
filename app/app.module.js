@@ -15,6 +15,8 @@
         'ui.bootstrap',
         'ui.tree',
         'btorfs.multiselect',
+        'nemLogging',
+        'ui-leaflet',
 
     ]);
 
