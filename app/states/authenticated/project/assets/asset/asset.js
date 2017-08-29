@@ -15,6 +15,30 @@
 
         vm.selected_tags = null;
 
+        // Serialize this into vm.asset on save()
+        vm.marker = {
+            focus: true,
+            draggable: true,
+            lat: 0,
+            lng: 0,
+        };
+
+        // Leaflet configs: http://angular-ui.github.io/ui-leaflet/
+        vm.leaflet = {
+            center: {
+                lat: 0,
+                lng: 0,
+                zoom: 6,
+            },
+            defaults: {
+                scrollWheelZoom: false,
+            },
+            markers: {
+                asset: vm.marker,
+            },
+        };
+
+        // Helper functions for rendering in view
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
 
@@ -42,6 +66,10 @@
                     return vm.asset.tag_ids.includes( tag.id );
                 });
 
+                // Update the marker to match the Asset's coordinates
+                vm.leaflet.center.lat = vm.marker.lat = vm.asset.latitude;
+                vm.leaflet.center.lng = vm.marker.lng = vm.asset.longitude;
+
             });
 
         }
@@ -66,6 +94,12 @@
             });
 
             console.log( vm.asset.tag_ids );
+
+            // Serialize Leaflet marker into the Asset
+            vm.asset.latitude = vm.marker.lat;
+            vm.asset.longitude = vm.marker.lng;
+
+            console.log( vm.asset.latitude, vm.asset.longitude );
 
         }
 
