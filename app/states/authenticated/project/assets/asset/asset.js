@@ -44,6 +44,7 @@
 
         // Helpers for setting coordinates + updating map
         vm.setLocation = setLocation;
+        vm.resetLocation = resetLocation;
 
         // Container for geocoding related stuff
         vm.geocode = {
@@ -77,8 +78,7 @@
                 });
 
                 // Update the marker to match the Asset's coordinates
-                vm.leaflet.center.lat = vm.marker.lat = vm.asset.latitude;
-                vm.leaflet.center.lng = vm.marker.lng = vm.asset.longitude;
+                resetLocation();
 
             });
 
@@ -100,6 +100,12 @@
 
             vm.leaflet.center.lat = vm.marker.lat = parseFloat( lat );
             vm.leaflet.center.lng = vm.marker.lng = parseFloat( lng );
+
+        }
+
+        function resetLocation( ) {
+
+            return setLocation( vm.asset.latitude, vm.asset.longitude );
 
         }
 
