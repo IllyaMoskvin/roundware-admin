@@ -79,6 +79,26 @@
 
         <hr/>
 
+        <!-- Lookup an address using Nominatim -->
+        <div class="form-group">
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="geocode" ng-model="vm.geocode.query">
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-block btn-primary" ng-click="vm.geocode.search()">Geocode</button>
+            </div>
+        </div>
+
+        <!-- Output for geocoding search results -->
+        <button
+            ng-repeat="result in vm.geocode.results"
+            class="btn btn-block btn-sm btn-default"
+            ng-click="vm.setLocation( result.lat, result.lng )"
+            style="text-align: left"
+        >{{ result.title }}</button>
+
+        <hr/>
+
         <!-- Save and Cancel buttons -->
         <div class="row">
             <div class="col-xs-6">

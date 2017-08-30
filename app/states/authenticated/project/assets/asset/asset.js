@@ -4,9 +4,9 @@
         .module('app')
         .controller('AssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'AssetService', 'TagService'];
+    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService'];
 
-    function Controller($q, $stateParams, ApiService, AssetService, TagService) {
+    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService) {
 
         var vm = this;
 
@@ -41,6 +41,16 @@
         // Helper functions for rendering in view
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
+
+        // Helpers for setting coordinates + updating map
+        vm.setLocation = setLocation;
+
+        // Container for geocoding related stuff
+        vm.geocode = {
+            search: geocode,
+            query: null,
+            results: [],
+        };
 
         vm.save = save;
 
@@ -83,6 +93,21 @@
         function getTag( tag_id ) {
 
             return TagService.find( tag_id ).cache.clean;
+
+        }
+
+        function setLocation( lat, lng ) {
+
+            vm.leaflet.center.lat = vm.marker.lat = parseFloat( lat );
+            vm.leaflet.center.lng = vm.marker.lng = parseFloat( lng );
+
+        }
+
+        function geocode( ) {
+
+            GeocodeService.get( vm.geocode.query ).then( function( results ) {
+                return vm.geocode.results = results;
+            });
 
         }
 
