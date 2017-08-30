@@ -11,7 +11,7 @@
     <div class="form-group">
         <label for="category" class="col-sm-2 control-label">Category</label>
         <div class="col-sm-10">
-            <select class="form-control" id="category" ng-model="vm.tag.tag_category_id" integer>
+            <select class="form-control" id="category" ng-model="vm.tag.tag_category_id" numeric>
                 <option ng-repeat="option in vm.categories.clean" value="{{option.id}}">{{option.name}}</option>
             </select>
         </div>
