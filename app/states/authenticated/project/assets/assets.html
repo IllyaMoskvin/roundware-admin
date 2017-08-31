@@ -24,9 +24,10 @@
                     <a href="{{ vm.getFileUrl( row.file ) }}">{{ row.filename }}</a>
                 </td>
                 <td>
-                    <span ng-repeat="tag_id in row.tag_ids">
-                        {{ vm.getTag( tag_id ).value }}{{ $last ? '' : ', ' }}
-                    </span>
+                    <!-- Use span and {{ $last ? '' : ', ' }} if you want the tags on one line -->
+                    <div ng-repeat="tag_id in row.tag_ids">
+                        {{ vm.getTag( tag_id ).value }}
+                    </div>
                 </td>
                 <td>{{ row.created }}</td>
                 <!-- TODO: Replace w/ ui-sref to edit asset form -->
