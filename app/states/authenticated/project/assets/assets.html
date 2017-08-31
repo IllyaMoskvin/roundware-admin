@@ -21,7 +21,14 @@
             <tr ng-repeat="row in vm.displayed.assets">
                 <td>{{ row.id }}</td>
                 <td>
+
+                    <!-- TODO: Replace w/ custom player -->
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.playAudio( row.file )">
+                        <span class="glyphicon glyphicon-play-circle"></span>
+                    </button>
+
                     <a href="{{ vm.getFileUrl( row.file ) }}">{{ row.filename }}</a>
+
                 </td>
                 <td>
                     <!-- Use span and {{ $last ? '' : ', ' }} if you want the tags on one line -->
