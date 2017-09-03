@@ -18,6 +18,7 @@
         'nemLogging',
         'ui-leaflet',
         'rzModule',
+        'angularFileUpload',
 
     ]);
 
