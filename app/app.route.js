@@ -117,10 +117,10 @@
                 }
             })
             // Inherits from project to use its ui-view, but belongs to assets
-            .state('project.asset', {
+            .state('project.asset-edit', {
                 url: '/assets/:asset_id',
                 templateUrl: 'states/authenticated/project/assets/asset/asset.html',
-                controller: 'AssetController',
+                controller: 'EditAssetController',
                 controllerAs: 'vm',
                 data: {
                     cssClassnames: 'rw-state-asset'

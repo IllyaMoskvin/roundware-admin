@@ -2,7 +2,7 @@
 
     angular
         .module('app')
-        .controller('AssetController',  Controller);
+        .controller('EditAssetController',  Controller);
 
     Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService'];
 
