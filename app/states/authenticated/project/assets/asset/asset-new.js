@@ -13,7 +13,7 @@
         // This is the object we'll be saving to server
         vm.asset = {
 
-            project: $stateParams.id, // TODO: Change to project_id
+            project_id: $stateParams.id,
             session_id: 1, // Reserved admin session
 
             media_type: "audio", // Support more formats?
