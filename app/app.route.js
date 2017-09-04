@@ -135,6 +135,15 @@
                 data: {
                     cssClassnames: 'rw-state-asset'
                 }
+            })
+            .state('project.audiotracks', {
+                url: '/audiotracks',
+                templateUrl: 'states/authenticated/project/audiotracks/audiotracks.html',
+                controller: 'AudiotracksController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-audiotracks'
+                }
             });
 
     }
