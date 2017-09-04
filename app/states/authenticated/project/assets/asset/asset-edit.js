@@ -53,6 +53,8 @@
             results: [],
         };
 
+        vm.saving = false;
+
         vm.save = save;
 
         activate();
@@ -124,13 +126,25 @@
                 return tag.id;
             });
 
-            console.log( vm.asset.tag_ids );
-
             // Serialize Leaflet marker into the Asset
             vm.asset.latitude = vm.marker.lat;
             vm.asset.longitude = vm.marker.lng;
 
-            console.log( vm.asset.latitude, vm.asset.longitude );
+            // TODO: Remove this once things are stable
+            console.log( vm.asset );
+
+            vm.saving = true;
+
+            AssetService.update( vm.asset.id ).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
+            });
+
 
         }
 
