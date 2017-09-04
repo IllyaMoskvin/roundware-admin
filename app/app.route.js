@@ -116,6 +116,16 @@
                     cssClassnames: 'rw-state-assets'
                 }
             })
+            // This must be above the looser-matching asset-edit definition
+            .state('project.asset-new', {
+                url: '/assets/new',
+                templateUrl: 'states/authenticated/project/assets/asset/asset.html',
+                controller: 'NewAssetController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-asset'
+                }
+            })
             // Inherits from project to use its ui-view, but belongs to assets
             .state('project.asset-edit', {
                 url: '/assets/:asset_id',
