@@ -1,0 +1,50 @@
+<div class="rw-assets">
+
+    <button class="btn btn-block btn-primary" ui-sref="project.asset-new()">Add New Asset</button>
+
+    <hr/>
+
+    <!-- Assets Table -->
+    <table st-table="vm.displayed.assets" st-safe-src="vm.assets" class="table table-striped">
+        <colgroup>
+            <col width="42">
+            <col>
+            <col>
+            <col width="160">
+            <col width="45">
+        </colgroup>
+        <thead>
+            <tr>
+                <th st-sort="id" st-sort-default="true">ID</th>
+                <th st-sort="filename" colspan="1">File</th>
+                <th>Tags</th>
+                <th st-sort="created" colspan="2">Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in vm.displayed.assets">
+                <td>{{ row.id }}</td>
+                <td>
+
+                    <!-- TODO: Replace w/ custom player -->
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.playAudio( row.file )">
+                        <span class="glyphicon glyphicon-play-circle"></span>
+                    </button>
+
+                    <a href="{{ vm.getFileUrl( row.file ) }}">{{ row.filename }}</a>
+
+                </td>
+                <td>
+                    <!-- Use span and {{ $last ? '' : ', ' }} if you want the tags on one line -->
+                    <div ng-repeat="tag_id in row.tag_ids">
+                        {{ vm.getTag( tag_id ).value }}
+                    </div>
+                </td>
+                <td>{{ row.created }}</td>
+                <!-- TODO: Replace w/ ui-sref to edit asset form -->
+                <td><st-button ui-sref="project.asset-edit({ asset_id: row.id })"/></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

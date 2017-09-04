@@ -4,9 +4,9 @@
         .module('app')
         .controller('ProjectController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService'];
+    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService', 'AssetService'];
 
-    function Controller($stateParams, ProjectService, TagService, UiGroupService) {
+    function Controller($stateParams, ProjectService, TagService, UiGroupService, AssetService) {
 
         var vm = this;
 
@@ -24,6 +24,11 @@
 
             UiGroupService.setDefaultParams({
                 project_id: $stateParams.id
+            });
+
+            // TODO: Change this to project_id when serverside is ready
+            AssetService.setDefaultParams({
+                project: $stateParams.id
             });
 
         }

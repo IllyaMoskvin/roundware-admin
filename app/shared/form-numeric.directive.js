@@ -3,7 +3,7 @@
 
     angular
         .module('app')
-        .directive('integer', Directive);
+        .directive('numeric', Directive);
 
     Directive.$inject = [];
 
@@ -23,12 +23,25 @@
             restrict: 'A',
             link: function( scope, element, attr, ngModel ) {
 
-                var parser = function(val) {
-                    return parseInt( val, 10 );
+                // TODO: Double-check that this is stable
+                if( !ngModel ) {
+                    return;
+                }
+
+                var parser = function( value ) {
+
+                    // Mitigate unassigned values
+                    if(!value) {
+                        return 0;
+                    }
+
+                    // There's no point to using parseInt here
+                    return parseFloat( value );
+
                 };
 
-                var formatter = function(val) {
-                    return '' + val;
+                var formatter = function( value ) {
+                    return '' + value;
                 };
 
                 ngModel.$parsers.unshift( parser );

@@ -4,7 +4,7 @@
     <div class="form-group row">
         <label for="category" class="col-sm-2 control-label">Category</label>
         <div class="col-sm-10">
-            <select class="form-control" id="category" ng-model="vm.show_category" integer>
+            <select class="form-control" id="category" ng-model="vm.show_category" numeric>
                 <option value="0">All</option>
                 <option ng-repeat="option in vm.categories" value="{{option.id}}">{{option.name}}</option>
             </select>

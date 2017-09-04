@@ -106,6 +106,35 @@
                 data: {
                     cssClassnames: 'rw-state-build-ui'
                 }
+            })
+            .state('project.assets', {
+                url: '/assets',
+                templateUrl: 'states/authenticated/project/assets/assets.html',
+                controller: 'AssetsController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-assets'
+                }
+            })
+            // This must be above the looser-matching asset-edit definition
+            .state('project.asset-new', {
+                url: '/assets/new',
+                templateUrl: 'states/authenticated/project/assets/asset/asset.html',
+                controller: 'NewAssetController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-asset'
+                }
+            })
+            // Inherits from project to use its ui-view, but belongs to assets
+            .state('project.asset-edit', {
+                url: '/assets/:asset_id',
+                templateUrl: 'states/authenticated/project/assets/asset/asset.html',
+                controller: 'EditAssetController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-asset'
+                }
             });
 
     }
@@ -212,7 +241,8 @@
 
         // TODO: Load config from file?
         ApiService.init({
-            url: 'http://localhost:8888/api/2/',
+            base: 'http://localhost:8888',
+            path: '/api/2/',
         });
 
         AuthService.init({

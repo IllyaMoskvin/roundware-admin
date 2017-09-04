@@ -14,6 +14,11 @@
         'smart-table',
         'ui.bootstrap',
         'ui.tree',
+        'btorfs.multiselect',
+        'nemLogging',
+        'ui-leaflet',
+        'rzModule',
+        'angularFileUpload',
 
     ]);
 
