@@ -15,7 +15,7 @@
         <tr ng-repeat="row in vm.displayed.categories">
             <td>{{ row.id }}</td>
             <td>{{ row.name }}</td>
-            <td><st-button modal-href="tag-category-edit" modal-data="{ id: row.id }"/></td>
+            <td><btn-edit modal-href="tag-category-edit" modal-data="{ id: row.id }"/></td>
         </tr>
     </tbody>
 </table>
@@ -47,7 +47,7 @@
             <td>{{ row.value }}</td>
             <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
             <td>{{ row.description }}</td>
-            <td><st-button modal-href="tag-edit" modal-data="{ id: row.id }"/></td>
+            <td><btn-edit modal-href="tag-edit" modal-data="{ id: row.id }"/></td>
         </tr>
     </tbody>
 </table>
