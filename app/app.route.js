@@ -218,6 +218,14 @@
                 templateUrl: 'modals/ui-group/confirm-reorder.html',
                 controller: 'ConfirmGenericController',
                 controllerAs: 'vm',
+            })
+            .modal('audiotrack-edit', {
+                templateUrl: 'modals/audiotrack/audiotrack.html',
+                controller: 'EditAudiotrackController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
             });
 
     }
