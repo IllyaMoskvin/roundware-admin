@@ -231,6 +231,11 @@
                 templateUrl: 'modals/audiotrack/audiotrack.html',
                 controller: 'NewAudiotrackController',
                 controllerAs: 'vm',
+            })
+            .modal('audiotrack-confirm-delete', {
+                templateUrl: 'modals/audiotrack/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
             });
 
     }

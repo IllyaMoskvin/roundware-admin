@@ -4,9 +4,9 @@
         .module('app')
         .controller('AudiotracksController',  Controller);
 
-    Controller.$inject = ['AudiotrackService', 'Notification'];
+    Controller.$inject = ['AudiotrackService', 'ModalService', 'Notification'];
 
-    function Controller(AudiotrackService, Notification) {
+    function Controller(AudiotrackService, ModalService, Notification) {
 
         var vm = this;
 
@@ -26,9 +26,13 @@
 
         function deleteAudiotrack( id ) {
 
-            AudiotrackService.delete( id ).promise.then( function() {
+            ModalService.open('audiotrack-confirm-delete').result.then( function() {
 
-                Notification.warning( { message: 'Audiotrack deleted!' } );
+                AudiotrackService.delete( id ).promise.then( function() {
+
+                    Notification.warning( { message: 'Audiotrack deleted!' } );
+
+                });
 
             });
 
