@@ -226,6 +226,11 @@
                 params: [
                     'id'
                 ]
+            })
+            .modal('audiotrack-new', {
+                templateUrl: 'modals/audiotrack/audiotrack.html',
+                controller: 'NewAudiotrackController',
+                controllerAs: 'vm',
             });
 
     }
