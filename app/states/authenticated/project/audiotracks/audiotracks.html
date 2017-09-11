@@ -17,6 +17,7 @@
             <col>
             <col>
             <col width="45">
+            <col width="45">
         </colgroup>
         <thead>
             <tr>
@@ -28,7 +29,7 @@
                 <th>Fade-Out</th>
                 <th>Pan Pos.</th>
                 <th>Pan Dur.</th>
-                <th colspan="2">Repeat?</th>
+                <th colspan="3">Repeat?</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +43,8 @@
                 <td>{{ row.minpanpos }} - {{ row.maxpanpos }}</td>
                 <td>{{ row.minpanduration }} - {{ row.maxpanduration }}</td>
                 <td>{{ row.repeatrecordings }}</td>
-                <td><st-button modal-href="audiotrack-edit" modal-data="{ id: row.id }"/></td>
+                <td><st-button modal-href="audiotrack-edit" modal-data="{ id: row.id }"></st-button></td>
+                <td><st-button type="delete" ng-click="vm.deleteAudiotrack( row.id )"></st-button></td>
             </tr>
         </tbody>
     </table>
