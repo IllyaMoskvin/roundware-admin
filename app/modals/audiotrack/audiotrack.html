@@ -1,0 +1,74 @@
+<!-- Audiotrack Editing Form -->
+<form class="form-horizontal rw-modal-audiotrack">
+
+    <table>
+        <tr>
+            <th class="col-xs-2"></th>
+            <th class="col-xs-5">Min</th>
+            <th class="col-xs-5">Max</th>
+        </tr>
+        <tr>
+            <th>Volume</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.minvolume"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxvolume"></td>
+        </tr>
+        <tr>
+            <th>Duration</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.minduration"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxduration"></td>
+        </tr>
+        <tr>
+            <th>Dead Air</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.mindeadair"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxdeadair"></td>
+        </tr>
+        <tr>
+            <th>Fade-In</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.minfadeintime"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxfadeintime"></td>
+        </tr>
+        <tr>
+            <th>Fade-Out</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.minfadeouttime"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxfadeouttime"></td>
+        </tr>
+        <tr>
+            <th>Pan Pos.</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.minpanpos"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxpanpos"></td>
+        </tr>
+        <tr>
+            <th>Pan Dur.</th>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.minpanduration"></td>
+            <td><input type="text" class="form-control" ng-model="vm.audiotrack.maxpanduration"></td>
+        </tr>
+    </table>
+
+    <hr/>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Repeat</label>
+        <div class="col-xs-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.audiotrack.repeatrecordings">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-default"
+                    ng-click="vm.cancel()">Cancel</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-block btn-primary"
+                    ng-click="vm.save()" ng-disabled="vm.saving">Save</button>
+        </div>
+    </div>
+
+</form>

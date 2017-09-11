@@ -135,6 +135,15 @@
                 data: {
                     cssClassnames: 'rw-state-asset'
                 }
+            })
+            .state('project.audiotracks', {
+                url: '/audiotracks',
+                templateUrl: 'states/authenticated/project/audiotracks/audiotracks.html',
+                controller: 'AudiotracksController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-audiotracks'
+                }
             });
 
     }
@@ -207,6 +216,24 @@
             })
             .modal('ui-group-confirm-reorder', {
                 templateUrl: 'modals/ui-group/confirm-reorder.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
+            })
+            .modal('audiotrack-edit', {
+                templateUrl: 'modals/audiotrack/audiotrack.html',
+                controller: 'EditAudiotrackController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
+            })
+            .modal('audiotrack-new', {
+                templateUrl: 'modals/audiotrack/audiotrack.html',
+                controller: 'NewAudiotrackController',
+                controllerAs: 'vm',
+            })
+            .modal('audiotrack-confirm-delete', {
+                templateUrl: 'modals/audiotrack/confirm-delete.html',
                 controller: 'ConfirmGenericController',
                 controllerAs: 'vm',
             });

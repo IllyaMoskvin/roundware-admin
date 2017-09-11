@@ -1,0 +1,52 @@
+<div class="rw-audiotracks">
+
+    <button type="button" class="btn btn-block btn-primary" modal-href="audiotrack-new">Add Audiotrack</button>
+
+    <hr/>
+
+    <!-- Audiotrack -->
+    <table st-table="vm.displayed.audiotracks" st-safe-src="vm.audiotracks.clean" class="table table-striped">
+        <colgroup>
+            <col width="42">
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col width="45">
+            <col width="45">
+        </colgroup>
+        <thead>
+            <tr>
+                <th st-sort="id" st-sort-default="true">ID</th>
+                <th>Volume</th>
+                <th>Duration</th>
+                <th>Dead Air</th>
+                <th>Fade-In</th>
+                <th>Fade-Out</th>
+                <th>Pan Pos.</th>
+                <th>Pan Dur.</th>
+                <th colspan="3">Repeat?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in vm.displayed.audiotracks">
+                <td>{{ row.id }}</td>
+                <td>{{ row.minvolume }} - {{ row.maxvolume }}</td>
+                <td>{{ row.minduration }} - {{ row.maxduration }}</td>
+                <td>{{ row.mindeadair }} - {{ row.maxdeadair }}</td>
+                <td>{{ row.minfadeintime }} - {{ row.maxfadeintime }}</td>
+                <td>{{ row.minfadeouttime }} - {{ row.maxfadeouttime }}</td>
+                <td>{{ row.minpanpos }} - {{ row.maxpanpos }}</td>
+                <td>{{ row.minpanduration }} - {{ row.maxpanduration }}</td>
+                <td>{{ row.repeatrecordings }}</td>
+                <td><btn-edit modal-href="audiotrack-edit" modal-data="{ id: row.id }"/></td>
+                <td><btn-delete ng-click="vm.deleteAudiotrack( row.id )"/></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
