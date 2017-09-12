@@ -26,9 +26,8 @@
                 project_id: $stateParams.id
             });
 
-            // TODO: Change this to project_id when serverside is ready
             AssetService.setDefaultParams({
-                project: $stateParams.id
+                project_id: $stateParams.id
             });
 
             AudiotrackService.setDefaultParams({
