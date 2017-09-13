@@ -21,6 +21,11 @@
             draggable: true,
             lat: 0,
             lng: 0,
+            icon: {
+                type: 'awesomeMarker',
+                icon: 'glyphicon-volume-up',
+                markerColor: 'blue'
+            }
         };
 
         // Leaflet configs: http://angular-ui.github.io/ui-leaflet/
