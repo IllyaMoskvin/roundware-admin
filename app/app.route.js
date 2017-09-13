@@ -144,6 +144,15 @@
                 data: {
                     cssClassnames: 'rw-state-audiotracks'
                 }
+            })
+            .state('project.speakers', {
+                url: '/speakers',
+                templateUrl: 'states/authenticated/project/speakers/speakers.html',
+                controller: 'SpeakersController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-speakers'
+                }
             });
 
     }
