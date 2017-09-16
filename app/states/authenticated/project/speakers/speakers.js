@@ -20,6 +20,8 @@
         vm.speakers = null;
         vm.map = null;
 
+        vm.getColor = getColor;
+
         activate();
 
         return vm;
@@ -48,7 +50,9 @@
                     // Add the shapes as Polygons to our FeatureGroup
                     shapes.forEach( function( shape ) {
 
-                        var poly = new L.Polygon( shape ).addTo( group );
+                        var poly = new L.Polygon( shape, {
+                            color: getColor( speaker.id ),
+                        }).addTo( group );
 
                     });
 
@@ -160,6 +164,25 @@
 
                 });
 
+            });
+
+        }
+
+
+        function getColor( seed, alpha ) {
+
+            // Alpha is optional, defaults to 1
+            var alpha = alpha || 1;
+
+            // Uncomment these sections to control the hue
+            // var hues = ['red', 'orange', 'yellow', 'purple', 'pink'];
+
+            return randomColor({
+                // hue: hues[Math.floor(Math.random() * hues.length)],
+                luminosity: 'bright',
+                seed: seed * 10, // increase differentiation
+                format: alpha ? 'rgba' : 'hex',
+                alpha: alpha,
             });
 
         }

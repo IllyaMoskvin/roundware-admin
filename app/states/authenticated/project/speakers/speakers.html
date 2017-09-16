@@ -3,6 +3,7 @@
     <table st-table="vm.displayed.speakers" st-safe-src="vm.speakers" class="table table-striped">
         <thead>
             <tr>
+                <th width="29"></th>
                 <th st-sort="id" st-sort-default="true">ID</th>
                 <th>Active</th>
                 <th>Code</th>
@@ -11,6 +12,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="row in vm.displayed.speakers">
+                <td style="background-color: {{ vm.getColor( row.id, 0.8 ) }}"></td>
                 <td>{{ row.id }}</td>
                 <td>{{ row.activeyn }}</td>
                 <td>{{ row.code }}</td>
