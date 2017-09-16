@@ -1,16 +1,16 @@
 <div class="rw-speakers">
 
-    <table class="table table-striped">
+    <table st-table="vm.displayed.speakers" st-safe-src="vm.speakers" class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+                <th st-sort="id" st-sort-default="true">ID</th>
                 <th>Active</th>
                 <th>Code</th>
                 <th colspan="2">Volume</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="row in vm.speakers">
+            <tr ng-repeat="row in vm.displayed.speakers">
                 <td>{{ row.id }}</td>
                 <td>{{ row.activeyn }}</td>
                 <td>{{ row.code }}</td>
