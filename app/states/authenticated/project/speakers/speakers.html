@@ -1,3 +1,23 @@
 <div class="rw-speakers">
-    {{ vm.speakers }}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Active</th>
+                <th>Code</th>
+                <th colspan="2">Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in vm.speakers">
+                <td>{{ row.id }}</td>
+                <td>{{ row.activeyn }}</td>
+                <td>{{ row.code }}</td>
+                <td>{{ row.minvolume }}</td>
+                <td>{{ row.maxvolume }}</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
