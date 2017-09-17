@@ -11,7 +11,7 @@
         // Leafet.draw cannot render multigeometries, e.g. MultiPolygons
         // We need to decompose MultiPolygons into FeatureGroups of Polygons
         // This is where we will store these FeatureGroups
-        var editableGroups = [];
+        var editableGroups = {};
 
         // We will always draw all FeatureGroups, but only one will be editable at a time.
 
@@ -24,6 +24,7 @@
         vm.map = null;
 
         vm.getColor = getColor;
+        vm.setCurrentSpeaker = setCurrentSpeaker;
 
         activate();
 
@@ -63,7 +64,7 @@
                     group.addTo( vm.map );
 
                     // Add the FeatureGroup to our tracker
-                    editableGroups.push( group );
+                    editableGroups[ speaker.id ] = group;
 
                 });
 
@@ -72,6 +73,15 @@
             initLeaflet();
 
         }
+
+
+        function setCurrentSpeaker( id ) {
+
+            // TODO: Use flyToBounds?
+            vm.map.fitBounds( editableGroups[ id ].getBounds() );
+
+        }
+
 
         function initLeaflet() {
 
