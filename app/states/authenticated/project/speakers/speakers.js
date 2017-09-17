@@ -4,9 +4,9 @@
         .module('app')
         .controller('SpeakersController',  Controller);
 
-    Controller.$inject = ['$scope', 'leafletData', 'leafletDrawEvents', 'SpeakerService', 'Notification'];
+    Controller.$inject = ['$scope', 'leafletData', 'SpeakerService', 'Notification'];
 
-    function Controller($scope, leafletData, leafletDrawEvents, SpeakerService, Notification) {
+    function Controller($scope, leafletData, SpeakerService, Notification) {
 
         // Leafet.draw cannot render multigeometries, e.g. MultiPolygons
         // We need to decompose MultiPolygons into FeatureGroups of Polygons
@@ -123,38 +123,6 @@
                 }
 
             };
-
-            var handle = {
-                created: function(e,leafletEvent, leafletObject, model, modelName) {
-                    currentGroup.addLayer(leafletEvent.layer);
-                },
-                edited: function(arg) {},
-                deleted: function(arg) {},
-
-                // These events aren't useful, but available for binding
-                drawstart: function(arg) {},
-                drawstop: function(arg) {},
-                editstart: function(arg) {},
-                editstop: function(arg) {},
-                deletestart: function(arg) {},
-                deletestop: function(arg) {}
-            };
-
-            var drawEvents = leafletDrawEvents.getAvailableEvents();
-
-            drawEvents.forEach(function(eventName){
-
-                // We need to specify the id of our map (#map) to track events
-                // https://github.com/angular-ui/ui-leaflet-draw/issues/10
-                $scope.$on('leafletDirectiveDraw.map.' + eventName, function(e, payload) {
-                    //{leafletEvent, leafletObject, model, modelName} = payload
-                    var leafletEvent, leafletObject, model, modelName; //destructuring not supported by chrome yet :(
-                    leafletEvent = payload.leafletEvent, leafletObject = payload.leafletObject, model = payload.model,
-                    modelName = payload.modelName;
-                    handle[eventName.replace('draw:','')](e,leafletEvent, leafletObject, model, modelName);
-                });
-
-            });
 
         }
 
