@@ -73,6 +73,7 @@
                     // Add the FeatureGroup to our tracker
                     editableGroups.push({
                         speaker_id: speaker.id,
+                        color: getColor( speaker.id ),
                         features: group,
                     });
 
@@ -102,6 +103,7 @@
 
             // Modify the drawOptions for the new drawControl instance
             vm.leaflet.drawOptions.edit.featureGroup = vm.currentGroup.features;
+            vm.leaflet.drawOptions.draw.polygon.shapeOptions.color = vm.currentGroup.color;
 
             // Remove the existing drawControl, if there is one
             if( vm.drawControl ) {
@@ -120,6 +122,7 @@
 
             // Leaflet configs: http://angular-ui.github.io/ui-leaflet/
             vm.leaflet = {
+
                 center: {
                     lat: 0,
                     lng: 0,
@@ -141,7 +144,9 @@
                                 message: 'Polygons cannot intersect.'
                             },
                             shapeOptions: {
-                                color: '#bada55'
+                                color: '#bada55',
+                                opacity: 1,
+                                weight: 3,
                             }
                         },
                         circle: false,
