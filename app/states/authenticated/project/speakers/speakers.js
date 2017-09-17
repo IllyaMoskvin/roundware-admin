@@ -9,16 +9,15 @@
     function Controller($scope, leafletData, SpeakerService, Notification) {
 
         // Leafet.draw cannot render multigeometries, e.g. MultiPolygons
-        // We need to decompose MultiPolygons into FeatureGroups of Polygons
-        // This is where we will store these FeatureGroups
-        var editableGroups = {};
-
-        // We will always draw all FeatureGroups, but only one will be editable at a time.
-
-        // This will be a pointer to the currently editable FeatureGroup
-        var currentGroup = new L.FeatureGroup();
+        // This is where we will store these FeatureGroups, along with their metadata
+        // We will always draw all FeatureGroups, but only one will be editable at a time
+        // Structure of each group: { speaker_id: speaker.id, features: FeatureGroup }
+        var editableGroups = [];
 
         var vm = this;
+
+        // This will be a pointer to the currently editable FeatureGroup
+        vm.currentGroup = null;
 
         vm.speakers = null;
         vm.map = null;
@@ -64,7 +63,10 @@
                     group.addTo( vm.map );
 
                     // Add the FeatureGroup to our tracker
-                    editableGroups[ speaker.id ] = group;
+                    editableGroups.push({
+                        speaker_id: speaker.id,
+                        features: group,
+                    });
 
                 });
 
@@ -77,8 +79,15 @@
 
         function setCurrentSpeaker( id ) {
 
+            var group = editableGroups.find( function( group ) {
+                return group.speaker_id == id;
+            });
+
+            // Set the current group...
+            vm.currentGroup = group;
+
             // TODO: Use flyToBounds?
-            vm.map.fitBounds( editableGroups[ id ].getBounds() );
+            vm.map.fitBounds( vm.currentGroup.features.getBounds() );
 
         }
 
@@ -117,7 +126,8 @@
                         marker: false,
                     },
                     edit: {
-                        featureGroup: currentGroup, //REQUIRED!!
+                        // REQUIRED! Change this before initializing L.Draw.Control
+                        featureGroup: null,
                         remove: true
                     }
                 }

@@ -31,7 +31,13 @@
 
     <hr/>
 
-    <p>Draw a shape on the map to add a new speaker, or click the <span class="glyphicon glyphicon-edit"></span> button to edit existing speakers.</p>
+    <p ng-if="vm.currentGroup">
+        Currently editing <strong>Speaker #{{ vm.currentGroup.speaker_id }}</strong>
+    </p>
+
+    <p ng-if="!vm.currentGroup">
+        Draw a shape on the map to add a new speaker, or click the <span class="glyphicon glyphicon-edit"></span> button to edit existing speakers.
+    </p>
 
     <!-- Leaflet map for adding new speakers -->
     <leaflet
