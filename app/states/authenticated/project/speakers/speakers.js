@@ -19,6 +19,9 @@
         // This will be a pointer to the currently editable FeatureGroup
         vm.currentGroup = null;
 
+        // https://github.com/angular-ui/ui-leaflet-draw/issues/7
+        vm.drawControl = null;
+
         vm.speakers = null;
         vm.map = null;
 
@@ -35,6 +38,11 @@
             leafletData.getMap('map').then( function( map ) {
 
                 vm.map = map;
+
+                // TODO: Also handle draw:edited and draw:deleted
+                vm.map.on('draw:created', function(e) {
+                    vm.currentGroup.features.addLayer(e.layer);
+                });
 
             });
 
@@ -88,6 +96,22 @@
 
             // TODO: Use flyToBounds?
             vm.map.fitBounds( vm.currentGroup.features.getBounds() );
+
+            // Leaflet.draw does not allow changing the target featureGroup
+            // We'll work around this by creating a new L.Draw.Control instance
+
+            // Modify the drawOptions for the new drawControl instance
+            vm.leaflet.drawOptions.edit.featureGroup = vm.currentGroup.features;
+
+            // Remove the existing drawControl, if there is one
+            if( vm.drawControl ) {
+                vm.map.removeControl( vm.drawControl );
+            }
+
+            // Create the new drawControl
+            vm.drawControl = new L.Control.Draw( vm.leaflet.drawOptions );
+
+            vm.drawControl.addTo( vm.map );
 
         }
 
