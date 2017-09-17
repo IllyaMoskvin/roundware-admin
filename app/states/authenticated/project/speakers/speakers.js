@@ -15,6 +15,9 @@
 
         // We will always draw all FeatureGroups, but only one will be editable at a time.
 
+        // This will be a pointer to the currently editable FeatureGroup
+        var currentGroup = new L.FeatureGroup();
+
         var vm = this;
 
         vm.speakers = null;
@@ -104,17 +107,16 @@
                         marker: false,
                     },
                     edit: {
-                        featureGroup: editableGroups[0], //REQUIRED!!
-                        remove: false
+                        featureGroup: currentGroup, //REQUIRED!!
+                        remove: true
                     }
                 }
 
             };
 
-
             var handle = {
                 created: function(e,leafletEvent, leafletObject, model, modelName) {
-                    editableGroups[0].addLayer(leafletEvent.layer);
+                    currentGroup.addLayer(leafletEvent.layer);
                 },
                 edited: function(arg) {},
                 deleted: function(arg) {},
@@ -131,13 +133,17 @@
             var drawEvents = leafletDrawEvents.getAvailableEvents();
 
             drawEvents.forEach(function(eventName){
-                $scope.$on('leafletDirectiveDraw.' + eventName, function(e, payload) {
+
+                // We need to specify the id of our map (#map) to track events
+                // https://github.com/angular-ui/ui-leaflet-draw/issues/10
+                $scope.$on('leafletDirectiveDraw.map.' + eventName, function(e, payload) {
                     //{leafletEvent, leafletObject, model, modelName} = payload
                     var leafletEvent, leafletObject, model, modelName; //destructuring not supported by chrome yet :(
                     leafletEvent = payload.leafletEvent, leafletObject = payload.leafletObject, model = payload.model,
                     modelName = payload.modelName;
                     handle[eventName.replace('draw:','')](e,leafletEvent, leafletObject, model, modelName);
                 });
+
             });
 
         }
