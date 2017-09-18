@@ -44,11 +44,18 @@
                     vm.currentGroup.features.addLayer(e.layer);
                 });
 
+                vm.map.on('draw:created', saveLeafletChanges );
+                vm.map.on('draw:edited', saveLeafletChanges );
+                vm.map.on('draw:deleted', saveLeafletChanges );
+
             });
 
             SpeakerService.list().promise.then( function(cache) {
 
                 vm.speakers = cache.dirty;
+
+                // Verification for whether lat-lon needs to be flipped:
+                // console.log( vm.speakers[1].shape.coordinates[0][0][0] );
 
                 vm.speakers.forEach( function( speaker ) {
 
@@ -82,6 +89,45 @@
             });
 
             initLeaflet();
+
+        }
+
+
+        function saveLeafletChanges( event ) {
+
+            // Unforunately, we can't call toGeoJson on a FeatureGroup
+            // https://github.com/Leaflet/Leaflet/issues/712
+            // https://github.com/Leaflet/Leaflet/issues/2734
+
+            var layers = vm.currentGroup.features.getLayers();
+
+            var features = layers.map( function( polygon ) {
+                return polygon.toGeoJSON();
+            });
+
+            var coordinates = features.map( function( feature ) {
+                return feature.geometry.coordinates;
+            });
+
+            // Since we used toGeoJSON, flipping is not required?
+            // console.log( coordinates[0][0][0] );
+            // coordinates = getFlippedShapes( coordinates );
+
+            var shape = {
+                type: 'MultiPolygon',
+                coordinates: coordinates,
+            };
+
+            // Dope. Now, save shape to server...
+            SpeakerService.update( vm.currentGroup.speaker_id, {
+
+                shape: shape
+
+            }).promise.then( function( cache ) {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            });
 
         }
 
