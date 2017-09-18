@@ -150,6 +150,7 @@
             // Modify the drawOptions for the new drawControl instance
             vm.leaflet.drawOptions.edit.featureGroup = vm.currentGroup.features;
             vm.leaflet.drawOptions.draw.polygon.shapeOptions.color = vm.currentGroup.color;
+            vm.leaflet.drawOptions.draw.rectangle.shapeOptions.color = vm.currentGroup.color;
 
             // Remove the existing drawControl, if there is one
             if( vm.drawControl ) {
@@ -190,14 +191,18 @@
                                 message: 'Polygons cannot intersect.'
                             },
                             shapeOptions: {
-                                color: '#bada55',
                                 opacity: 1,
                                 weight: 3,
                             }
                         },
                         circle: false,
                         circlemarker: false,
-                        rectangle: false,
+                        rectangle: {
+                            shapeOptions: {
+                                opacity: 1,
+                                weight: 3,
+                            },
+                        },
                         marker: false,
                     },
                     edit: {
