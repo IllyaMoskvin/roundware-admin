@@ -100,7 +100,7 @@
                     }
 
                     var matches = scope.strings.filter( function( string ) {
-                        return string.language === language.language_code;
+                        return string.language_id === language.id;
                     });
 
                     if( matches.length < 1 ) {
@@ -108,7 +108,7 @@
                         // Create a dummy string
                         var string = {
                             localized_string: '',
-                            language: language.language_code,
+                            language_id: language.id,
                         };
 
                         scope.model[scope.field].push( string );
