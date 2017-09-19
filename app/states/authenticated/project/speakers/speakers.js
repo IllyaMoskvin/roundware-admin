@@ -84,6 +84,8 @@
                         features: group,
                     });
 
+                    setAttenuationBorder( speaker );
+
                 });
 
             });
@@ -125,6 +127,9 @@
 
             }).promise.then( function( cache ) {
 
+                // Draw the new attenuation_border on our map
+                setAttenuationBorder( cache.clean );
+
                 Notification.success( { message: 'Changes saved!' } );
 
             });
@@ -161,6 +166,52 @@
             vm.drawControl = new L.Control.Draw( vm.leaflet.drawOptions );
 
             vm.drawControl.addTo( vm.map );
+
+        }
+
+
+        function setAttenuationBorder( speaker ) {
+
+            var group = editableGroups.find( function( group ) {
+                return group.speaker_id == speaker.id;
+            });
+
+            // Reset the group's attenuation_border
+            if( group.attenuation ) {
+                group.attenuation.removeFrom( vm.map );
+                delete group.attenuation;
+            }
+
+            // Create new attenuation FeatureGroup
+            var attenuation = new L.geoJSON();
+
+            var coordinates = speaker.attenuation_border.coordinates;
+
+            // Refactor? Standardize to an array of lines
+            switch( speaker.attenuation_border.type ) {
+                case "MultiLineString":
+                    flip( coordinates ).map( addLine );
+                break;
+                case "LineString":
+                    [ flip( coordinates ) ].map( addLine );
+                break;
+            }
+
+            // Helper for adding each line to FeatureGroup
+            function addLine( line ) {
+
+                new L.Polyline( line, {
+                    color: getColor( speaker.id ),
+                    weight: 1,
+                }).addTo( attenuation );
+
+            }
+
+            // Show the FeatureGroup on the map
+            attenuation.addTo( vm.map );
+
+            // Save the attenuation group to our tracker
+            group.attenuation = attenuation;
 
         }
 
