@@ -28,6 +28,8 @@
         vm.getColor = getColor;
         vm.setCurrentSpeaker = setCurrentSpeaker;
 
+        vm.saving = false;
+
         activate();
 
         return vm;
@@ -47,6 +49,18 @@
                 vm.map.on('draw:created', saveLeafletChanges );
                 vm.map.on('draw:edited', saveLeafletChanges );
                 vm.map.on('draw:deleted', saveLeafletChanges );
+
+                // It's up to the server callback to restore attenuation
+                vm.map.on('draw:drawstart', hideCurrentAttenuationBorder );
+                vm.map.on('draw:editstart', hideCurrentAttenuationBorder );
+                vm.map.on('draw:deletestart', hideCurrentAttenuationBorder );
+
+                // ...but because there's no draw:cancel event, we'll restore
+                // attenuation if nothing is currently saving to server
+                // https://github.com/Leaflet/Leaflet.draw/issues/357
+                vm.map.on('draw:drawstop', showCurrentAttenuationBorder );
+                vm.map.on('draw:editstop', showCurrentAttenuationBorder );
+                vm.map.on('draw:deletestop', showCurrentAttenuationBorder );
 
             });
 
@@ -121,6 +135,8 @@
             };
 
             // Dope. Now, save shape to server...
+            vm.saving = true;
+
             SpeakerService.update( vm.currentGroup.speaker_id, {
 
                 shape: shape
@@ -132,12 +148,20 @@
 
                 Notification.success( { message: 'Changes saved!' } );
 
+            }).finally( function() {
+
+                vm.saving = false;
+
             });
 
         }
 
 
         function setCurrentSpeaker( id ) {
+
+            // Restore attenuation border for any previously edited Speaker
+            // Fixes cases where this is called after triggering e.g. draw:drawstart
+            showCurrentAttenuationBorder();
 
             var group = editableGroups.find( function( group ) {
                 return group.speaker_id == id;
@@ -178,7 +202,7 @@
 
             // Reset the group's attenuation_border
             if( group.attenuation ) {
-                group.attenuation.removeFrom( vm.map );
+                hideAttenuationBorder( group );
                 delete group.attenuation;
             }
 
@@ -212,6 +236,79 @@
 
             // Save the attenuation group to our tracker
             group.attenuation = attenuation;
+
+        }
+
+
+        // Meant for L.Draw.Control callbacks
+        function hideCurrentAttenuationBorder( ) {
+
+            return hideAttenuationBorder( vm.currentGroup );
+
+        }
+
+        // Likewise, but this is a work-around for lack of draw:cancel
+        function showCurrentAttenuationBorder( ) {
+
+            if( vm.saving ) {
+                return false;
+            }
+
+            return showAttenuationBorder( vm.currentGroup );
+
+        }
+
+        // Remove a group's attenuation from map, if it's shown
+        function hideAttenuationBorder( group ) {
+
+            if( !hasAttenuationBorder( group ) ) {
+                return false;
+            }
+
+            if( !isAttenuationBorderDrawn( group ) ) {
+                return false;
+            }
+
+            group.attenuation.removeFrom( vm.map );
+
+            return true;
+
+        }
+
+        // Add the group's attenuation to map, if it's hidden
+        function showAttenuationBorder( group ) {
+
+            if( !hasAttenuationBorder( group ) ) {
+                return false;
+            }
+
+            if( isAttenuationBorderDrawn( group ) ) {
+                return false;
+            }
+
+            group.attenuation.addTo( vm.map );
+
+            return true;
+
+        }
+
+        function hasAttenuationBorder( group ) {
+
+            if( !group ) {
+                return false;
+            }
+
+            if( !group.attenuation ) {
+                return false;
+            }
+
+            return true;
+
+        }
+
+        function isAttenuationBorderDrawn( group ) {
+
+            return vm.map.hasLayer( group.attenuation );
 
         }
 
