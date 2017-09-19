@@ -76,18 +76,6 @@
                     // Create a FeatureGroup for each Speaker
                     var group = new L.geoJSON();
 
-                    // Get a copy of the shapes w/ their coord order flipped
-                    var shapes = flip( speaker.shape.coordinates );
-
-                    // Add the shapes as Polygons to our FeatureGroup
-                    shapes.forEach( function( shape ) {
-
-                        var poly = new L.Polygon( shape, {
-                            color: getColor( speaker.id ),
-                        }).addTo( group );
-
-                    });
-
                     // Add the FeatureGroup to the map
                     group.addTo( vm.map );
 
@@ -98,6 +86,24 @@
                         features: group,
                     });
 
+                    // New Speakers will have `shape` as null
+                    if( speaker.shape ) {
+
+                        // Get a copy of the shapes w/ their coord order flipped
+                        var shapes = flip( speaker.shape.coordinates );
+
+                        // Add the shapes as Polygons to our FeatureGroup
+                        shapes.forEach( function( shape ) {
+
+                            new L.Polygon( shape, {
+                                color: getColor( speaker.id ),
+                            }).addTo( group );
+
+                        });
+
+                    }
+
+                    // Add `attenuation_border` to map and tracker
                     setAttenuationBorder( speaker );
 
                 });
@@ -195,6 +201,11 @@
 
 
         function setAttenuationBorder( speaker ) {
+
+            // Abort if the serverside attenuation is undefined
+            if( !speaker.attenuation_border ) {
+                return false;
+            }
 
             var group = editableGroups.find( function( group ) {
                 return group.speaker_id == speaker.id;
