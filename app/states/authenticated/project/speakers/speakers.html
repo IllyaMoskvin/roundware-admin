@@ -1,13 +1,24 @@
 <div class="rw-speakers">
 
     <table st-table="vm.displayed.speakers" st-safe-src="vm.speakers" class="table table-striped">
+        <colgroup>
+            <col width="45">
+            <col width="45">
+            <col width="80">
+            <col width="80">
+            <col width="80">
+            <col width="100">
+            <col>
+        </colgroup>
         <thead>
             <tr>
-                <th width="45"></th>
+                <th></th>
                 <th st-sort="id" st-sort-default="true">ID</th>
                 <th>Active</th>
                 <th>Code</th>
-                <th colspan="2">Volume</th>
+                <th>Volume</th>
+                <th>Attn. Dist.</th>
+                <th>URI</th>
             </tr>
         </thead>
         <tbody>
@@ -23,8 +34,9 @@
                 <td>{{ row.id }}</td>
                 <td>{{ row.activeyn }}</td>
                 <td>{{ row.code }}</td>
-                <td>{{ row.minvolume }}</td>
-                <td>{{ row.maxvolume }}</td>
+                <td>{{ row.minvolume }} - {{ row.maxvolume }}</td>
+                <td>{{ row.attenuation_distance }}</td>
+                <td>{{ row.uri }}</td>
             </tr>
         </tbody>
     </table>
