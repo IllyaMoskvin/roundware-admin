@@ -11,6 +11,7 @@
 
         return new DataFactory.Collection({
             route: 'speakers',
+            refresh: true,
         });
 
     }
