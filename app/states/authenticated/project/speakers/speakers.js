@@ -63,7 +63,7 @@
                     var group = new L.geoJSON();
 
                     // Get a copy of the shapes w/ their coord order flipped
-                    var shapes = getFlippedShapes( speaker.shape.coordinates );
+                    var shapes = flip( speaker.shape.coordinates );
 
                     // Add the shapes as Polygons to our FeatureGroup
                     shapes.forEach( function( shape ) {
@@ -111,7 +111,7 @@
 
             // Since we used toGeoJSON, flipping is not required?
             // console.log( coordinates[0][0][0] );
-            // coordinates = getFlippedShapes( coordinates );
+            // coordinates = flip( coordinates );
 
             var shape = {
                 type: 'MultiPolygon',
@@ -220,25 +220,21 @@
         // Django returns GeoJSON? Lat & Long are flipped.
         // https://github.com/Leaflet/Leaflet/issues/2495
         // https://github.com/Leaflet/Leaflet/issues/1455
-        function getFlippedShapes( coordinates ) {
 
-            // Avoid changing the original arrays
-            var shapes = angular.extend( [], coordinates );
+        // I've abstracted flipping to be recursive:
+        // https://tools.ietf.org/html/rfc7946#section-3.1.1
 
-            // Flip each coordinate in each shape
-            return shapes.map( function( shape ) {
+        function flip( array ) {
 
-                return shape.map( function( points ) {
+            // Is this an array of arrays, or is it a point?
+            if( array[0] && array[0].constructor === Array ) {
+                return array.map( flip );
+            }
 
-                    return points.map( function( point ) {
+            // array.reverse edits in place, but we want a copy
+            var point = angular.extend( [], array );
 
-                        return point.reverse();
-
-                    });
-
-                });
-
-            });
+            return point.reverse();
 
         }
 
