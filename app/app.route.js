@@ -245,6 +245,19 @@
                 templateUrl: 'modals/audiotrack/confirm-delete.html',
                 controller: 'ConfirmGenericController',
                 controllerAs: 'vm',
+            })
+            .modal('speaker-edit', {
+                templateUrl: 'modals/speaker/speaker.html',
+                controller: 'EditSpeakerController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
+            })
+            .modal('speaker-new', {
+                templateUrl: 'modals/speaker/speaker.html',
+                controller: 'NewSpeakerController',
+                controllerAs: 'vm',
             });
 
     }

@@ -1,5 +1,9 @@
 <div class="rw-speakers">
 
+    <button type="button" class="btn btn-block btn-primary" modal-href="speaker-new">Add Speaker</button>
+
+    <hr/>
+
     <table st-table="vm.displayed.speakers" st-safe-src="vm.speakers" class="table table-striped">
         <colgroup>
             <col width="45">
@@ -9,6 +13,7 @@
             <col width="80">
             <col width="100">
             <col>
+            <col width="45">
         </colgroup>
         <thead>
             <tr>
@@ -19,6 +24,7 @@
                 <th>Volume</th>
                 <th>Attn. Dist.</th>
                 <th>URI</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +43,7 @@
                 <td>{{ row.minvolume }} - {{ row.maxvolume }}</td>
                 <td>{{ row.attenuation_distance }}</td>
                 <td>{{ row.uri }}</td>
+                <td><btn-edit modal-href="speaker-edit" modal-data="{ id: row.id }"/></td>
             </tr>
         </tbody>
     </table>
