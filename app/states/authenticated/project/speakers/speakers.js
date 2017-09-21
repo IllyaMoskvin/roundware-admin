@@ -195,7 +195,11 @@
             vm.currentGroup = group;
 
             // TODO: Use flyToBounds?
-            vm.map.fitBounds( vm.currentGroup.features.getBounds() );
+            if( vm.currentGroup.features.getLayers().length > 0 ) {
+                vm.map.fitBounds( vm.currentGroup.features.getBounds() );
+            } else {
+                fitBoundsToAll();
+            }
 
             // Leaflet.draw does not allow changing the target featureGroup
             // We'll work around this by creating a new L.Draw.Control instance
