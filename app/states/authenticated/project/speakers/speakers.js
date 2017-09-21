@@ -108,6 +108,9 @@
 
                 });
 
+                // Reset the map
+                fitBoundsToAll();
+
             });
 
             initLeaflet();
@@ -159,6 +162,21 @@
                 vm.saving = false;
 
             });
+
+        }
+
+
+        // Useful for resetting the map to show all Speakers
+        function fitBoundsToAll( ) {
+
+            // Create a FeatureGroup of FeatureGroups
+            var features = editableGroups.map( function( group ) {
+                return group.features;
+            });
+
+            var group = new L.FeatureGroup( features );
+
+            vm.map.fitBounds( group.getBounds() );
 
         }
 
