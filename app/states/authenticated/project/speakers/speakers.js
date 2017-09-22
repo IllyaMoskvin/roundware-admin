@@ -29,6 +29,7 @@
         vm.setCurrentSpeaker = setCurrentSpeaker;
 
         vm.saving = false;
+        vm.editing = false;
 
         activate();
 
@@ -51,16 +52,27 @@
                 vm.map.on('draw:deleted', saveLeafletChanges );
 
                 // It's up to the server callback to restore attenuation
-                vm.map.on('draw:drawstart', hideCurrentAttenuationBorder );
-                vm.map.on('draw:editstart', hideCurrentAttenuationBorder );
-                vm.map.on('draw:deletestart', hideCurrentAttenuationBorder );
+                vm.map.on('draw:drawstart', editStart );
+                vm.map.on('draw:editstart', editStart );
+                vm.map.on('draw:deletestart', editStart );
 
                 // ...but because there's no draw:cancel event, we'll restore
                 // attenuation if nothing is currently saving to server
                 // https://github.com/Leaflet/Leaflet.draw/issues/357
-                vm.map.on('draw:drawstop', showCurrentAttenuationBorder );
-                vm.map.on('draw:editstop', showCurrentAttenuationBorder );
-                vm.map.on('draw:deletestop', showCurrentAttenuationBorder );
+                vm.map.on('draw:drawstop', editStop );
+                vm.map.on('draw:editstop', editStop );
+                vm.map.on('draw:deletestop', editStop );
+
+                // Helpers to decrease repetition
+                function editStart() {
+                    hideCurrentAttenuationBorder();
+                    vm.editing = true;
+                }
+
+                function editStop() {
+                    showCurrentAttenuationBorder();
+                    vm.editing = false;
+                }
 
             });
 
@@ -255,7 +267,14 @@
 
                     // Clicking on a shape opens this speaker
                     poly.on('click', function() {
+
+                        // Don't interfere with actual functionality
+                        if( vm.editing ) {
+                            return;
+                        }
+
                         setCurrentSpeaker( speaker.id );
+
                     });
 
                 });
