@@ -454,7 +454,7 @@
                     var expression = 'vm.speakers.clean[' + index + ']';
 
                     // This is the function we actually want to call
-                    var listener = $scope.$watch( expression, setSpeaker );
+                    var listener = $scope.$watch( expression, setSpeaker, true );
 
                     watchers.push({
                         id: speaker.id,
