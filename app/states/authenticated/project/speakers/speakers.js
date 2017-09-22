@@ -472,8 +472,31 @@
                     var index = vm.speakers.clean.indexOf( speaker );
                     var expression = 'vm.speakers.clean[' + index + ']';
 
-                    // This is the function we actually want to call
-                    var listener = $scope.$watch( expression, setSpeaker, true );
+                    // What attributes are we actually interested in watching?
+                    var attributes = [
+                        expression + '.activeyn',
+                        expression + '.attenuation_distance',
+                    ];
+
+                    // Watch these attributes, and check if any of them actually changed
+                    var listener = $scope.$watchGroup( attributes, function( new_values, old_values ) {
+
+                        var changed = false;
+
+                        for( var i=0; i < new_values.length; i++ ) {
+                            if( new_values[i] != old_values[i] ) {
+                                changed = true;
+                            }
+                        }
+
+                        if( !changed ) {
+                            return;
+                        }
+
+                        // This is the function we actually want to call
+                        setSpeaker( speaker );
+
+                    });
 
                     watchers.push({
                         id: speaker.id,
