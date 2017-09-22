@@ -147,14 +147,18 @@
         }
 
 
-        function setCurrentSpeaker( speaker ) {
+        function setCurrentSpeaker( id ) {
 
             // Restore attenuation border for any previously edited Speaker
             // Fixes cases where this is called after triggering e.g. draw:drawstart
             showCurrentAttenuationBorder();
 
+            var speaker = vm.speakers.clean.find( function( speaker ) {
+                return speaker.id == id;
+            });
+
             var group = editableGroups.find( function( group ) {
-                return group.speaker_id == speaker.id;
+                return group.speaker_id == id;
             });
 
             // Set the current group...
@@ -244,10 +248,15 @@
                 // Add the shapes as Polygons to our FeatureGroup
                 shapes.forEach( function( shape ) {
 
-                    new L.Polygon( shape, {
+                    var poly = new L.Polygon( shape, {
                         color: getColor( speaker.id ),
                         className: getSpeakerClasses( speaker ),
                     }).addTo( features );
+
+                    // Clicking on a shape opens this speaker
+                    poly.on('click', function() {
+                        setCurrentSpeaker( speaker.id );
+                    });
 
                 });
 
