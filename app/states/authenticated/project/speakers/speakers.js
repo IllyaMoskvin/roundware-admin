@@ -66,29 +66,16 @@
 
             SpeakerService.list().promise.then( function(cache) {
 
-                // Prevents the watch from firing until we are ready
-                var initialized = false;
-
                 // Save the cache to controller
                 vm.speakers = cache;
 
-                // Set a watch to catch serverside updates
-                // This will fire once when initialized, regardless
-                $scope.$watch( 'vm.speakers.clean', function( nv, ov ) {
+                // Set up $watchers for updates
+                initWatchers();
 
-                    // Re-draw all the Speakers on the map
-                    vm.speakers.clean.forEach( setSpeaker );
+                // Run the first draw loop manually
+                vm.speakers.clean.forEach( setSpeaker );
 
-                    // Reset the map, but only on initial load
-                    if( !initialized ) {
-
-                        fitBoundsToAll();
-
-                        initialized = true;
-
-                    }
-
-                }, true);
+                fitBoundsToAll();
 
             });
 
@@ -388,6 +375,79 @@
         function isAttenuationBorderDrawn( group ) {
 
             return vm.map.hasLayer( group.attenuation );
+
+        }
+
+
+        // Moved here due to sheer size. We are watching the "clean" speakers
+        // collection, and setting up individual watchers for each speaker.
+        // The goal is to prevent a watch cascade, where an update on one speaker
+        // triggers an update for all other speakers. setSpeakers is effectively
+        // indemnipotent, but using a simple deep watch caused bugs w/ attenuation
+        function initWatchers( ) {
+
+            var watchers = [];
+
+            // Set a watch to catch serverside updates
+            $scope.$watchCollection( 'vm.speakers.clean', function( speakers ) {
+
+                // vm.speakers should be defined at this point, but if not, exit
+                if( !speakers ) {
+                    return;
+                }
+
+                // Identify any speakers that were removed
+                var removed_speakers = watchers.filter( function( watcher ) {
+
+                    var match = speakers.find( function( speaker ) {
+                        return speaker.id == watcher.id
+                    });
+
+                    return (typeof match === 'undefined');
+
+                });
+
+                // Identify any speakers that were added
+                var added_speakers = speakers.filter( function( speaker ) {
+
+                    var match = watchers.find( function( watcher ) {
+                        return watcher.id == speaker.id
+                    });
+
+                    return (typeof match === 'undefined');
+
+                });
+
+                // Remove any watchers for removed Speakers
+                removed_speakers.forEach( function( speaker ) {
+
+                    var watcher = watchers.find( function( watcher ) {
+                        return watcher.id == speaker.id;
+                    });
+
+                    // Call the function returned by the watcher to remove it
+                    // https://stackoverflow.com/questions/14957614/angularjs-clear-watch
+                    watcher.listener();
+
+                });
+
+                // Add watchers for added Speakers
+                added_speakers.forEach( function( speaker ) {
+
+                    var index = vm.speakers.clean.indexOf( speaker );
+                    var expression = 'vm.speakers.clean[' + index + ']';
+
+                    // This is the function we actually want to call
+                    var listener = $scope.$watch( expression, setSpeaker );
+
+                    watchers.push({
+                        id: speaker.id,
+                        listener: listener,
+                    });
+
+                });
+
+            });
 
         }
 
