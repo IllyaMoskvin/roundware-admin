@@ -66,15 +66,33 @@
 
             SpeakerService.list().promise.then( function(cache) {
 
-                vm.speakers = cache.dirty;
+                // Prevents the watch from firing until we are ready
+                var initialized = false;
 
-                // Verification for whether lat-lon needs to be flipped:
-                // console.log( vm.speakers[1].shape.coordinates[0][0][0] );
+                // Save the cache to controller
+                vm.speakers = cache;
 
-                vm.speakers.forEach( setSpeaker );
+                // Set a watch to catch serverside updates
+                $scope.$watch( 'vm.speakers.clean', function( nv, ov ) {
 
-                // Reset the map
+                    if( !initialized ) {
+                        return false;
+                    }
+
+                    // Re-draw all the Speakers on the map
+                    vm.speakers.clean.forEach( setSpeaker );
+
+                }, true);
+
+                // We will do this manually the first time... fitBoundsToAll
+                // will not fire if we delegate this to the initial $watch run
+                vm.speakers.clean.forEach( setSpeaker );
+
+                // Reset the map, but only on initial load
                 fitBoundsToAll();
+
+                // Now that we've fitBounds, so we can "init" the watcher
+                initialized = true;
 
             });
 
