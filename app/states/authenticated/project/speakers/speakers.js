@@ -73,26 +73,22 @@
                 vm.speakers = cache;
 
                 // Set a watch to catch serverside updates
+                // This will fire once when initialized, regardless
                 $scope.$watch( 'vm.speakers.clean', function( nv, ov ) {
-
-                    if( !initialized ) {
-                        return false;
-                    }
 
                     // Re-draw all the Speakers on the map
                     vm.speakers.clean.forEach( setSpeaker );
 
+                    // Reset the map, but only on initial load
+                    if( !initialized ) {
+
+                        fitBoundsToAll();
+
+                        initialized = true;
+
+                    }
+
                 }, true);
-
-                // We will do this manually the first time... fitBoundsToAll
-                // will not fire if we delegate this to the initial $watch run
-                vm.speakers.clean.forEach( setSpeaker );
-
-                // Reset the map, but only on initial load
-                fitBoundsToAll();
-
-                // Now that we've fitBounds, so we can "init" the watcher
-                initialized = true;
 
             });
 
