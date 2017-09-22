@@ -270,11 +270,6 @@
 
         function setAttenuationBorder( speaker ) {
 
-            // Abort if the serverside attenuation is undefined
-            if( !speaker.attenuation_border ) {
-                return false;
-            }
-
             var group = editableGroups.find( function( group ) {
                 return group.speaker_id == speaker.id;
             });
@@ -283,6 +278,11 @@
             if( group.attenuation ) {
                 hideAttenuationBorder( group );
                 delete group.attenuation;
+            }
+
+            // Abort if the (new) serverside attenuation is undefined
+            if( !speaker.attenuation_border ) {
+                return false;
             }
 
             // Create new attenuation FeatureGroup
