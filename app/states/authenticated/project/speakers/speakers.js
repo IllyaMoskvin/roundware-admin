@@ -476,6 +476,7 @@
                     var attributes = [
                         expression + '.activeyn',
                         expression + '.attenuation_distance',
+                        expression + '.attenuation_border',
                     ];
 
                     // Watch these attributes, and check if any of them actually changed
@@ -492,6 +493,9 @@
                         if( !changed ) {
                             return;
                         }
+
+                        // Sanity check
+                        console.log('Change detected for Speaker #' + speaker.id);
 
                         // This is the function we actually want to call
                         setSpeaker( speaker );
