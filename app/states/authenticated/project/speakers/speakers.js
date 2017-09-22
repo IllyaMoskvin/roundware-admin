@@ -146,14 +146,14 @@
         }
 
 
-        function setCurrentSpeaker( id ) {
+        function setCurrentSpeaker( speaker ) {
 
             // Restore attenuation border for any previously edited Speaker
             // Fixes cases where this is called after triggering e.g. draw:drawstart
             showCurrentAttenuationBorder();
 
             var group = editableGroups.find( function( group ) {
-                return group.speaker_id == id;
+                return group.speaker_id == speaker.id;
             });
 
             // Set the current group...
@@ -173,6 +173,10 @@
             vm.leaflet.drawOptions.edit.featureGroup = vm.currentGroup.features;
             vm.leaflet.drawOptions.draw.polygon.shapeOptions.color = vm.currentGroup.color;
             vm.leaflet.drawOptions.draw.rectangle.shapeOptions.color = vm.currentGroup.color;
+
+            // TODO: This doesn't actually change the leaflet-draw-guide-dash colors
+            vm.leaflet.drawOptions.draw.polygon.shapeOptions.className = getSpeakerClasses( speaker );
+            vm.leaflet.drawOptions.draw.rectangle.shapeOptions.className = getSpeakerClasses( speaker );
 
             // Remove the existing drawControl, if there is one
             if( vm.drawControl ) {
@@ -230,6 +234,7 @@
 
                     new L.Polygon( shape, {
                         color: getColor( speaker.id ),
+                        className: getSpeakerClasses( speaker ),
                     }).addTo( features );
 
                 });
@@ -282,7 +287,7 @@
 
                 new L.Polyline( line, {
                     color: getColor( speaker.id ),
-                    weight: 1,
+                    className: getAttenuationClasses( speaker ),
                 }).addTo( attenuation );
 
             }
@@ -394,18 +399,12 @@
                                 color: '#e1e100',
                                 message: 'Polygons cannot intersect.'
                             },
-                            shapeOptions: {
-                                opacity: 1,
-                                weight: 3,
-                            }
+                            shapeOptions: {},
                         },
                         circle: false,
                         circlemarker: false,
                         rectangle: {
-                            shapeOptions: {
-                                opacity: 1,
-                                weight: 3,
-                            },
+                            shapeOptions: {},
                         },
                         marker: false,
                     },
@@ -458,6 +457,31 @@
                 format: alpha ? 'rgba' : 'hex',
                 alpha: alpha,
             });
+
+        }
+
+
+        function getSpeakerClasses( speaker ) {
+
+            return getActiveClasses( speaker, 'rw-map-speaker' );
+
+        }
+
+
+        function getAttenuationClasses( speaker ) {
+
+            return getActiveClasses( speaker, 'rw-map-attenuation' );
+
+        }
+
+        function getActiveClasses( speaker, base ) {
+
+            var classes = [
+                base,
+                speaker.activeyn ? 'active' : 'inactive',
+            ];
+
+            return classes.join(' ');
 
         }
 

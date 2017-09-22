@@ -20,4 +20,34 @@
 		border: none;
 	}
 
+	.rw-map-speaker {
+
+		stroke-width: 3px;
+
+		&.inactive {
+
+			fill: gray;
+			stroke: gray;
+			opacity: 0.5;
+
+			stroke-dasharray: 4px;
+			stroke-width: 2px;
+
+		}
+
+	}
+
+	.rw-map-attenuation {
+
+		stroke-width: 1px;
+
+		&.inactive {
+
+			stroke: gray;
+			opacity: 0.5;
+
+		}
+
+	}
+
 }
