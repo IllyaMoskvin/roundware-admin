@@ -216,13 +216,20 @@
                 return group.speaker_id == speaker.id;
             });
 
+            var features;
+
             if( typeof group !== 'undefined' ) {
 
-                // Remove the old FeatureGroup from the map
-                group.features.removeFrom( vm.map );
-                delete group.features;
+                // Use the existing FeatureGroup, avoid breaking drawControl
+                features = group.features;
+
+                // Remove existing shapes from the group
+                features.clearLayers();
 
             } else {
+
+                // Create a FeatureGroup for the Speaker
+                features = new L.geoJSON();
 
                 // Create new metagroup
                 group = {
@@ -234,9 +241,6 @@
                 editableGroups.push( group );
 
             }
-
-            // Create a FeatureGroup for the Speaker
-            var features = new L.geoJSON();
 
             // Add the FeatureGroup to the map
             features.addTo( vm.map );
