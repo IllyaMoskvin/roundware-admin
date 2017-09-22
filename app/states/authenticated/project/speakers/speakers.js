@@ -181,6 +181,13 @@
 
             // Remove the existing drawControl, if there is one
             if( vm.drawControl ) {
+
+                // This is definitely a hack, but Leaflet.draw doesn't clean up after itself, so...
+                // If we don't do this, `Cancel` won't be fired if you switch Speakers while drawing
+                for( var toolbar in vm.drawControl._toolbars ) {
+                    vm.drawControl._toolbars[toolbar].disable();
+                }
+
                 vm.map.removeControl( vm.drawControl );
             }
 
