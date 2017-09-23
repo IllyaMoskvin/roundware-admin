@@ -437,6 +437,11 @@
 
             var watchers = [];
 
+            // Unfortunately, watching vm.speakers.clean[i] doesn't work: the whole
+            // array shifts when updated, so which speaker [i] points to changes too.
+            // This has to be a scope (vm) variable, since we can't watch non-scoped vars.
+            vm.speakers_by_id = {};
+
             // Set a watch to catch serverside updates
             $scope.$watchCollection( 'vm.speakers.clean', function( speakers ) {
 
@@ -483,6 +488,9 @@
                     // Remove this watcher from our list
                     watchers.splice( watchers.indexOf( watcher ), 1 );
 
+                    // Remove the speaker from our keyed object
+                    delete vm.speakers_by_id[ speaker.id ];
+
                     // Remove this Speaker from the map
                     var group = editableGroups.find( function( group ) {
                         return group.speaker_id == speaker.id;
@@ -518,7 +526,7 @@
                         vm.drawControl = null;
                     }
 
-                    console.log('Removed Speaker #' + speaker.id);
+                    console.log('💀 Removed Speaker #' + speaker.id);
 
                 });
 
@@ -533,9 +541,11 @@
 
                     watchers.push( watcher );
 
-                    // This doesn't work b/c the index changes when an item is removed...
-                    var index = vm.speakers.clean.indexOf( speaker );
-                    var expression = 'vm.speakers.clean[' + index + ']';
+                    // Track the speaker by key (id)
+                    vm.speakers_by_id[ speaker.id ] = speaker;
+
+                    // This works b/c the index (speaker_id) does not change
+                    var expression = 'vm.speakers_by_id[' + speaker.id + ']';
 
                     // What attributes are we actually interested in watching?
                     var attributes = [
