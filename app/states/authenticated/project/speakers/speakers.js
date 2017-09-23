@@ -480,6 +480,9 @@
                     // https://stackoverflow.com/questions/14957614/angularjs-clear-watch
                     watcher.listener();
 
+                    // Remove this watcher from our list
+                    watchers.splice( watchers.indexOf( watcher ), 1 );
+
                     // Remove this Speaker from the map
                     var group = editableGroups.find( function( group ) {
                         return group.speaker_id == speaker.id;
