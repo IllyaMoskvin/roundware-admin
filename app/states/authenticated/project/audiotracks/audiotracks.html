@@ -43,8 +43,8 @@
                 <td>{{ row.minpanpos }} - {{ row.maxpanpos }}</td>
                 <td>{{ row.minpanduration }} - {{ row.maxpanduration }}</td>
                 <td>{{ row.repeatrecordings }}</td>
-                <td><btn-edit modal-href="audiotrack-edit" modal-data="{ id: row.id }"/></td>
-                <td><btn-delete ng-click="vm.deleteAudiotrack( row.id )"/></td>
+                <td class="no-ellipsis"><btn-edit modal-href="audiotrack-edit" modal-data="{ id: row.id }"/></td>
+                <td class="no-ellipsis"><btn-delete ng-click="vm.deleteAudiotrack( row.id )"/></td>
             </tr>
         </tbody>
     </table>

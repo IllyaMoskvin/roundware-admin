@@ -45,8 +45,8 @@
                 <td>{{ row.minvolume }} - {{ row.maxvolume }}</td>
                 <td>{{ row.attenuation_distance }}</td>
                 <td>{{ row.uri }}</td>
-                <td><btn-edit modal-href="speaker-edit" modal-data="{ id: row.id }"/></td>
-                <td><btn-delete ng-click="vm.deleteSpeaker( row.id )"/></td>
+                <td class="no-ellipsis"><btn-edit modal-href="speaker-edit" modal-data="{ id: row.id }"/></td>
+                <td class="no-ellipsis"><btn-delete ng-click="vm.deleteSpeaker( row.id )"/></td>
             </tr>
         </tbody>
     </table>

@@ -5,7 +5,7 @@ table[st-table] {
 	table-layout:fixed;
 }
 
-table td:not(:last-child) {
+table td:not(.no-ellipsis) {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
