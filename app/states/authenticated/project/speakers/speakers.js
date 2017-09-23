@@ -440,6 +440,8 @@
             // Set a watch to catch serverside updates
             $scope.$watchCollection( 'vm.speakers.clean', function( speakers ) {
 
+                console.log('📫 Speaker collection change detected');
+
                 // vm.speakers should be defined at this point, but if not, exit
                 if( !speakers ) {
                     return;
@@ -477,6 +479,43 @@
                     // Call the function returned by the watcher to remove it
                     // https://stackoverflow.com/questions/14957614/angularjs-clear-watch
                     watcher.listener();
+
+                    // Remove this Speaker from the map
+                    var group = editableGroups.find( function( group ) {
+                        return group.speaker_id == speaker.id;
+                    });
+
+                    if( group ) {
+
+                        if( group.features ) {
+                            group.features.removeFrom( vm.map );
+                            group.features = null;
+                        }
+
+                        if( group.attenuation ) {
+                            group.attenuation.removeFrom( vm.map );
+                            group.attenuation = null;
+                        }
+
+                    }
+
+                    // Remove this speaker from our tracker
+                    editableGroups.splice( editableGroups.indexOf( group ), 1 );
+
+                    // Remove the current draw control
+                    if( vm.currentGroup && vm.currentGroup.speaker_id == speaker.id ) {
+
+                        // TODO: Reduce code duplication!
+                        for( var toolbar in vm.drawControl._toolbars ) {
+                            vm.drawControl._toolbars[toolbar].disable();
+                        }
+
+                        vm.map.removeControl( vm.drawControl );
+                        vm.currentGroup = null;
+                        vm.drawControl = null;
+                    }
+
+                    console.log('Removed Speaker #' + speaker.id);
 
                 });
 
