@@ -483,6 +483,15 @@
                 // Add watchers for added Speakers
                 added_speakers.forEach( function( speaker ) {
 
+                    // Add new watcher to our list
+                    var watcher = {
+                        id: speaker.id,
+                        initialized: false,
+                    };
+
+                    watchers.push( watcher );
+
+                    // This doesn't work b/c the index changes when an item is removed...
                     var index = vm.speakers.clean.indexOf( speaker );
                     var expression = 'vm.speakers.clean[' + index + ']';
 
@@ -494,32 +503,41 @@
                     ];
 
                     // Watch these attributes, and check if any of them actually changed
-                    var listener = $scope.$watchGroup( attributes, function( new_values, old_values ) {
+                    watcher.listener = $scope.$watchGroup( attributes, function( new_values, old_values ) {
 
-                        var changed = false;
+                        console.log('👂 Possible change detected for Speaker #' + speaker.id);
 
-                        for( var i=0; i < new_values.length; i++ ) {
-                            if( new_values[i] != old_values[i] ) {
-                                changed = true;
+                        if( watcher.initialized ) {
+
+                            var changed = false;
+
+                            for( var i=0; i < new_values.length; i++ ) {
+                                if( new_values[i] != old_values[i] ) {
+                                    console.log('➡ Attr. change in Speaker #' + speaker.id + ': ' + attributes[i]);
+                                    console.log('↪ New: ', new_values[i]);
+                                    console.log('↪ Old: ', old_values[i]);
+                                    changed = true;
+                                }
                             }
+
+                            if( !changed ) {
+                                console.log('🚫 Nothing actually changed for Speaker #' + speaker.id);
+                                return;
+                            }
+
                         }
 
-                        if( !changed ) {
-                            return;
-                        }
+                        watcher.initialized = true;
 
                         // Sanity check
-                        console.log('Change detected for Speaker #' + speaker.id);
+                        console.log('‼ Change confirmed for Speaker #' + speaker.id);
 
                         // This is the function we actually want to call
                         setSpeaker( speaker );
 
                     });
 
-                    watchers.push({
-                        id: speaker.id,
-                        listener: listener,
-                    });
+                    console.log('👓 Added watcher for Speaker #' + speaker.id);
 
                 });
 
