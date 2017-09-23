@@ -258,6 +258,11 @@
                 templateUrl: 'modals/speaker/speaker.html',
                 controller: 'NewSpeakerController',
                 controllerAs: 'vm',
+            })
+            .modal('speaker-confirm-delete', {
+                templateUrl: 'modals/speaker/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
             });
 
     }

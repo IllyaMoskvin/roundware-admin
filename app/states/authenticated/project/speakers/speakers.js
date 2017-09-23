@@ -4,9 +4,9 @@
         .module('app')
         .controller('SpeakersController',  Controller);
 
-    Controller.$inject = ['$scope', 'leafletData', 'SpeakerService', 'Notification'];
+    Controller.$inject = ['$scope', 'leafletData', 'SpeakerService', 'ModalService', 'Notification'];
 
-    function Controller($scope, leafletData, SpeakerService, Notification) {
+    function Controller($scope, leafletData, SpeakerService, ModalService, Notification) {
 
         // Leafet.draw cannot render multigeometries, e.g. MultiPolygons
         // This is where we will store these FeatureGroups, along with their metadata
@@ -27,6 +27,7 @@
 
         vm.getColor = getColor;
         vm.setCurrentSpeaker = setCurrentSpeaker;
+        vm.deleteSpeaker = deleteSpeaker;
 
         vm.saving = false;
         vm.editing = false;
@@ -413,6 +414,19 @@
 
         }
 
+        function deleteSpeaker( id ) {
+
+            ModalService.open('speaker-confirm-delete').result.then( function() {
+
+                SpeakerService.delete( id ).promise.then( function() {
+
+                    Notification.warning( { message: 'Speaker deleted!' } );
+
+                });
+
+            });
+
+        }
 
         // Moved here due to sheer size. We are watching the "clean" speakers
         // collection, and setting up individual watchers for each speaker.
