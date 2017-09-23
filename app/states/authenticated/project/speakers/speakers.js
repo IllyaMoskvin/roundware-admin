@@ -27,6 +27,7 @@
 
         vm.getColor = getColor;
         vm.setCurrentSpeaker = setCurrentSpeaker;
+        vm.releaseCurrentSpeaker = releaseCurrentSpeaker;
         vm.deleteSpeaker = deleteSpeaker;
         vm.addSpeakerHandler = addSpeakerHandler;
 
@@ -160,12 +161,44 @@
 
         }
 
+        function releaseCurrentSpeaker( ) {
+
+            fitBoundsToAll();
+            resetCurrentSpeaker();
+
+        }
+
+
+        function resetCurrentSpeaker( ) {
+
+            vm.currentGroup = null;
+
+            // Remove the existing drawControl, if there is one
+            if( vm.drawControl ) {
+
+                // This is definitely a hack, but Leaflet.draw doesn't clean up after itself, so...
+                // If we don't do this, `Cancel` won't be fired if you switch Speakers while drawing
+                for( var toolbar in vm.drawControl._toolbars ) {
+                    vm.drawControl._toolbars[toolbar].disable();
+                }
+
+                vm.map.removeControl( vm.drawControl );
+
+                vm.drawControl = null;
+
+            }
+
+        }
+
 
         function setCurrentSpeaker( id ) {
 
             // Restore attenuation border for any previously edited Speaker
             // Fixes cases where this is called after triggering e.g. draw:drawstart
             showCurrentAttenuationBorder();
+
+            // Remove the current draw control
+            resetCurrentSpeaker();
 
             var speaker = vm.speakers.clean.find( function( speaker ) {
                 return speaker.id == id;
@@ -196,18 +229,6 @@
             // TODO: This doesn't actually change the leaflet-draw-guide-dash colors
             vm.leaflet.drawOptions.draw.polygon.shapeOptions.className = getSpeakerClasses( speaker );
             vm.leaflet.drawOptions.draw.rectangle.shapeOptions.className = getSpeakerClasses( speaker );
-
-            // Remove the existing drawControl, if there is one
-            if( vm.drawControl ) {
-
-                // This is definitely a hack, but Leaflet.draw doesn't clean up after itself, so...
-                // If we don't do this, `Cancel` won't be fired if you switch Speakers while drawing
-                for( var toolbar in vm.drawControl._toolbars ) {
-                    vm.drawControl._toolbars[toolbar].disable();
-                }
-
-                vm.map.removeControl( vm.drawControl );
-            }
 
             // Create the new drawControl
             vm.drawControl = new L.Control.Draw( vm.leaflet.drawOptions );
@@ -533,14 +554,8 @@
                     // Remove the current draw control
                     if( vm.currentGroup && vm.currentGroup.speaker_id == speaker.id ) {
 
-                        // TODO: Reduce code duplication!
-                        for( var toolbar in vm.drawControl._toolbars ) {
-                            vm.drawControl._toolbars[toolbar].disable();
-                        }
+                        resetCurrentSpeaker();
 
-                        vm.map.removeControl( vm.drawControl );
-                        vm.currentGroup = null;
-                        vm.drawControl = null;
                     }
 
                     console.log('💀 Removed Speaker #' + speaker.id);
