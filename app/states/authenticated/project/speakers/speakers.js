@@ -28,6 +28,7 @@
         vm.getColor = getColor;
         vm.setCurrentSpeaker = setCurrentSpeaker;
         vm.deleteSpeaker = deleteSpeaker;
+        vm.addSpeakerHandler = addSpeakerHandler;
 
         vm.saving = false;
         vm.editing = false;
@@ -414,6 +415,7 @@
 
         }
 
+
         function deleteSpeaker( id ) {
 
             ModalService.open('speaker-confirm-delete').result.then( function() {
@@ -427,6 +429,21 @@
             });
 
         }
+
+
+        // This should be bound to a modal-handler attribute in the view
+        // It'll be injected with the modal promise, which resolves when it's closed
+        function addSpeakerHandler( promise ) {
+
+            // The save method in NewSpeakerController passes the cache.id on close
+            promise.result.then( function( speaker_id ) {
+
+                setCurrentSpeaker( speaker_id );
+
+            });
+
+        }
+
 
         // Moved here due to sheer size. We are watching the "clean" speakers
         // collection, and setting up individual watchers for each speaker.

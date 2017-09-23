@@ -33,11 +33,11 @@
 
             vm.saving = true;
 
-            SpeakerService.create( vm.speaker ).promise.then( function() {
+            SpeakerService.create( vm.speaker ).promise.then( function( cache ) {
 
                 Notification.success( { message: 'Changes saved!' } );
 
-                $uibModalInstance.close();
+                $uibModalInstance.close( cache.id );
 
             }).finally( function() {
 
@@ -49,7 +49,7 @@
 
         function cancel() {
 
-            $uibModalInstance.close();
+            $uibModalInstance.dismiss();
 
         }
 

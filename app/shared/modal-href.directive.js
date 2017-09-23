@@ -13,12 +13,18 @@
             scope: {
                 modal: '@modalHref',
                 data: '=modalData',
+                handler: '=modalHandler',
             },
             link: function( scope, element, attr ) {
 
                 element.on('click', function() {
 
-                    ModalService.open( scope.modal, scope.data );
+                    var promise = ModalService.open( scope.modal, scope.data );
+
+                    // Call the handler, passing it the promise instance
+                    if( scope.handler ) {
+                        scope.handler( promise );
+                    }
 
                 });
 
