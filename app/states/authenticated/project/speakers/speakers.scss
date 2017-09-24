@@ -1,0 +1,53 @@
+.rw-speakers {
+
+	// These are hard-coded to be 40px per side, which is dumb
+	$marker-size: 10px;
+
+	.leaflet-marker-icon {
+		margin-left: -$marker-size / 2 !important;
+		margin-top: -$marker-size / 2 !important;
+		width: $marker-size !important;
+		height: $marker-size !important;
+	}
+
+	// https://github.com/Leaflet/Leaflet.draw/issues/194
+	.leaflet-draw-tooltip {
+		display: none;
+	}
+
+	.btn-map {
+		color: white;
+		border: none;
+	}
+
+	.rw-map-speaker {
+
+		stroke-width: 3px;
+
+		&.inactive {
+
+			fill: gray;
+			stroke: gray;
+			opacity: 0.5;
+
+			stroke-dasharray: 4px;
+			stroke-width: 2px;
+
+		}
+
+	}
+
+	.rw-map-attenuation {
+
+		stroke-width: 1px;
+
+		&.inactive {
+
+			stroke: gray;
+			opacity: 0.5;
+
+		}
+
+	}
+
+}

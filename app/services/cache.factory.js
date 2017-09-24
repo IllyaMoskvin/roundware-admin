@@ -59,11 +59,11 @@
 
                 // Determine if we are updating all data
                 if( input.constructor === Array ) {
-                    return updateData( input );
+                    return $q.when( updateData( input ) );
                 }
 
                 // Assume that otherwise, we're updating one datum
-                return updateDatum( input );
+                return $q.when( updateDatum( input ) );
 
             }
 
@@ -121,6 +121,13 @@
                 var id = newDatum.id;
                 var oldDatum = detail( id, cache.both );
 
+                // Remove all old properties from object, while keeping reference
+                // Assumes that the server provides everything we need
+                // This is needed for when something is removed serverside
+                // TODO: Test this thoroughly! It makes LocalizedStrings blink
+                resetOwnProperties( oldDatum.clean );
+                resetOwnProperties( oldDatum.dirty );
+
                 // http://davidcai.github.io/blog/posts/copy-vs-extend-vs-merge/
                 angular.merge( oldDatum.clean, newDatum );
                 angular.merge( oldDatum.dirty, newDatum );
@@ -131,6 +138,23 @@
                 oldDatum.initialized = true;
 
                 return oldDatum;
+
+                // Clear old properties from the cached objects
+                // https://stackoverflow.com/a/22983798/1943591
+                function resetOwnProperties( object ) {
+
+                    for( var prop in object ) {
+
+                        if( prop == 'id' ) {
+                            continue;
+                        }
+
+                        if( object.hasOwnProperty( prop ) ) {
+                            delete object[prop];
+                        }
+
+                    }
+                }
 
             }
 

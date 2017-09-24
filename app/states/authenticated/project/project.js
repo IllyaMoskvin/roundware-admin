@@ -4,9 +4,9 @@
         .module('app')
         .controller('ProjectController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService', 'AssetService', 'AudiotrackService'];
+    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService', 'AssetService', 'AudiotrackService', 'SpeakerService'];
 
-    function Controller($stateParams, ProjectService, TagService, UiGroupService, AssetService, AudiotrackService) {
+    function Controller($stateParams, ProjectService, TagService, UiGroupService, AssetService, AudiotrackService, SpeakerService) {
 
         var vm = this;
 
@@ -31,6 +31,10 @@
             });
 
             AudiotrackService.setDefaultParams({
+                project_id: $stateParams.id
+            });
+
+            SpeakerService.setDefaultParams({
                 project_id: $stateParams.id
             });
 

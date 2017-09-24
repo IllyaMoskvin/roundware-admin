@@ -144,6 +144,15 @@
                 data: {
                     cssClassnames: 'rw-state-audiotracks'
                 }
+            })
+            .state('project.speakers', {
+                url: '/speakers',
+                templateUrl: 'states/authenticated/project/speakers/speakers.html',
+                controller: 'SpeakersController',
+                controllerAs: 'vm',
+                data: {
+                    cssClassnames: 'rw-state-speakers'
+                }
             });
 
     }
@@ -234,6 +243,24 @@
             })
             .modal('audiotrack-confirm-delete', {
                 templateUrl: 'modals/audiotrack/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
+            })
+            .modal('speaker-edit', {
+                templateUrl: 'modals/speaker/speaker.html',
+                controller: 'EditSpeakerController',
+                controllerAs: 'vm',
+                params: [
+                    'id'
+                ]
+            })
+            .modal('speaker-new', {
+                templateUrl: 'modals/speaker/speaker.html',
+                controller: 'NewSpeakerController',
+                controllerAs: 'vm',
+            })
+            .modal('speaker-confirm-delete', {
+                templateUrl: 'modals/speaker/confirm-delete.html',
                 controller: 'ConfirmGenericController',
                 controllerAs: 'vm',
             });

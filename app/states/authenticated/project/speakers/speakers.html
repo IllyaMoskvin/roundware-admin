@@ -1,0 +1,77 @@
+<div class="rw-speakers">
+
+    <button
+        type="button"
+        class="btn btn-block btn-primary"
+        modal-href="speaker-new"
+        modal-handler="vm.addSpeakerHandler"
+    >Add Speaker</button>
+
+    <hr/>
+
+    <table st-table="vm.displayed.speakers" st-safe-src="vm.speakers.clean" class="table table-striped">
+        <colgroup>
+            <col width="45">
+            <col width="45">
+            <col width="80">
+            <col width="80">
+            <col width="80">
+            <col width="100">
+            <col>
+            <col width="45">
+            <col width="45">
+        </colgroup>
+        <thead>
+            <tr>
+                <th></th>
+                <th st-sort="id" st-sort-default="true">ID</th>
+                <th>Active</th>
+                <th>Code</th>
+                <th>Volume</th>
+                <th>Attn. Dist.</th>
+                <th>URI</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in vm.displayed.speakers">
+                <td>
+                    <a
+                        href="javascript:;"
+                        class="btn btn-sm btn-default btn-square btn-map"
+                        style="background-color: {{ vm.getColor( row.id ) }};"
+                        ng-click="vm.setCurrentSpeaker( row.id )"
+                    ><span class="glyphicon glyphicon-map-marker"></span></a>
+                </td>
+                <td>{{ row.id }}</td>
+                <td>{{ row.activeyn }}</td>
+                <td>{{ row.code }}</td>
+                <td>{{ row.minvolume }} - {{ row.maxvolume }}</td>
+                <td>{{ row.attenuation_distance }}</td>
+                <td>{{ row.uri }}</td>
+                <td class="no-ellipsis"><btn-edit modal-href="speaker-edit" modal-data="{ id: row.id }"/></td>
+                <td class="no-ellipsis"><btn-delete ng-click="vm.deleteSpeaker( row.id )"/></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr/>
+
+    <p ng-if="vm.currentGroup">
+        Currently editing <strong>Speaker #{{ vm.currentGroup.speaker_id }}</strong>
+        <button class="btn btn-xs btn-primary" ng-click="vm.releaseCurrentSpeaker()">Release</button>
+    </p>
+
+    <p ng-if="!vm.currentGroup">
+        Add a new speaker, or use the <span class="glyphicon glyphicon-map-marker"></span> buttons to edit existing speakers.
+    </p>
+
+    <!-- Leaflet map for adding new speakers -->
+    <leaflet
+        id="map"
+        height="400px"
+        center="vm.leaflet.center"
+    ></leaflet>
+
+</div>

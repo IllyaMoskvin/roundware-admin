@@ -1,0 +1,70 @@
+<!-- Speaker Editing Form -->
+<form class="form-horizontal rw-modal-speaker">
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Active</label>
+        <div class="col-xs-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.speaker.activeyn">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="code" class="col-xs-2 control-label">Code</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="code" ng-model="vm.speaker.code">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="minvolume" class="col-xs-2 control-label">
+            <abbr title="Min Volume">Min Vol.</abbr>
+        </label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="minvolume" ng-model="vm.speaker.minvolume">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="maxvolume" class="col-xs-2 control-label">
+            <abbr title="Max Volume">Max Vol.</abbr>
+        </label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="maxvolume" ng-model="vm.speaker.maxvolume">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="uri" class="col-xs-2 control-label">URI</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="uri" ng-model="vm.speaker.uri">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="attenuation_distance" class="col-xs-2 control-label">
+            <abbr title="Attenuation Distance">Attn. Dist.</abbr>
+        </label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="attenuation_distance" ng-model="vm.speaker.attenuation_distance">
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-default"
+                    ng-click="vm.cancel()">Cancel</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-block btn-primary"
+                    ng-click="vm.save()" ng-disabled="vm.saving">Save</button>
+        </div>
+    </div>
+
+</form>
