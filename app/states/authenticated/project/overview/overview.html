@@ -8,6 +8,34 @@
     </div>
 
     <div class="form-group">
+        <label class="col-sm-2 control-label">Publish Date</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="vm.project.pub_date">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Coordinates</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" id="latitude" ng-model="vm.project.latitude">
+        </div>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" id="longitude" ng-model="vm.project.longitude">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Auto Submit</label>
+        <div class="col-xs-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.auto_submit">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-sm-2 control-label">Languages</label>
         <div class="col-sm-10">
 
@@ -21,6 +49,193 @@
 
         </div>
     </div>
+
+    <hr/>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.listen_enabled">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Listen Enabled</label>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.speak_enabled">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Speak Enabled</label>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.geo_listen_enabled">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Geo Listen Enabled</label>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.geo_speak_enabled">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Geo Speak Enabled</label>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.demo_stream_enabled">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Demo Stream Enabled</label>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.reset_tag_defaults_on_startup">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Reset Tags Defaults On Startup</label>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-2">
+            <div class="checkbox text-right">
+                <label>
+                    <input type="checkbox" ng-model="vm.project.timed_asset_priority">
+                </label>
+            </div>
+        </div>
+        <label class="col-xs-10 control-label" style="text-align: left">Timed Asset Priority</label>
+    </div>
+
+    <hr/>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Max Recording Length</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.max_recording_length">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Recording Radius</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.recording_radius" numeric>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Out of Range Distance</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.out_of_range_distance" numeric>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Audio stream bitrate</label>
+        <div class="col-xs-10">
+            <select class="form-control" ng-model="vm.project.audio_stream_bitrate">
+                <option value="64">64</option>
+                <option value="96">96</option>
+                <option value="112">112</option>
+                <option value="128">128</option>
+                <option value="160">160</option>
+                <option value="192">192</option>
+                <option value="256">256</option>
+                <option value="320">320</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Sharing URL</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.sharing_url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Out of Range URL</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.out_of_range_url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Demo Stream URL</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.demo_stream_url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Files URL</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.files_url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Files Version</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.files_version">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Repeat Mode</label>
+        <div class="col-xs-10">
+            <select class="form-control" ng-model="vm.project.repeat_mode">
+                <option value="stop">stop</option>
+                <option value="continuous">continuous</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Ordering</label>
+        <div class="col-xs-10">
+            <select class="form-control" ng-model="vm.project.ordering">
+                <option value="by_like">by_like</option>
+                <option value="by_weight">by_weight</option>
+                <option value="random">random</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-2 control-label">Audio Format</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" ng-model="vm.project.audio_format">
+        </div>
+    </div>
+
+    <local-inputs model="vm.project" field="sharing_message_loc" title="Sharing Message"></local-inputs>
+
+    <local-inputs model="vm.project" field="out_of_range_message_loc" title="Out of Range Message"></local-inputs>
+
+    <local-inputs model="vm.project" field="legal_agreement_loc" title="Legal Agreement Message"></local-inputs>
 
     <local-inputs model="vm.project" field="demo_stream_message_loc" title="Demo Stream Message"></local-inputs>
 
