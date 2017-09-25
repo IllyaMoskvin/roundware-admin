@@ -10,7 +10,29 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Publish Date</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="vm.project.pub_date">
+
+            <p class="input-group">
+
+                <input
+                    type="text"
+                    class="form-control"
+                    datetime-picker="MM/dd/yyyy HH:mm"
+                    ng-model="vm.project.pub_date"
+                    is-open="vm.is_pub_date_open"
+                    save-as="ISO"
+                    read-as="false"
+                />
+
+                <span class="input-group-btn">
+                    <button
+                        type="button"
+                        class="btn btn-default"
+                        ng-click="vm.is_pub_date_open = !vm.is_pub_date_open"
+                    ><span class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+
+            </p>
+
         </div>
     </div>
 

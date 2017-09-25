@@ -19,6 +19,7 @@
         'ui-leaflet',
         'rzModule',
         'angularFileUpload',
+        'ui.bootstrap.datetimepicker',
 
     ]);
 
