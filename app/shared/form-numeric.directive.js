@@ -41,6 +41,12 @@
                 };
 
                 var formatter = function( value ) {
+
+                    // Prevent 'undefined' turning up in form fields
+                    if( typeof value === 'undefined' ) {
+                        value = '';
+                    }
+
                     return '' + value;
                 };
 
