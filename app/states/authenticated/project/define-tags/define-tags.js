@@ -17,6 +17,7 @@
         vm.getCategory = getCategory;
 
         vm.deleteTagCategory = deleteTagCategory;
+        vm.deleteTag = deleteTag;
 
         activate();
 
@@ -54,6 +55,23 @@
             });
 
         }
+
+        function deleteTag( id ) {
+
+            ModalService.open('tag-confirm-delete').result.then( function() {
+
+                return TagService.delete( id ).promise;
+
+                // TODO: Refresh UI Group and UI Item lists?
+
+            }).then( function() {
+
+                Notification.warning( { message: 'Tag deleted!' } );
+
+            });
+
+        }
+
 
     }
 

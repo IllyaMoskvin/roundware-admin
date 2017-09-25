@@ -188,6 +188,11 @@
                 controller: 'NewTagController',
                 controllerAs: 'vm',
             })
+            .modal('tag-confirm-delete', {
+                templateUrl: 'modals/tag/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
+            })
             .modal('tag-category-edit', {
                 templateUrl: 'modals/tag-category/tag-category.html',
                 controller: 'EditTagCategoryController',

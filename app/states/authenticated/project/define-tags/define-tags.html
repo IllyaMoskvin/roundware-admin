@@ -36,13 +36,16 @@
         <col>
         <col width="55%">
         <col width="45">
+        <col width="45">
     </colgroup>
     <thead>
         <tr>
             <th st-sort="id" st-sort-default="true">ID</th>
             <th st-sort="value">Tag</th>
             <th st-sort="tag_category_id" st-sort-default="true">Category</th>
-            <th colspan="2">UI Text</th>
+            <th>UI Text</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -52,6 +55,7 @@
             <td>{{ vm.getCategory( row.tag_category_id ).name }}</td>
             <td>{{ row.description }}</td>
             <td class="no-ellipsis"><btn-edit modal-href="tag-edit" modal-data="{ id: row.id }"/></td>
+            <td class="no-ellipsis"><btn-delete ng-click="vm.deleteTag( row.id )"/></td>
         </tr>
     </tbody>
 </table>
