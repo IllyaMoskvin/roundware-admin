@@ -9,6 +9,9 @@
 
 			display: inline-block;
 			width: calc( 100% - 100px );
+
+			// https://stackoverflow.com/questions/20310690
+			vertical-align: top;
 		}
 
 	}
@@ -19,6 +22,8 @@
 
 	[ui-tree] {
 
+		margin: 10px 0;
+
 		.angular-ui-tree-placeholder {
 			background: #f0f9ff;
 			border: 2px dashed #bed2db;
@@ -26,7 +31,7 @@
 		}
 
 		.angular-ui-tree-nodes .angular-ui-tree-nodes {
-			padding-left: 30px;
+			padding-left: 32px;
 		}
 
 		.angular-ui-tree-node {
@@ -35,6 +40,8 @@
 
 		// TODO: Separate handle into dedicated element?
 		.angular-ui-tree-handle {
+			border-radius: 5px;
+			line-height: 24px;
 			background: #f8faff;
 			border: 1px solid #dae2ea;
 			color: #7c9eb2;
