@@ -16,6 +16,8 @@
         vm.cancel = cancel;
         vm.save = save;
 
+        vm.showCancel = true;
+
         vm.saving = false;
 
         activate();

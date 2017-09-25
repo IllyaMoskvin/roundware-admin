@@ -263,6 +263,21 @@
 
     <hr/>
 
-    <a class="btn btn-block btn-primary" ng-click="vm.save()">Save</a>
+    <div ng-if="!vm.showCancel">
+        <a class="btn btn-block btn-primary" ng-click="vm.save()">Save</a>
+    </div>
+
+    <div ng-if="vm.showCancel" class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-default"
+                    ng-click="vm.cancel()">Cancel</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-block btn-primary"
+                    ng-click="vm.save()" ng-disabled="vm.saving">Save</button>
+        </div>
+    </div>
+
 
 </form>
