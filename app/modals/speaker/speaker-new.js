@@ -27,6 +27,8 @@
                 project_id: $stateParams.id,
             };
 
+            // seed();
+
         }
 
         function save() {
@@ -50,6 +52,22 @@
         function cancel() {
 
             $uibModalInstance.dismiss();
+
+        }
+
+        // Useful for testing the form. Call this in activate()
+        function seed() {
+
+            angular.extend( vm.speaker, {
+
+                activeyn: true,
+                code: 5,
+                minvolume: 0,
+                maxvolume: 1,
+                uri: 'http://g.co',
+                attenuation_distance: 10000,
+
+            });
 
         }
 
