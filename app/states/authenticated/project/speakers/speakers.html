@@ -60,7 +60,8 @@
 
     <p ng-if="vm.currentGroup">
         Currently editing <strong>Speaker #{{ vm.currentGroup.speaker_id }}</strong>
-        <button class="btn btn-xs btn-primary" ng-click="vm.releaseCurrentSpeaker()">Release</button>
+        <!-- Commented out to avoid confusing user. Restore it when we can draw a shape to add Speaker -->
+        <!-- <button class="btn btn-xs btn-primary" ng-click="vm.releaseCurrentSpeaker()">Release</button> -->
     </p>
 
     <p ng-if="!vm.currentGroup">

@@ -4,9 +4,9 @@
         .module('app')
         .controller('SpeakersController',  Controller);
 
-    Controller.$inject = ['$scope', 'leafletData', 'SpeakerService', 'ModalService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'SpeakerService', 'ProjectService', 'ModalService', 'Notification'];
 
-    function Controller($scope, leafletData, SpeakerService, ModalService, Notification) {
+    function Controller($scope, $q, $stateParams, leafletData, SpeakerService, ProjectService, ModalService, Notification) {
 
         // Leafet.draw cannot render multigeometries, e.g. MultiPolygons
         // This is where we will store these FeatureGroups, along with their metadata
@@ -40,10 +40,13 @@
 
         function activate() {
 
-            // This is where we'll be adding our editable FeatureGroups
-            leafletData.getMap('map').then( function( map ) {
+            $q.all({
+                'map': leafletData.getMap('map'),
+                'speakers': SpeakerService.list().promise,
+                'project': ProjectService.find( $stateParams.id ).promise,
+            }).then( function( results ) {
 
-                vm.map = map;
+                vm.map = results.map;
 
                 // TODO: Also handle draw:edited and draw:deleted
                 vm.map.on('draw:created', function(e) {
@@ -77,12 +80,8 @@
                     vm.editing = false;
                 }
 
-            });
-
-            SpeakerService.list().promise.then( function(cache) {
-
                 // Save the cache to controller
-                vm.speakers = cache;
+                vm.speakers = results.speakers;
 
                 // Set up $watchers for updates
                 initWatchers();
@@ -91,6 +90,16 @@
                 vm.speakers.clean.forEach( setSpeaker );
 
                 fitBoundsToAll();
+
+                // If there are no speakers, center map using project coordinates
+                if( vm.speakers.clean.length < 1 ) {
+
+                    var lat = results.project.clean.latitude || 0;
+                    var long = results.project.clean.longitude || 0;
+
+                    vm.map.setView( new L.LatLng( lat, long ), vm.map.getZoom() );
+
+                }
 
             });
 
@@ -150,12 +159,24 @@
         // Useful for resetting the map to show all Speakers
         function fitBoundsToAll( ) {
 
+            // Exit if there's no editableGroups
+            if( editableGroups.length < 1 ) {
+                return;
+            }
+
             // Create a FeatureGroup of FeatureGroups
             var features = editableGroups.map( function( group ) {
                 return group.features;
             });
 
             var group = new L.FeatureGroup( features );
+
+            var bounds = group.getBounds();
+
+            // Exit if there's no shapes to bound to
+            if( angular.equals({}, bounds) ) {
+                return;
+            }
 
             vm.map.fitBounds( group.getBounds() );
 
