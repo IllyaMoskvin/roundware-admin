@@ -13,6 +13,8 @@
         vm.project = null;
         vm.languages = null;
 
+        vm.showOptional = true;
+
         vm.update = update;
 
         activate();
