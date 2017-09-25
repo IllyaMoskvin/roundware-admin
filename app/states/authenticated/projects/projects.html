@@ -12,9 +12,10 @@
     <ul>
 
         <li ng-repeat="project in vm.projects">
-            <a ui-sref="project.overview({ id: project.id })">
+            <a ui-sref="project.overview({ id: project.id })" class="project-link">
                 {{ project.name }}
             </a>
+            <btn-delete ng-click="vm.deleteProject( project.id )"></btn-delete>
         </li>
 
     </ul>

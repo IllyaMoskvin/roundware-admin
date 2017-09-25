@@ -170,6 +170,11 @@
                 controller: 'NewProjectController',
                 controllerAs: 'vm',
             })
+            .modal('project-confirm-delete', {
+                templateUrl: 'modals/project/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
+            })
             .modal('tag-edit', {
                 templateUrl: 'modals/tag/tag.html',
                 controller: 'EditTagController',
