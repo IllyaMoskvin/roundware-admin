@@ -4,9 +4,9 @@
         .module('app')
         .controller('DefineTagsController',  Controller);
 
-    Controller.$inject = ['TagService', 'TagCategoryService'];
+    Controller.$inject = ['TagService', 'TagCategoryService', 'ModalService', 'Notification'];
 
-    function Controller(TagService, TagCategoryService) {
+    function Controller(TagService, TagCategoryService, ModalService, Notification) {
 
         var vm = this;
 
@@ -15,6 +15,9 @@
 
         // Used to retrieve category names in table
         vm.getCategory = getCategory;
+
+        vm.deleteTagCategory = deleteTagCategory;
+        vm.deleteTag = deleteTag;
 
         activate();
 
@@ -32,6 +35,43 @@
             return TagCategoryService.find( category_id ).cache.clean;
 
         }
+
+        function deleteTagCategory( id ) {
+
+            ModalService.open('tag-category-confirm-delete').result.then( function() {
+
+                return TagCategoryService.delete( id ).promise;
+
+            }).then( function() {
+
+                // The Tag list needs to be refreshed to remove cascaded Tags
+                // TODO: Remove them clientside immediately? There's a FOSS happening...
+                return TagService.list().promise;
+
+            }).then( function() {
+
+                Notification.warning( { message: 'Tag Category deleted!' } );
+
+            });
+
+        }
+
+        function deleteTag( id ) {
+
+            ModalService.open('tag-confirm-delete').result.then( function() {
+
+                return TagService.delete( id ).promise;
+
+                // TODO: Refresh UI Group and UI Item lists?
+
+            }).then( function() {
+
+                Notification.warning( { message: 'Tag deleted!' } );
+
+            });
+
+        }
+
 
     }
 
