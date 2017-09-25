@@ -9,20 +9,25 @@
 		padding: 0;
 
 		li {
-			padding: 20px;
+			padding: 10px 20px;
 
-			a {
+			> * {
+				vertical-align: middle;
+			}
+
+			a.project-link {
 				display: inline-block;
 				text-align: center;
 
 				width: 25%;
-				height: 3em;
-				line-height: 3em;
+				height: 29px;
+				line-height: 29px;
 
 				background-color: #eee;
 				border: thin solid #ddd;
+				border-radius: 3px;
 
-				font-size: 1.2em;
+				font-size: 14px;
 				font-weight: bold;
 
 				text-decoration: none;

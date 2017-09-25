@@ -13,7 +13,9 @@
         vm.project = null;
         vm.languages = null;
 
-        vm.update = update;
+        vm.showOptional = true;
+
+        vm.save = save;
 
         activate();
 
@@ -26,7 +28,7 @@
 
         }
 
-        function update() {
+        function save() {
 
             ProjectService.update( vm.project.id ).promise.then( function() {
                 Notification.success( { message: 'Changes saved!' } );
