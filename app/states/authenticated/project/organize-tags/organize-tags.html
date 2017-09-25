@@ -58,6 +58,18 @@
     <script type="text/ng-template" id="relationship-node.html">
         <div ui-tree-handle>
 
+            <a data-nodrag
+                class="btn btn-default btn-xs btn-square"
+                ng-if="node.nodes && node.nodes.length > 0"
+                ng-click="toggle(this)"
+            ><span
+                class="glyphicon"
+                ng-class="{
+                    'glyphicon-chevron-right': collapsed,
+                    'glyphicon-chevron-down': !collapsed
+                }"
+            ></span></a>
+
             <span>{{ node.tag.value }}</span>
 
             <local-string language-code="vm.show_language" string-ids="node.tag.loc_msg" class="text-muted"></local-string>
@@ -76,7 +88,7 @@
             ><span class="glyphicon glyphicon-remove"></span></button>
 
         </div>
-        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}">
+        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}" ng-class="{hidden: collapsed}">
             <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
         </ol>
     </script>
