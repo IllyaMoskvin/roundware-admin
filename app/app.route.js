@@ -164,6 +164,12 @@
 
         // http://angular-ui.github.io/bootstrap/#!#%2Fmodal
         ModalService
+            // This one is an oddball, since it uses a state's template
+            .modal('project-new', {
+                templateUrl: 'states/authenticated/project/overview/overview.html',
+                controller: 'NewProjectController',
+                controllerAs: 'vm',
+            })
             .modal('tag-edit', {
                 templateUrl: 'modals/tag/tag.html',
                 controller: 'EditTagController',
