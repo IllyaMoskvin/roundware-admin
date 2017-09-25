@@ -414,6 +414,8 @@
                 // TODO: Watch doesn't pick up the changes, so do this manually..?
                 nestBoth();
 
+            }).then( function() {
+
                 Notification.warning( { message: 'All changes saved!' } );
 
             });
