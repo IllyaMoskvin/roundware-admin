@@ -201,6 +201,11 @@
                 controller: 'NewTagCategoryController',
                 controllerAs: 'vm',
             })
+            .modal('tag-category-confirm-delete', {
+                templateUrl: 'modals/tag-category/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
+            })
             .modal('ui-group-edit', {
                 templateUrl: 'modals/ui-group/ui-group.html',
                 controller: 'EditUiGroupController',

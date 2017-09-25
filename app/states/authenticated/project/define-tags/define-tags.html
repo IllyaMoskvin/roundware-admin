@@ -4,11 +4,14 @@
         <col width="42">
         <col>
         <col width="45">
+        <col width="45">
     </colgroup>
     <thead>
         <tr>
             <th st-sort="id" st-sort-default="true">ID</th>
-            <th st-sort="name" colspan="2">Tag Category</th>
+            <th st-sort="name">Tag Category</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +19,7 @@
             <td>{{ row.id }}</td>
             <td>{{ row.name }}</td>
             <td class="no-ellipsis"><btn-edit modal-href="tag-category-edit" modal-data="{ id: row.id }"/></td>
+            <td class="no-ellipsis"><btn-delete ng-click="vm.deleteTagCategory( row.id )"/></td>
         </tr>
     </tbody>
 </table>
