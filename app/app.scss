@@ -50,11 +50,6 @@ h1 {
 	font-size: 24px;
 }
 
-// Some utility classes...
-.text-monospace {
-	font-family: monospace !important;
-}
-
 .glyphicon-chevron-down {
 	vertical-align: text-top;
 }
@@ -63,4 +58,9 @@ h1 {
 .glyphicon-edit,
 .glyphicon-plus {
 	left: 0.5px;
+}
+
+// Some utility classes...
+.text-monospace {
+	font-family: monospace !important;
 }
