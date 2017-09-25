@@ -56,5 +56,11 @@ h1 {
 }
 
 .glyphicon-chevron-down {
-	vertical-align: text-top
+	vertical-align: text-top;
+}
+
+.glyphicon-chevron-down,
+.glyphicon-edit,
+.glyphicon-plus {
+	left: 0.5px;
 }
