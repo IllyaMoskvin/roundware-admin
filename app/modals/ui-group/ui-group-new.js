@@ -53,7 +53,7 @@
 
         function cancel() {
 
-            $uibModalInstance.close();
+            $uibModalInstance.dismiss();
 
         }
 
