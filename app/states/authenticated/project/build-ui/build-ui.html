@@ -30,7 +30,7 @@
             <!-- UI Group Tree -->
             <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
 
-                <ol ui-tree-nodes="" ng-model="vm.groupTree">
+                <ol class="rw-ui-group-tree-nodes" ui-tree-nodes="" ng-model="vm.groupTree">
                     <li ng-repeat="group in vm.groupTree" ui-tree-node>
 
                         <div ui-tree-handle>
@@ -78,7 +78,7 @@
 
             <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
 
-                <ol ui-tree-nodes="" ng-model="vm.itemTree">
+                <ol class="rw-ui-item-tree-nodes" ui-tree-nodes="" ng-model="vm.itemTree">
                     <li ng-repeat="node in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
                 </ol>
 
@@ -120,9 +120,18 @@
             ><span class="glyphicon glyphicon-plus"></span></button>
 
         </div>
-        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}" ng-class="{hidden: collapsed}">
-            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'ui-item-node.html'"></li>
-        </ol>
+
+        <ol ui-tree-nodes=""
+            ng-model="node.nodes"
+            data-parent-id="{{ node.id }}"
+            ng-class="{hidden: collapsed}"
+            class="rw-ui-item-tree-nodes"
+        ><li
+            ui-tree-node
+            ng-repeat="node in node.nodes"
+            ng-include="'ui-item-node.html'"
+        ></li></ol>
+
     </script>
 
 </div>

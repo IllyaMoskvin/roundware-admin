@@ -30,31 +30,40 @@
 			margin: 10px 0;
 		}
 
-		.angular-ui-tree-nodes .angular-ui-tree-nodes {
-			padding-left: 32px;
-		}
-
-		.angular-ui-tree-node {
-			margin: 10px 0;
-		}
-
-		// TODO: Separate handle into dedicated element?
-		.angular-ui-tree-handle {
-			border-radius: 5px;
-			line-height: 24px;
-			background: #f8faff;
-			border: 1px solid #dae2ea;
-			color: #7c9eb2;
-			padding: 10px 10px;
-			margin: 10px 0;
-		}
-
-		.angular-ui-tree-handle:hover {
-			color: #438eb9;
-			background: #f4f6f7;
-			border-color: #dce2e8;
-		}
 
 	}
 
 }
+
+// We need to define .angular-ui-tree-nodes outside .rw-build-ui,
+// because .angular-ui-tree-drag gets appended to body
+.rw-ui-group-tree-nodes,
+.rw-ui-item-tree-nodes {
+
+	&.angular-ui-tree-nodes .angular-ui-tree-nodes {
+		padding-left: 32px;
+	}
+
+	.angular-ui-tree-node {
+		margin: 10px 0;
+	}
+
+	// TODO: Separate handle into dedicated element?
+	.angular-ui-tree-handle {
+		border-radius: 5px;
+		line-height: 24px;
+		background: #f8faff;
+		border: 1px solid #dae2ea;
+		color: #7c9eb2;
+		padding: 10px 10px;
+		margin: 10px 0;
+	}
+
+	.angular-ui-tree-handle:hover {
+		color: #438eb9;
+		background: #f4f6f7;
+		border-color: #dce2e8;
+	}
+
+}
+
