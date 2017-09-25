@@ -150,12 +150,24 @@
         // Useful for resetting the map to show all Speakers
         function fitBoundsToAll( ) {
 
+            // Exit if there's no editableGroups
+            if( editableGroups.length < 1 ) {
+                return;
+            }
+
             // Create a FeatureGroup of FeatureGroups
             var features = editableGroups.map( function( group ) {
                 return group.features;
             });
 
             var group = new L.FeatureGroup( features );
+
+            var bounds = group.getBounds();
+
+            // Exit if there's no shapes to bound to
+            if( angular.equals({}, bounds) ) {
+                return;
+            }
 
             vm.map.fitBounds( group.getBounds() );
 
