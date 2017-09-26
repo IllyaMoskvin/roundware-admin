@@ -85,6 +85,24 @@
 
             <hr/>
 
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <p class="form-control-static">Show:</p>
+                </div>
+                <div class="col-sm-10">
+
+                    <div class="btn-group pull-right">
+                        <button
+                            ng-repeat="group in vm.groupTree"
+                            class="btn btn-show-toggle"
+                            ng-class="'rw-index-' + group.index"
+                            ng-click="vm.toggleItemsByGroup( group.index )"
+                        >{{ group.index }}</button>
+                    </div>
+
+                </div>
+            </div>
+
             <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
 
                 <ol class="rw-ui-item-tree-nodes" ui-tree-nodes="" ng-model="vm.itemTree">
