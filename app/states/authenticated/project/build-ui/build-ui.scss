@@ -46,6 +46,7 @@
 
 	.angular-ui-tree-handle {
 
+		border-radius: 5px;
 		line-height: 24px;
 
 		padding: 10px 10px;
@@ -124,11 +125,54 @@
 
 	.angular-ui-tree-handle {
 
-		border-radius: 5px;
-
 		background: #f8faff;
 		border: 1px solid #dae2ea;
 		color: #7c9eb2;
+
+		.btn-toggle,
+		.btn-placeholder {
+			margin-left: 0;
+			margin-right: 0;
+		}
+
+		.btn-placeholder {
+			background-color: #efefef;
+			border-radius: 5px;
+			display: inline-block;
+			vertical-align: middle;
+			height: 24px;
+			width: 24px;
+		}
+
+		.label-group {
+
+			border-radius: 8px;
+
+			margin-left: 4px;
+			margin-right: 7px;
+
+			display: inline-block;
+			width: 24px;
+
+			text-align: center;
+			vertical-align: middle;
+
+			color: white;
+
+		}
+
+		// Apply the lighter versions of our colors
+		@for $i from 1 through length($colors-normal) {
+
+			&.rw-index-#{$i} {
+
+				.label-group {
+					background-color: nth($colors-normal, $i);
+				}
+
+			}
+
+		}
 
 	}
 

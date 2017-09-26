@@ -96,10 +96,11 @@
 
     <!-- Nested node template for UI Items -->
     <script type="text/ng-template" id="ui-item-node.html">
-        <div ui-tree-handle>
+
+        <div ui-tree-handle ng-class="'rw-index-' + node.group.index">
 
             <a data-nodrag
-                class="btn btn-default btn-xs btn-square"
+                class="btn btn-default btn-xs btn-square btn-toggle"
                 ng-if="node.nodes && node.nodes.length > 0"
                 ng-click="toggle(this)"
             ><span
@@ -110,7 +111,11 @@
                 }"
             ></span></a>
 
-            <span>{{ node.group.index }} / {{ node.index }} / {{ node.tag.value }}</span>
+            <span ng-if="node.nodes && node.nodes.length < 1" class="btn-placeholder"></span>
+
+            <span class="label-group">{{ node.group.index }}</span>
+
+            <span class=>{{ node.tag.value }}</span>
 
             <button type="button" data-nodrag
                 class="btn btn-xs btn-default btn-square pull-right"
