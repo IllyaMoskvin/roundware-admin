@@ -40,23 +40,66 @@
 .rw-ui-group-tree-nodes,
 .rw-ui-item-tree-nodes {
 
-	&.angular-ui-tree-nodes .angular-ui-tree-nodes {
-		padding-left: 32px;
-	}
-
 	.angular-ui-tree-node {
 		margin: 10px 0;
 	}
 
-	// TODO: Separate handle into dedicated element?
 	.angular-ui-tree-handle {
+
 		border-radius: 5px;
 		line-height: 24px;
+
+		padding: 10px 10px;
+		margin: 10px 0;
+
+	}
+
+}
+
+.rw-ui-group-tree-nodes {
+
+	// TODO: Separate handle into dedicated element?
+	.angular-ui-tree-handle {
+
+		// Default colors...
+		background-color: white;
+		border: 1px solid #dae2ea;
+		color: #7c9eb2;
+
+		// Apply our custom colors! See app.scss
+		@for $i from 1 through length($colors-normal) {
+			&.rw-index-#{$i} {
+				color: nth($colors-normal, $i);
+				border-color: nth($colors-normal, $i);
+			}
+		}
+
+	}
+
+	.angular-ui-tree-handle:hover {
+
+		// Apply the lighter versions of our colors
+		@for $i from 1 through length($colors-light) {
+			&.rw-index-#{$i} {
+				color: nth($colors-light, $i);
+				border-color: nth($colors-light, $i);
+			}
+		}
+
+	}
+
+}
+
+.rw-ui-item-tree-nodes {
+
+	&.angular-ui-tree-nodes .angular-ui-tree-nodes {
+		padding-left: 32px;
+	}
+
+	.angular-ui-tree-handle {
 		background: #f8faff;
 		border: 1px solid #dae2ea;
 		color: #7c9eb2;
-		padding: 10px 10px;
-		margin: 10px 0;
 	}
 
 	.angular-ui-tree-handle:hover {
@@ -66,4 +109,3 @@
 	}
 
 }
-

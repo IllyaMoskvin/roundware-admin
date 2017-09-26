@@ -33,7 +33,8 @@
                 <ol class="rw-ui-group-tree-nodes" ui-tree-nodes="" ng-model="vm.groupTree">
                     <li ng-repeat="group in vm.groupTree" ui-tree-node>
 
-                        <div ui-tree-handle>
+                        <div ui-tree-handle ng-class="'rw-index-' + group.index">
+
                             <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
 
                             <!-- TODO: Use the button directive here? -->

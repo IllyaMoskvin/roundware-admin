@@ -15,16 +15,19 @@ $color-dropdown-hover   : #2F5EA7;      // Azure
 $color-icon-delete      : #D62B2B;      // Valencia
 $color-icon-accept      : #22BD31;      // Forrest Green
 
-$color-groups : (
+$colors-normal : (
 	#64CC9B,            // Emerald
-	#B1E5CD,            // Pauda
 	#F7CF40,            // Saffron
-	#FBE7A0,            // Cherokee
 	#F6702C,            // Crusta
-	#FBB796,            // Rose Bud
 	#3CCFF0,            // Picton Blue
-	#9EE7F8,            // Sail
 	#8C66C4,            // Amethyst
+);
+
+$colors-light : (
+	#B1E5CD,            // Pauda
+	#FBE7A0,            // Cherokee
+	#FBB796,            // Rose Bud
+	#9EE7F8,            // Sail
 	#C5B3E2,            // Prelude
 );
 
