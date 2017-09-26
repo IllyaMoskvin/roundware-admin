@@ -35,8 +35,6 @@
 
                         <div ui-tree-handle ng-class="'rw-index-' + group.index">
 
-                            <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
-
                             <!-- TODO: Use the button directive here? -->
                             <button type="button" data-nodrag
                                 class="btn btn-xs btn-default btn-square pull-right"
@@ -54,6 +52,12 @@
                                 class="btn btn-xs btn-default btn-square pull-right"
                                 ng-click="vm.deleteGroup( group )"
                             ><span class="glyphicon glyphicon-remove"></span></button>
+
+                            <div class="label-group">Group {{ group.index }}</div>
+
+                            <div class="label-name">{{ group.name }}</div>
+
+                            <div class="label-category">Category: {{ group.tag_category.name }}</div>
 
                         </div>
 

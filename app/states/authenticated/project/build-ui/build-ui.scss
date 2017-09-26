@@ -46,7 +46,6 @@
 
 	.angular-ui-tree-handle {
 
-		border-radius: 5px;
 		line-height: 24px;
 
 		padding: 10px 10px;
@@ -64,14 +63,34 @@
 		// Default colors...
 		background-color: white;
 		border: 1px solid #dae2ea;
-		color: #7c9eb2;
+
+		.label-group,
+		.label-category {
+			font-size: 12px;
+		}
+
+		.label-name {
+			//
+		}
+
+		.label-category {
+			font-weight: normal;
+			color: $color-gray-medium;
+		}
 
 		// Apply our custom colors! See app.scss
 		@for $i from 1 through length($colors-normal) {
+
 			&.rw-index-#{$i} {
-				color: nth($colors-normal, $i);
+
 				border-color: nth($colors-normal, $i);
+
+				.label-group {
+					color: nth($colors-normal, $i);
+				}
+
 			}
+
 		}
 
 	}
@@ -80,10 +99,17 @@
 
 		// Apply the lighter versions of our colors
 		@for $i from 1 through length($colors-light) {
+
 			&.rw-index-#{$i} {
-				color: nth($colors-light, $i);
+
 				border-color: nth($colors-light, $i);
+
+				.label-group {
+					color: nth($colors-light, $i);
+				}
+
 			}
+
 		}
 
 	}
@@ -97,9 +123,13 @@
 	}
 
 	.angular-ui-tree-handle {
+
+		border-radius: 5px;
+
 		background: #f8faff;
 		border: 1px solid #dae2ea;
 		color: #7c9eb2;
+
 	}
 
 	.angular-ui-tree-handle:hover {
