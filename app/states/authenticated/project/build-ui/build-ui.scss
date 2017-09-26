@@ -2,6 +2,8 @@
 
 	#rw-tree-ui-groups {
 
+		margin-top: 17px;
+
 		[ui-tree-handle] > span {
 			white-space: nowrap;
 			overflow: hidden;
@@ -22,12 +24,12 @@
 
 	[ui-tree] {
 
-		margin: 10px 0;
+		margin: 8px 0;
 
 		.angular-ui-tree-placeholder {
 			background: #f0f9ff;
 			border: 2px dashed #bed2db;
-			margin: 10px 0;
+			margin: 8px 0;
 		}
 
 
@@ -41,7 +43,7 @@
 .rw-ui-item-tree-nodes {
 
 	.angular-ui-tree-node {
-		margin: 10px 0;
+		margin: 8px 0;
 	}
 
 	.angular-ui-tree-handle {
@@ -49,8 +51,8 @@
 		border-radius: 5px;
 		line-height: 24px;
 
-		padding: 10px 10px;
-		margin: 10px 0;
+		padding: 8px 10px;
+		margin: 8px 0;
 
 	}
 
@@ -64,6 +66,9 @@
 		// Default colors...
 		background-color: white;
 		border: 1px solid #dae2ea;
+
+		padding-top: 10px;
+		padding-bottom: 10px;
 
 		.label-group,
 		.label-category {

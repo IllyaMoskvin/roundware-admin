@@ -31,6 +31,12 @@
 
             <hr/>
 
+            <button type="button"
+                class="btn btn-block btn-primary"
+                modal-href="ui-group-new"
+                modal-data="{ index: vm.groupTree.length + 1, ui_mode: vm.mode }"
+            >Add UI Group</button>
+
             <!-- UI Group Tree -->
             <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
 
@@ -69,12 +75,6 @@
                 </ol>
 
             </div>
-
-            <button type="button"
-                class="btn btn-block btn-primary"
-                modal-href="ui-group-new"
-                modal-data="{ index: vm.groupTree.length + 1, ui_mode: vm.mode }"
-            >Add UI Group</button>
 
         </div>
 
