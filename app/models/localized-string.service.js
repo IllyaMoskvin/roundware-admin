@@ -11,6 +11,13 @@
 
         return new DataFactory.Collection({
             route: 'localizedstrings',
+            mapped: [
+                {
+                    incoming: 'text',
+                    stored: 'text',
+                    outgoing: 'localized_string',
+                },
+            ]
         });
 
     }

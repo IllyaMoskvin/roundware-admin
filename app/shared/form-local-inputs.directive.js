@@ -107,7 +107,7 @@
 
                         // Create a dummy string
                         var string = {
-                            localized_string: '',
+                            text: '',
                             language_id: language.id,
                         };
 
