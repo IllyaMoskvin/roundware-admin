@@ -348,7 +348,7 @@
                         return;
                     }
 
-                    if( datum[ field.incoming ] ) {
+                    if( typeof datum[ field.incoming ] !== 'undefined' ) {
                         datum[ field.stored ] = datum[ field.incoming ];
                         delete datum[ field.incoming ];
                     }
@@ -485,7 +485,7 @@
                         return;
                     }
 
-                    if( datum[ field.stored ] ) {
+                    if( typeof datum[ field.stored ] !== 'undefined' ) {
                         datum[ field.outgoing ] = datum[ field.stored ];
                         delete datum[ field.stored ];
                     }
@@ -505,7 +505,7 @@
                         return;
                     }
 
-                    if( datum[ field.outgoing ] ) {
+                    if( typeof datum[ field.outgoing ] !== 'undefined' ) {
                         datum[ field.stored ] = datum[ field.outgoing ];
                         delete datum[ field.outgoing ];
                     }
