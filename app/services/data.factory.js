@@ -28,6 +28,7 @@
                 mapped: options.mapped || null,
                 embedded: options.embedded || null,
                 ignored: options.ignored || null,
+                blanked: options.blanked || null,
             };
 
             var cache = new CacheFactory.Cache( );
@@ -204,10 +205,32 @@
                     // ...but reject all other errors
                     return $q.reject( response );
 
-                }).finally( function() {
+                })
 
+                // Delete all `embedded` items that call for manual deletion
+                if( settings.embedded ) {
+
+                    var includes = settings.embedded.filter( function( include ) {
+                        return include.delete;
+                    });
+
+                    var oldDatum = cache.detail( id );
+
+                    var promises = includes.map( function( include ) {
+                        return oldDatum.clean[ include.field ].map( function( id ) {
+                            return $injector.get( include.model ).delete( id ).promise;
+                        });
+                    });
+
+                    promise = promise.then( function() {
+                        return $q.all( promises );
+                    });
+
+                }
+
+                // Update the cache
+                promise = promise.finally( function() {
                     return cache.delete( id );
-
                 });
 
                 return {
@@ -348,7 +371,7 @@
                         return;
                     }
 
-                    if( datum[ field.incoming ] ) {
+                    if( typeof datum[ field.incoming ] !== 'undefined' ) {
                         datum[ field.stored ] = datum[ field.incoming ];
                         delete datum[ field.incoming ];
                     }
@@ -404,6 +427,35 @@
 
                 }
 
+                // Check if necessary fields have been blanked out
+                if( settings.blanked ) {
+
+                    promise = promise.then( function() {
+
+                        var deferred = $q.defer();
+                        var is_blanked = false;
+
+                        settings.blanked.forEach( function( field ) {
+
+                            // Assumes the field is a string
+                            if( !datum[field] || !datum[field].trim() ) {
+                                is_blanked = true;
+                            }
+
+                        });
+
+                        if( is_blanked ) {
+                            deferred.reject('blanked');
+                        } else {
+                            deferred.resolve( true );
+                        }
+
+                        return deferred.promise;
+
+                    });
+
+                }
+
                 // Transform mapped fields from cached into outgoing
                 promise = promise.then( function() {
 
@@ -449,6 +501,21 @@
 
                 });
 
+                // Restore any "blanked" embedded objects for editing
+                promise = promise.then( function( response ) {
+
+                    if( includes ) {
+
+                        includes.blanked.forEach( function( include ) {
+                            datum[ include.field ].push( include.original );
+                        });
+
+                    }
+
+                    return response;
+
+                });
+
                 // If anything up to here fails, delete all created resources
                 promise = promise.then( null, function( response ) {
 
@@ -485,7 +552,7 @@
                         return;
                     }
 
-                    if( datum[ field.stored ] ) {
+                    if( typeof datum[ field.stored ] !== 'undefined' ) {
                         datum[ field.outgoing ] = datum[ field.stored ];
                         delete datum[ field.stored ];
                     }
@@ -505,7 +572,7 @@
                         return;
                     }
 
-                    if( datum[ field.outgoing ] ) {
+                    if( typeof datum[ field.outgoing ] !== 'undefined' ) {
                         datum[ field.stored ] = datum[ field.outgoing ];
                         delete datum[ field.outgoing ];
                     }
@@ -523,6 +590,8 @@
 
                 var promises = [];
                 var created = [];
+                var blanked = [];
+                var removed = []
 
                 includes.forEach( function( include ) {
 
@@ -564,12 +633,48 @@
 
                                 return true;
 
+                            }, function( error ) {
+
+                                // Catch cases where a needed field was left empty
+                                // Only relevant for LocalizedStrings w/ empty text
+                                if( error == 'blanked' ) {
+
+                                    blanked.push({
+                                        field: include.field,
+                                        original: resource,
+                                    });
+
+                                    return true;
+
+                                }
+
+                                return $q.reject();
+
                             });
 
                         } else {
 
                             // This is an id reference to an existing subresource that should be updated
                             promise = $injector.get( include.model ).update( resource ).promise;
+
+                            // Catch cases where a needed field was blanked out
+                            // Again, only relevant for LocalizeStrings w/ emptied text
+                            promise = promise.then( null, function( error ) {
+
+                                if( error == 'blanked' ) {
+
+                                    removed.push({
+                                        field: include.field,
+                                        original: resource,
+                                    });
+
+                                    return $injector.get( include.model ).delete( resource ).promise;
+
+                                }
+
+                                return $q.reject();
+
+                            });
 
                         }
 
@@ -584,7 +689,7 @@
                 // Activate the includes here, once they are all saved successfully
                 var promise = $q.all( promises ).then( function() {
 
-                    return activateIncludes( datum, created );
+                    return activateIncludes( datum, created, blanked, removed );
 
                 });
 
@@ -592,17 +697,28 @@
                 return {
                     promise: promise,
                     created: created,
+                    blanked: blanked,
+                    removed: removed,
                 };
 
             }
 
             // This function modifies the outgoing datum in place
             // It swaps objects for ids in includes fields
-            function activateIncludes( datum, created ) {
+            function activateIncludes( datum, created, blanked, removed ) {
 
                 created.forEach( function( item ) {
 
                     datum[ item.field ][ item.index ] = item.id;
+
+                });
+
+                // Both blank and removed need the same treatment here
+                blanked.concat(removed).forEach( function( item ) {
+
+                    var index = datum[ item.field ].indexOf( item.original );
+
+                    datum[ item.field ].splice( index, 1 );
 
                 });
 
