@@ -55,6 +55,8 @@
         vm.deleteGroup = deleteGroup;
         vm.deleteItem = deleteItem;
 
+        vm.toggleItemsByGroup = toggleItemsByGroup;
+
         vm.saving = false;
 
         activate();
@@ -414,6 +416,8 @@
                 // TODO: Watch doesn't pick up the changes, so do this manually..?
                 nestBoth();
 
+            }).then( function() {
+
                 Notification.warning( { message: 'All changes saved!' } );
 
             });
@@ -455,6 +459,38 @@
                 vm.saving = false;
 
             });
+
+        }
+
+
+        // https://github.com/angular-ui-tree/angular-ui-tree/issues/740
+        // https://stackoverflow.com/questions/13743058
+        function toggleItemsByGroup( index ) {
+
+            var tree = document.getElementById('rw-tree-ui-items');
+
+            // Collapse all items w/ indexes >= than this one
+            for( var i = index; i <= vm.max_index; i++ ) {
+
+                getItems(i).forEach( function( item ) {
+                    angular.element( item ).scope().collapse();
+                });
+
+            }
+
+            // Expand all items w/ indexes < than this one
+            for( var i = 1; i < index; i++ ) {
+
+                getItems(i).forEach( function( item ) {
+                    angular.element( item ).scope().expand();
+                });
+
+            }
+
+            // Helper for convenience
+            function getItems( index ) {
+                return tree.querySelectorAll('.rw-index-' + index);
+            }
 
         }
 

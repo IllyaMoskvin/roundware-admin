@@ -49,7 +49,7 @@
 
     <!-- Tag relationship tree -->
     <div ui-tree="vm.relationshipTreeOptions" id="rw-tree-tag-relationships">
-        <ol ui-tree-nodes="" ng-model="vm.relationshipTree">
+        <ol ui-tree-nodes="" ng-model="vm.relationshipTree" class="rw-tag-relationship-tree-nodes">
             <li ng-repeat="node in vm.relationshipTree" ui-tree-node ng-include="'relationship-node.html'"></li>
         </ol>
     </div>
@@ -88,9 +88,19 @@
             ><span class="glyphicon glyphicon-remove"></span></button>
 
         </div>
-        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}" ng-class="{hidden: collapsed}">
-            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'relationship-node.html'"></li>
-        </ol>
+
+        <ol
+            ui-tree-nodes=""
+            ng-model="node.nodes"
+            data-parent-id="{{ node.id }}"
+            ng-class="{hidden: collapsed}"
+            class="rw-tag-relationship-tree-nodes"
+        ><li
+            ui-tree-node
+            ng-repeat="node in node.nodes"
+            ng-include="'relationship-node.html'"
+        ></li></ol>
+
     </script>
 
 </div>

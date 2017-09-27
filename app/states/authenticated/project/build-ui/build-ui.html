@@ -1,9 +1,13 @@
 <div class="rw-build-ui">
 
+    <p>Select a UI Mode, add UI Groups to it, then use the <span class="glyphicon glyphicon-plus"></span> buttons to build the UI Item hierarchy. It helps to think of UI Groups as screens or prompts, with the UI Item tree representing available options as the users flow through those screens.</p>
+
+    <hr/>
+
     <!-- UI Mode select -->
     <div class="form-group row">
         <div class="col-sm-2">
-            <p class="form-control-static"><strong>UI Mode</strong></p>
+            <p class="form-control-static"><strong>Select UI Mode</strong></p>
         </div>
         <div class="col-sm-10">
             <div class="btn-group pull-right" data-toggle="buttons">
@@ -23,14 +27,23 @@
         <!-- UI Groups -->
         <div class="col-xs-6">
 
+            <h1>Create UI Groups</h1>
+
+            <hr/>
+
+            <button type="button"
+                class="btn btn-block btn-primary"
+                modal-href="ui-group-new"
+                modal-data="{ index: vm.groupTree.length + 1, ui_mode: vm.mode }"
+            >Add UI Group</button>
+
             <!-- UI Group Tree -->
             <div id="rw-tree-ui-groups" ui-tree="vm.groupTreeOptions">
 
-                <ol ui-tree-nodes="" ng-model="vm.groupTree">
+                <ol class="rw-ui-group-tree-nodes" ui-tree-nodes="" ng-model="vm.groupTree">
                     <li ng-repeat="group in vm.groupTree" ui-tree-node>
 
-                        <div ui-tree-handle>
-                            <span>{{ group.index }} / {{ group.tag_category.name }} / {{ group.name }}</span>
+                        <div ui-tree-handle ng-class="'rw-index-' + group.index">
 
                             <!-- TODO: Use the button directive here? -->
                             <button type="button" data-nodrag
@@ -50,6 +63,12 @@
                                 ng-click="vm.deleteGroup( group )"
                             ><span class="glyphicon glyphicon-remove"></span></button>
 
+                            <div class="label-group">Group {{ group.index }}</div>
+
+                            <div class="label-name">{{ group.name }}</div>
+
+                            <div class="label-category">Category: {{ group.tag_category.name }}</div>
+
                         </div>
 
                     </li>
@@ -57,20 +76,36 @@
 
             </div>
 
-            <button type="button"
-                class="btn btn-block btn-primary"
-                modal-href="ui-group-new"
-                modal-data="{ index: vm.groupTree.length + 1, ui_mode: vm.mode }"
-            >Add UI Group</button>
-
         </div>
 
         <!-- UI Items -->
         <div class="col-xs-6">
 
+            <h1>Organize UI Items</h1>
+
+            <hr/>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <p class="form-control-static">Show:</p>
+                </div>
+                <div class="col-sm-10">
+
+                    <div class="btn-group pull-right">
+                        <button
+                            ng-repeat="group in vm.groupTree"
+                            class="btn btn-show-toggle"
+                            ng-class="'rw-index-' + group.index"
+                            ng-click="vm.toggleItemsByGroup( group.index )"
+                        >{{ group.index }}</button>
+                    </div>
+
+                </div>
+            </div>
+
             <div id="rw-tree-ui-items" ui-tree="vm.itemTreeOptions">
 
-                <ol ui-tree-nodes="" ng-model="vm.itemTree">
+                <ol class="rw-ui-item-tree-nodes" ui-tree-nodes="" ng-model="vm.itemTree">
                     <li ng-repeat="node in vm.itemTree" ui-tree-node ng-include="'ui-item-node.html'"></li>
                 </ol>
 
@@ -83,10 +118,11 @@
 
     <!-- Nested node template for UI Items -->
     <script type="text/ng-template" id="ui-item-node.html">
-        <div ui-tree-handle>
+
+        <div ui-tree-handle ng-class="'rw-index-' + node.group.index">
 
             <a data-nodrag
-                class="btn btn-default btn-xs btn-square"
+                class="btn btn-default btn-xs btn-square btn-toggle"
                 ng-if="node.nodes && node.nodes.length > 0"
                 ng-click="toggle(this)"
             ><span
@@ -97,7 +133,11 @@
                 }"
             ></span></a>
 
-            <span>{{ node.group.index }} / {{ node.index }} / {{ node.tag.value }}</span>
+            <span ng-if="node.nodes && node.nodes.length < 1" class="btn-placeholder"></span>
+
+            <span class="label-group">{{ node.group.index }}</span>
+
+            <span class=>{{ node.tag.value }}</span>
 
             <button type="button" data-nodrag
                 class="btn btn-xs btn-default btn-square pull-right"
@@ -112,9 +152,18 @@
             ><span class="glyphicon glyphicon-plus"></span></button>
 
         </div>
-        <ol ui-tree-nodes="" ng-model="node.nodes" data-parent-id="{{ node.id }}" ng-class="{hidden: collapsed}">
-            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'ui-item-node.html'"></li>
-        </ol>
+
+        <ol ui-tree-nodes=""
+            ng-model="node.nodes"
+            data-parent-id="{{ node.id }}"
+            ng-class="{hidden: collapsed}"
+            class="rw-ui-item-tree-nodes"
+        ><li
+            ui-tree-node
+            ng-repeat="node in node.nodes"
+            ng-include="'ui-item-node.html'"
+        ></li></ol>
+
     </script>
 
 </div>
