@@ -38,18 +38,22 @@
                 {
                     field: 'demo_stream_message_loc',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
                 {
                     field: 'legal_agreement_loc',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
                 {
                     field: 'sharing_message_loc',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
                 {
                     field: 'out_of_range_message_loc',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
             ],
         });

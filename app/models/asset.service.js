@@ -28,10 +28,12 @@
                 {
                     field: 'loc_description',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
                 {
                     field: 'loc_alt_text',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
             ],
         });

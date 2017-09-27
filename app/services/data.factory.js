@@ -204,10 +204,32 @@
                     // ...but reject all other errors
                     return $q.reject( response );
 
-                }).finally( function() {
+                })
 
+                // Delete all `embedded` items that call for manual deletion
+                if( settings.embedded ) {
+
+                    var includes = settings.embedded.filter( function( include ) {
+                        return include.delete;
+                    });
+
+                    var oldDatum = cache.detail( id );
+
+                    var promises = includes.map( function( include ) {
+                        return oldDatum.clean[ include.field ].map( function( id ) {
+                            return $injector.get( include.model ).delete( id ).promise;
+                        });
+                    });
+
+                    promise = promise.then( function() {
+                        return $q.all( promises );
+                    });
+
+                }
+
+                // Update the cache
+                promise = promise.finally( function() {
                     return cache.delete( id );
-
                 });
 
                 return {

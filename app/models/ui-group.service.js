@@ -27,6 +27,7 @@
                 {
                     field: 'header_text_loc',
                     model: 'LocalizedStringService',
+                    delete: true,
                 },
                 {
                     field: 'ui_items',
