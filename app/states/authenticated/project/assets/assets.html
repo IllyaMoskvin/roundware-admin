@@ -8,6 +8,7 @@
     <table st-table="vm.displayed.assets" st-safe-src="vm.assets" class="table table-striped">
         <colgroup>
             <col width="42">
+            <col width="42">
             <col>
             <col>
             <col width="160">
@@ -16,14 +17,31 @@
         <thead>
             <tr>
                 <th st-sort="id" st-sort-default="true">ID</th>
-                <th st-sort="filename" colspan="1">File</th>
+                <th></th>
+                <th st-sort="filename">File</th>
                 <th>Tags</th>
-                <th st-sort="created" colspan="2">Created</th>
+                <th st-sort="created">Created</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="row in vm.displayed.assets">
                 <td>{{ row.id }}</td>
+                <td>
+
+                    <a
+                        href="{{ vm.getFileUrl( row.file ) }}"
+                        title="{{ row.filename }}"
+                        target="_blank"
+                    ><span
+                        class="glyphicon"
+                        ng-class="{
+                            'glyphicon-headphones': row.media_type == 'audio',
+                            'glyphicon-picture': row.media_type == 'image'
+                        }"
+                    ></span></a>
+
+                </td>
                 <td>
 
                     <!-- TODO: Replace w/ custom player -->
