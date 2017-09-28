@@ -33,7 +33,7 @@
             center: {
                 lat: 0,
                 lng: 0,
-                zoom: 6,
+                zoom: 17,
             },
             defaults: {
                 scrollWheelZoom: false,
