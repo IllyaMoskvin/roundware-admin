@@ -13,7 +13,6 @@
         vm.assets = null;
 
         vm.getFileUrl = getFileUrl;
-        vm.playAudio = playAudio;
         vm.getTag = getTag;
 
         activate();
@@ -38,14 +37,6 @@
         function getFileUrl( path ) {
 
             return ApiService.getBaseUrl( path );
-
-        }
-
-        // TODO: This is terrible and should be replaced
-        function playAudio( file ) {
-
-            var audio = new Audio( getFileUrl( file ) );
-            audio.play();
 
         }
 

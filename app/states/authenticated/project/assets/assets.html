@@ -27,7 +27,7 @@
         <tbody>
             <tr ng-repeat="row in vm.displayed.assets">
                 <td>{{ row.id }}</td>
-                <td>
+                <td class="text-center">
 
                     <a
                         href="{{ vm.getFileUrl( row.file ) }}"
@@ -42,14 +42,11 @@
                     ></span></a>
 
                 </td>
-                <td>
+                <td class="no-ellipsis">
 
-                    <!-- TODO: Replace w/ custom player -->
-                    <button type="button" class="btn btn-primary btn-sm" ng-click="vm.playAudio( row.file )">
-                        <span class="glyphicon glyphicon-play-circle"></span>
-                    </button>
-
-                    <a href="{{ vm.getFileUrl( row.file ) }}">{{ row.filename }}</a>
+                    <audio controls>
+                        <source ng-src="{{ vm.getFileUrl( row.file ) }}">
+                    </audio>
 
                 </td>
                 <td>
