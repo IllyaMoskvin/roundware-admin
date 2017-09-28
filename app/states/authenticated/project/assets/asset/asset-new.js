@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewAssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService'];
+    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService'];
 
-    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService) {
+    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService, LanguageService) {
 
         var vm = this;
 
@@ -30,6 +30,8 @@
             volume: 1,
 
         };
+
+        vm.languages = null;
 
         // Multi-select widget won't work if these start as null
         vm.selected_tags = [];
@@ -91,9 +93,13 @@
 
             $q.all({
                 'tags': TagService.list().promise,
+                'languages': LanguageService.list().promise,
             }).then( function( caches ) {
 
                 vm.tags = caches.tags.clean;
+                vm.languages = caches.languages.clean;
+
+                // TODO: Filter languages by project languages?
 
             });
 

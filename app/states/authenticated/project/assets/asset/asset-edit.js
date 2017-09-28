@@ -4,14 +4,15 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService'];
+    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService'];
 
-    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService) {
+    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService, LanguageService) {
 
         var vm = this;
 
         vm.asset = null;
         vm.tags = null;
+        vm.languages = null;
 
         vm.selected_tags = null;
 
@@ -74,10 +75,14 @@
             $q.all({
                 'asset': AssetService.find( $stateParams.asset_id ).promise,
                 'tags': TagService.list().promise,
+                'languages': LanguageService.list().promise,
             }).then( function( caches ) {
 
                 vm.asset = caches.asset.dirty;
                 vm.tags = caches.tags.clean;
+                vm.languages = caches.languages.clean;
+
+                // TODO: Filter languages by project languages?
 
                 // Find Tags assoc. w/ this asset
                 vm.selected_tags = vm.tags.filter( function( tag ) {
