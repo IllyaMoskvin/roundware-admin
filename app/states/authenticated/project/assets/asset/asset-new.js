@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewAssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService'];
+    Controller.$inject = ['$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService'];
 
-    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService, LanguageService) {
+    function Controller($q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService) {
 
         var vm = this;
 
@@ -31,6 +31,7 @@
 
         };
 
+        vm.map = null;
         vm.languages = null;
 
         // Multi-select widget won't work if these start as null
@@ -92,14 +93,23 @@
             // eliminate server request spam caused by getTag()
 
             $q.all({
+                'map': leafletData.getMap('map'),
                 'tags': TagService.list().promise,
+                'project': ProjectService.find( $stateParams.id ).promise,
                 'languages': LanguageService.list().promise,
-            }).then( function( caches ) {
+            }).then( function( results ) {
 
-                vm.tags = caches.tags.clean;
-                vm.languages = caches.languages.clean;
+                vm.map = results.map;
+                vm.tags = results.tags.clean;
+                vm.languages = results.languages.clean;
 
                 // TODO: Filter languages by project languages?
+
+                // Center map using project coordinates
+                var lat = results.project.clean.latitude || 0;
+                var long = results.project.clean.longitude || 0;
+
+                vm.map.setView( new L.LatLng( lat, long ), vm.map.getZoom() );
 
             });
 
