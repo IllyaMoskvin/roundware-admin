@@ -132,6 +132,11 @@
 
         function getBaseUrl( url ) {
 
+            // Prevent errors if the info is still loading
+            if( !url ) {
+                return settings.base;
+            }
+
             // add leading slash, if it's missing
             url = url.replace(/^\/?/g, '/');
 
