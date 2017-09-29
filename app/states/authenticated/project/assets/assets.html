@@ -42,11 +42,20 @@
                     ></span></a>
 
                 </td>
-                <td class="no-ellipsis">
+                <td ng-if="row.media_type == 'audio'" class="no-ellipsis">
 
                     <audio controls>
                         <source ng-src="{{ vm.getFileUrl( row.file ) }}">
                     </audio>
+
+                </td>
+                <td ng-if="row.media_type != 'audio'" class="no-ellipsis">
+
+                    <a
+                        href="{{ vm.getFileUrl( row.file ) }}"
+                        title="{{ row.filename }}"
+                        target="_blank"
+                    >{{ row.filename }}</a>
 
                 </td>
                 <td>
