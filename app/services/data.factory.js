@@ -31,8 +31,9 @@
                 blanked: options.blanked || null,
             };
 
+            var defaultParams = options.params || {};
+
             var cache = new CacheFactory.Cache( );
-            var defaultParams = {};
 
             // define public interface
             return {
@@ -47,7 +48,7 @@
                 delete: remove,
 
                 // settings
-                setDefaultParams: setDefaultParams,
+                setDefaultParam: setDefaultParam,
 
             };
 
@@ -242,11 +243,13 @@
 
 
             // Use this to set persistent params for all GET requests
-            // Expects an object of params as per Angular's $http.config
-            // TODO: Additive params? Currently, it's a `set` situation.
-            function setDefaultParams( params ) {
+            // Expects key and value; will be passed to Angular's $http.config.params
+            // To unset a param, pass `null` or `undefined` as value
+            function setDefaultParam( param, value ) {
 
-                return defaultParams = params || {};
+                defaultParams[param] = value;
+
+                return defaultParams;
 
             }
 

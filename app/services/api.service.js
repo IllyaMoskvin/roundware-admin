@@ -61,8 +61,6 @@
 
             angular.merge( config, {
                 params: {
-                    // session-for-admin-uploads
-                    session_id: 1,
                     // show embedded localized string lists
                     admin: 1,
                 }
