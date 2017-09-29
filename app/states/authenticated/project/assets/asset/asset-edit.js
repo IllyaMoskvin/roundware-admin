@@ -4,9 +4,9 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService'];
 
-    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService, LanguageService) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService) {
 
         var vm = this;
 
@@ -51,6 +51,7 @@
         // Helpers for setting coordinates + updating map
         vm.setLocation = setLocation;
         vm.resetLocation = resetLocation;
+        vm.centerMapOnMarker = centerMapOnMarker;
 
         // Container for geocoding related stuff
         vm.geocode = {
@@ -73,14 +74,18 @@
             // eliminate server request spam caused by getTag()
 
             $q.all({
+                'map': leafletData.getMap('map'),
                 'asset': AssetService.find( $stateParams.asset_id ).promise,
                 'tags': TagService.list().promise,
                 'languages': LanguageService.list().promise,
-            }).then( function( caches ) {
+            }).then( function( results ) {
 
-                vm.asset = caches.asset.dirty;
-                vm.tags = caches.tags.clean;
-                vm.languages = caches.languages.clean;
+                vm.map = results.map;
+
+                // Load info from the caches
+                vm.asset = results.asset.dirty;
+                vm.tags = results.tags.clean;
+                vm.languages = results.languages.clean;
 
                 // TODO: Filter languages by project languages?
 
@@ -88,6 +93,10 @@
                 vm.selected_tags = vm.tags.filter( function( tag ) {
                     return vm.asset.tag_ids.includes( tag.id );
                 });
+
+                // Pan map to marker, when its coordinates change
+                // Triggering this for <input/> change requires `ng-change` attr
+                $scope.$watchGroup( ['vm.marker.lat', 'vm.marker.lng'], centerMapOnMarker );
 
                 // Update the marker to match the Asset's coordinates
                 resetLocation();
@@ -118,6 +127,12 @@
         function resetLocation( ) {
 
             return setLocation( vm.asset.latitude, vm.asset.longitude );
+
+        }
+
+        function centerMapOnMarker( ) {
+
+            vm.map.panTo( new L.LatLng( vm.marker.lat, vm.marker.lng ) );
 
         }
 

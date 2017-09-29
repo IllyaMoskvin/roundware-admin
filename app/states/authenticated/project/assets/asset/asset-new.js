@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewAssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService'];
 
-    function Controller($q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService) {
 
         var vm = this;
 
@@ -73,6 +73,7 @@
         // Helpers for setting coordinates + updating map
         vm.setLocation = setLocation;
         vm.resetLocation = resetLocation;
+        vm.centerMapOnMarker = centerMapOnMarker;
 
         // Container for geocoding related stuff
         vm.geocode = {
@@ -100,16 +101,20 @@
             }).then( function( results ) {
 
                 vm.map = results.map;
+
+                // Load info from the caches
                 vm.tags = results.tags.clean;
                 vm.languages = results.languages.clean;
 
                 // TODO: Filter languages by project languages?
 
-                // Center map using project coordinates
-                var lat = results.project.clean.latitude || 0;
-                var long = results.project.clean.longitude || 0;
+                // Pan map to marker, when its coordinates change
+                // Triggering this for <input/> change requires `ng-change` attr
+                $scope.$watchGroup( ['vm.marker.lat', 'vm.marker.lng'], centerMapOnMarker );
 
-                vm.map.setView( new L.LatLng( lat, long ), vm.map.getZoom() );
+                // Center marker using project coordinates, map should follow
+                vm.marker.lat = results.project.clean.latitude || 0;
+                vm.marker.lng = results.project.clean.longitude || 0;
 
             });
 
@@ -137,6 +142,12 @@
         function resetLocation( ) {
 
             return setLocation( vm.asset.latitude, vm.asset.longitude );
+
+        }
+
+        function centerMapOnMarker( ) {
+
+            vm.map.panTo( new L.LatLng( vm.marker.lat, vm.marker.lng ) );
 
         }
 

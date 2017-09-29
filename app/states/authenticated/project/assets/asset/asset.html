@@ -123,11 +123,11 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Latitude</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="latitude" ng-model="vm.marker.lat" numeric>
+                <input type="text" class="form-control" ng-model="vm.marker.lat" ng-change="vm.centerMapOnMarker()" numeric>
             </div>
             <label class="col-sm-2 control-label">Longitude</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="longitude" ng-model="vm.marker.lng" numeric>
+                <input type="text" class="form-control" ng-model="vm.marker.lng" ng-change="vm.centerMapOnMarker()" numeric>
             </div>
             <div class="col-sm-2">
                  <button class="btn btn-block btn-default" ng-click="vm.resetLocation()">Reset</button>
