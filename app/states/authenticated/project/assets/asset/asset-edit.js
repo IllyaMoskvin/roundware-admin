@@ -4,9 +4,9 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'Notification'];
 
-    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, Notification) {
 
         var vm = this;
 
@@ -146,21 +146,26 @@
 
         function save() {
 
+            var asset = angular.merge( {}, vm.asset );
+
             // Serialize selected Tags back into the Asset
-            vm.asset.tag_ids = vm.selected_tags.map( function( tag ) {
+            asset.tag_ids = vm.selected_tags.map( function( tag ) {
                 return tag.id;
             });
 
             // Serialize Leaflet marker into the Asset
-            vm.asset.latitude = vm.marker.lat;
-            vm.asset.longitude = vm.marker.lng;
+            asset.latitude = vm.marker.lat;
+            asset.longitude = vm.marker.lng;
+
+            // Null out the file field: we aren't uploading stuff
+            asset.file = undefined;
 
             // TODO: Remove this once things are stable
-            console.log( vm.asset );
+            console.log( asset );
 
             vm.saving = true;
 
-            AssetService.update( vm.asset.id ).promise.then( function() {
+            AssetService.update( vm.asset.id, asset ).promise.then( function() {
 
                 Notification.success( { message: 'Changes saved!' } );
 
