@@ -137,13 +137,14 @@
         <hr/>
 
         <!-- Lookup an address using Nominatim -->
-        <div class="form-group">
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="geocode" ng-model="vm.geocode.query">
-            </div>
-            <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+            </span>
+            <input type="text" class="form-control" placeholder="Search for address, city, etc." ng-model="vm.geocode.query">
+            <span class="input-group-btn">
                 <button class="btn btn-block btn-primary" ng-click="vm.geocode.search()">Geocode</button>
-            </div>
+            </span>
         </div>
 
         <!-- Output for geocoding search results -->
