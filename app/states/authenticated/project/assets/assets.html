@@ -62,8 +62,8 @@
                         {{ vm.getTag( tag_id ).value }}
                     </div>
                 </td>
-                <td>{{ row.created }}</td>
-                <!-- TODO: Replace w/ ui-sref to edit asset form -->
+                <!-- Assets created through the Django admin panel have milliseconds -->
+                <td>{{ row.created | date : 'yyyy-MM-dd HH:mm:ss' }}</td>
                 <td class="no-ellipsis"><btn-edit ui-sref="project.asset-edit({ asset_id: row.id })"/></td>
             </tr>
         </tbody>
