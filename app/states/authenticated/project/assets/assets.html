@@ -29,17 +29,15 @@
                 <td>{{ row.id }}</td>
                 <td class="text-center">
 
-                    <a
-                        href="{{ vm.getFileUrl( row.file ) }}"
-                        title="{{ row.filename }}"
-                        target="_blank"
-                    ><span
+                    <span
                         class="glyphicon"
                         ng-class="{
                             'glyphicon-headphones': row.media_type == 'audio',
-                            'glyphicon-picture': row.media_type == 'image'
+                            'glyphicon-picture': row.media_type == 'photo',
+                            'glyphicon-facetime-video': row.media_type == 'video',
+                            'glyphicon-text-size': row.media_type == 'text',
                         }"
-                    ></span></a>
+                    ></span>
 
                 </td>
                 <td ng-if="row.media_type == 'audio'" class="no-ellipsis">
