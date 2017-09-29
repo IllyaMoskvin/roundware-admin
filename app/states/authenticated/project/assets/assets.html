@@ -9,6 +9,7 @@
         <colgroup>
             <col width="42">
             <col width="42">
+            <col width="60">
             <col>
             <col>
             <col width="160">
@@ -18,6 +19,7 @@
             <tr>
                 <th st-sort="id" st-sort-default="true">ID</th>
                 <th></th>
+                <th st-sort="audio_length_in_seconds">Size</th>
                 <th st-sort="filename">File</th>
                 <th>Tags</th>
                 <th st-sort="created">Created</th>
@@ -39,6 +41,13 @@
                         }"
                     ></span>
 
+                </td>
+                <td ng-if="row.media_type == 'audio'">
+                    <!-- Feel free to prepend `HH:` to the format string to show hours -->
+                    {{ row.audio_length_in_seconds | secondsToDateTime | date : 'mm:ss' }}
+                </td>
+                <td ng-if="row.media_type != 'audio'">
+                    <!-- IDEA: Show filesize i/o length for image assets? -->
                 </td>
                 <td ng-if="row.media_type == 'audio'" class="no-ellipsis">
 
