@@ -4,15 +4,16 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'EnvelopeService', 'Notification'];
 
-    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, Notification) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, EnvelopeService, Notification) {
 
         var vm = this;
 
         vm.asset = null;
         vm.tags = null;
         vm.languages = null;
+        vm.envelopes = null;
 
         vm.selected_tags = null;
 
@@ -78,6 +79,7 @@
                 'asset': AssetService.find( $stateParams.asset_id ).promise,
                 'tags': TagService.list().promise,
                 'languages': LanguageService.list().promise,
+                'envelopes': EnvelopeService.list().promise,
             }).then( function( results ) {
 
                 vm.map = results.map;
@@ -86,6 +88,7 @@
                 vm.asset = results.asset.dirty;
                 vm.tags = results.tags.clean;
                 vm.languages = results.languages.clean;
+                vm.envelopes = results.envelopes.clean;
 
                 // TODO: Filter languages by project languages?
 
@@ -156,6 +159,13 @@
             // Serialize Leaflet marker into the Asset
             asset.latitude = vm.marker.lat;
             asset.longitude = vm.marker.lng;
+
+            // Envelope <select/> accepts an array, but returns an int
+            // We need to serialize it back into an array
+            // TODO: Add this to NewAssetController
+            if( vm.asset.envelope_ids.constructor !== Array ) {
+                asset.envelope_ids = [ vm.asset.envelope_ids ];
+            }
 
             // Null out the file field: we aren't uploading stuff
             asset.file = undefined;
