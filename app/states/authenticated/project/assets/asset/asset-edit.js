@@ -147,40 +147,18 @@
 
         }
 
-        // TODO: Abstract some of this into AssetService
         function save() {
 
             vm.saving = true;
 
-            // Because we might be making a new Envelope, this returns a promise
-            var promise = getEnvelopeId( vm.asset.envelope_ids );
+            // See AssetService for more details re: args & return
+            AssetService.update({
 
-            // Wait until we have our envelope(s), then save
-            promise.then( function( envelope_ids ) {
+                'asset': vm.asset,
+                'marker': vm.marker,
+                'tags': vm.selected_tags,
 
-                var asset = angular.merge( {}, vm.asset );
-
-                // Add the correct(ed) envelope_ids
-                asset.envelope_ids = envelope_ids;
-
-                // Serialize selected Tags back into the Asset
-                asset.tag_ids = vm.selected_tags.map( function( tag ) {
-                    return tag.id;
-                });
-
-                // Serialize Leaflet marker into the Asset
-                asset.latitude = vm.marker.lat;
-                asset.longitude = vm.marker.lng;
-
-                // Null out the file field: we aren't uploading stuff
-                asset.file = undefined;
-
-                // TODO: Remove this once things are stable
-                console.log( asset );
-
-                return AssetService.update( vm.asset.id, asset ).promise;
-
-            }).then( function() {
+            }).promise.then( function() {
 
                 Notification.success( { message: 'Changes saved!' } );
 
@@ -189,53 +167,6 @@
                 vm.saving = false;
 
             });
-
-        }
-
-        function getEnvelopeId( envelope_ids ) {
-
-            var deferred = $q.defer();
-
-            // Envelope <select/> accepts an array, but returns an int
-            // We need to serialize it back into an array
-            if( envelope_ids.constructor !== Array ) {
-
-                // Special case for creating new Envelope
-                if( vm.asset.envelope_ids == 0 ) {
-
-                    // TODO: Use project-specific admin sessions
-                    EnvelopeService.create({
-
-                        session_id: 1,
-
-                    }).promise.then( function( cache ) {
-
-                        deferred.resolve( cache.id );
-
-                    });
-
-                } else {
-
-                    // It's an int or a string, return it back
-                    deferred.resolve( envelope_ids );
-
-                }
-
-            } else {
-
-                // Normalize Asset to belong to only one Envelope
-                deferred.resolve( envelope_ids[0] );
-
-            }
-
-            // This is where we wrap the id in an array
-            var promise = deferred.promise.then( function( envelope_id ) {
-
-                return [ envelope_id ];
-
-            });
-
-            return promise;
 
         }
 
