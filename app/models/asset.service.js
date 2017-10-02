@@ -5,9 +5,9 @@
         .module('app')
         .factory('AssetService', Service);
 
-    Service.$inject = ['$q', 'DataFactory', 'EnvelopeService'];
+    Service.$inject = ['$q', '$stateParams', 'DataFactory', 'EnvelopeService', 'SessionService', 'ProjectService'];
 
-    function Service($q, DataFactory, EnvelopeService) {
+    function Service($q, $stateParams, DataFactory, EnvelopeService, SessionService, ProjectService) {
 
         var collection = new DataFactory.Collection({
             route: 'assets',
@@ -159,13 +159,23 @@
                 // Special case for creating new Envelope
                 if( envelope_ids == 0 ) {
 
-                    // TODO: Use project-specific admin sessions
-                    EnvelopeService.create({
+                    // Create new "admin" session assoc. w/ this project
+                    SessionService.create({
 
-                        session_id: 1,
+                        project_id: $stateParams.id,
 
                     }).promise.then( function( cache ) {
 
+                        // Create Envelope assoc. w/ this session
+                        return EnvelopeService.create({
+
+                            session_id: cache.id,
+
+                        }).promise;
+
+                    }).then( function( cache ) {
+
+                        // Resolve w/ this new Envelope's id
                         deferred.resolve( cache.id );
 
                     });
