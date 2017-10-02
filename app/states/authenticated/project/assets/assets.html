@@ -51,7 +51,7 @@
                 </td>
                 <td ng-if="row.media_type == 'audio'" class="no-ellipsis">
 
-                    <audio controls>
+                    <audio controls preload="none">
                         <source ng-src="{{ vm.getFileUrl( row.file ) }}">
                     </audio>
 
