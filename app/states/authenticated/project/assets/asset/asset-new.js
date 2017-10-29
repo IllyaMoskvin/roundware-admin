@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService', 'EnvelopeService'];
+    Controller.$inject = ['$scope', '$q', '$state', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService', 'EnvelopeService', 'Notification'];
 
-    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService, EnvelopeService) {
+    function Controller($scope, $q, $state, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService, EnvelopeService, Notification) {
 
         var vm = this;
 
@@ -25,7 +25,11 @@
             // Needed to avoid NaN on slider widget
             weight: 50,
 
+            // Select "Create new envelope" as default
+            envelope_ids: 0,
+
             // For convenience?
+            language_id: 1,
             submitted: true,
             volume: 1,
 
@@ -82,6 +86,8 @@
             query: null,
             results: [],
         };
+
+        vm.saving = false;
 
         vm.save = save;
 
@@ -164,16 +170,32 @@
 
         function save() {
 
-            // Serialize selected Tags back into the Asset
-            vm.asset.tag_ids = vm.selected_tags.map( function( tag ) {
-                return tag.id;
+            // TODO: Validate that `media_type` matches selected file
+
+            vm.saving = true;
+
+            // See AssetService for more details re: args & return
+            AssetService.create({
+
+                'asset': vm.asset,
+                'marker': vm.marker,
+                'tags': vm.selected_tags,
+
+                // These reference via names, not ids
+                'file': document.forms['asset']['file'].files[0],
+
+            }).promise.then( function(cache) {
+
+                // Open Edit Asset with the new asset's id
+                $state.go('project.asset-edit', { asset_id: cache.id } );
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            }).finally( function() {
+
+                vm.saving = false;
+
             });
-
-            // Serialize Leaflet marker into the Asset
-            vm.asset.latitude = vm.marker.lat;
-            vm.asset.longitude = vm.marker.lng;
-
-            console.log( vm.asset );
 
         }
 

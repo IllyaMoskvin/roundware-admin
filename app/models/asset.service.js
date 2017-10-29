@@ -41,6 +41,7 @@
         // Assets require some custom pre-processing
         var custom = {
             update: update,
+            create: create,
         };
 
         // Return all methods from collection, some overwritten w/ custom
@@ -75,6 +76,8 @@
                 throw 'Missing marker longitude';
             }
 
+            // TODO: Catch these throws and fail the promise, so that the Save button is re-enabled?
+
         }
 
 
@@ -94,6 +97,72 @@
                 asset.file = undefined;
 
                 return collection.update( asset.id, asset ).promise;
+
+            });
+
+            return {
+                promise: promise,
+                cache: datum,
+            };
+
+        }
+
+
+        // This "overwrites" the collection's create() method
+        function create( params, config ) {
+
+            // Some create-specific validation
+            if( typeof params.file === 'undefined' ) {
+                throw 'Missing file';
+            }
+
+            // Validate and transform
+            var promise = prepareSaveRequest( params );
+
+            // Define this after the validation fires, above
+            // This is the original, "cached" datum
+            var datum = params.asset;
+
+            // Create-specific calls go here
+            promise = promise.then( function( asset ) {
+
+                // Append our file
+                asset.file = params.file;
+
+                // TODO: envelope_ids[] is not accepted for create call
+                // Fix server to expect envelope_ids, not envelope_id
+                asset.envelope_id = asset.envelope_ids[0];
+                delete asset.envelope_ids;
+
+                // https://stackoverflow.com/questions/16483873/angularjs-http-post-file-and-form-data
+                return collection.create( asset, {
+                    headers: {
+                        // AngularJS defaults to application/json; charset=utf-8
+                        // Setting this to `undefined` allows it to send reasonable defaults
+                        // i.e. multipart/form-data; boundary= [webkit stuff here]
+                        'Content-Type': undefined
+                    },
+                    transformRequest: function (data, headersGetter) {
+
+                        var formData = new FormData();
+
+                        angular.forEach(data, function (value, key) {
+
+                            // https://stackoverflow.com/questions/16104078
+                            if( value.constructor === Array ) {
+                                value.forEach( function( item ) {
+                                    formData.append( key + '[]', item );
+                                });
+                            } else {
+                                formData.append( key, value );
+                            }
+
+                        });
+
+                        return formData;
+
+                    }
+                }).promise;
 
             });
 
