@@ -52,7 +52,14 @@
         // which is *quite* different from other ModelServices. They are fairly
         // implementation-dependent, e.g. `marker` corresponds to a Leaflet marker.
         // This is done to reduce code duplication b/w New- and EditAssetControllers
+
+
+        // These params are required by both update() and create()
         function validateSaveParams( params ) {
+
+            var deferred = $q.defer();
+
+            var failed = false;
 
             var required = [
                 'asset',
@@ -63,20 +70,74 @@
             required.forEach( function( param ) {
 
                 if( typeof params[param] === 'undefined' ) {
-                    throw 'Missing required param in AssetService save attempt: ' + param;
+                    deferred.reject('Missing required param in AssetService save attempt: ' + param);
+                    failed = true;
                 }
 
             });
 
-            if( typeof params.marker.lat === 'undefined' ) {
-                throw 'Missing marker latitude';
+            // Redundant, but without the if, this will fail silently
+            if( typeof params.marker !== 'undefined' ) {
+
+                if( typeof params.marker.lat === 'undefined' ) {
+                    deferred.reject('Missing marker latitude');
+                    failed = true;
+                }
+
+                if( typeof params.marker.lng === 'undefined' ) {
+                    deferred.reject('Missing marker longitude');
+                    failed = true;
+                }
+
             }
 
-            if( typeof params.marker.lng === 'undefined' ) {
-                throw 'Missing marker longitude';
+            if( !failed ) {
+                deferred.resolve();
             }
 
-            // TODO: Catch these throws and fail the promise, so that the Save button is re-enabled?
+            return deferred.promise;
+
+        }
+
+
+        // create() also expects `file` param
+        function validateCreateParams( params ) {
+
+            var deferred = $q.defer();
+
+            var failed = false;
+
+            if( typeof params.file === 'undefined' ) {
+
+                deferred.reject( 'Please select a file to upload' );
+                failed = true;
+
+            } else {
+
+                // Validate that `media_type` matches selected file
+                // https://stackoverflow.com/questions/29805909
+                var mime_type = params.file['type'].split('/')[0];
+
+                if(
+                    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+                    ( params.asset.media_type === 'audio' && mime_type !== 'audio' ) ||
+                    ( params.asset.media_type === 'photo' && mime_type !== 'image' ) ||
+                    ( params.asset.media_type === 'video' && mime_type !== 'video' ) ||
+                    ( params.asset.media_type === 'text' && mime_type !== 'text' )
+                ) {
+
+                    deferred.reject( 'File does not match selected Media Type' );
+                    failed = true;
+
+                }
+
+            }
+
+            if( !failed ) {
+                deferred.resolve();
+            }
+
+            return deferred.promise;
 
         }
 
@@ -84,11 +145,17 @@
         // This "overwrites" the collection's update() method
         function update( params ) {
 
-            // Validate and transform
-            var promise = prepareSaveRequest( params );
+            // Validate shared params
+            // Start building promise chain
+            var promise = validateSaveParams( params );
 
-            // Define this after the validation fires, above
+            // Define this after validating that the asset param is set
             var datum = collection.find( params.asset.id );
+
+            // Run shared transformations
+            promise = promise.then( function() {
+                return prepareSaveRequest( params );
+            });
 
             // Update-specific calls go here
             promise = promise.then( function( asset ) {
@@ -111,17 +178,28 @@
         // This "overwrites" the collection's create() method
         function create( params, config ) {
 
-            // Some create-specific validation
-            if( typeof params.file === 'undefined' ) {
-                throw 'Missing file';
-            }
+            // Start a promise chain
+            var promise = $q.when(true);
 
-            // Validate and transform
-            var promise = prepareSaveRequest( params );
+            // Run shared param validation
+            promise = promise.then( function() {
+                return validateSaveParams( params );
+            });
 
-            // Define this after the validation fires, above
+            // Run create-specific param validation
+            promise = promise.then( function() {
+                return validateCreateParams( params );
+            });
+
             // This is the original, "cached" datum
+            // We might not use it for anything, it's here for parity
+            // Define this after validating that the asset param is set
             var datum = params.asset;
+
+            // Run shared transformations
+            promise = promise.then( function() {
+                return prepareSaveRequest( params );
+            });
 
             // Create-specific calls go here
             promise = promise.then( function( asset ) {
@@ -176,8 +254,6 @@
 
         // Shared logic b/w create() and update()
         function prepareSaveRequest( params ) {
-
-            validateSaveParams( params );
 
             // Start building promise chain
             var promise = $q.when(true);
