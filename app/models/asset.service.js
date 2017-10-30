@@ -16,7 +16,7 @@
                 {
                     incoming: 'loc_description_admin',
                     stored: 'loc_description',
-                    outgoing: 'loc_description',
+                    outgoing: 'description_loc_ids',
                 },
                 {
                     incoming: 'loc_alt_text_admin',
@@ -236,6 +236,14 @@
                             }
 
                         });
+
+                        // TODO: Fix server to accept and return description ids in a consistent format:
+                        // `partial_update` expects `description_loc_ids` to be an array, but
+                        // `create` expects them to be a comma-searated string...
+                        // See c. L628 of api.py
+                        if( typeof data.description_loc_ids !== 'undefined' ) {
+                            formData.set( 'description_loc_ids', data.description_loc_ids.join(',') );
+                        }
 
                         return formData;
 
