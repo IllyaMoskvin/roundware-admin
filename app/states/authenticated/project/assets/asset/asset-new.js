@@ -170,8 +170,33 @@
 
         function save() {
 
-            // TODO: Validate that `media_type` matches selected file
+            // Do preliminary validation that a file has been selected
+            // This is to prevent errors when checking for MIME type
+            // This functionality also exists in AssetService
+            // Note that these reference elements via names, not ids
+            var file = document.forms['asset']['file'].files[0];
 
+            if( !file ) {
+                Notification.error( { message: 'Please select a file to upload.' } );
+                return;
+            }
+
+            // Validate that `media_type` matches selected file
+            // https://stackoverflow.com/questions/29805909
+            var mime_type = file['type'].split('/')[0];
+
+            if(
+                // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+                ( vm.asset.media_type === 'audio' && mime_type !== 'audio' ) ||
+                ( vm.asset.media_type === 'photo' && mime_type !== 'image' ) ||
+                ( vm.asset.media_type === 'video' && mime_type !== 'video' ) ||
+                ( vm.asset.media_type === 'text' && mime_type !== 'text' )
+            ) {
+                Notification.error( { message: 'File does not match selected Media Type.' } );
+                return;
+            }
+
+            // Start the saving process...
             vm.saving = true;
 
             // See AssetService for more details re: args & return
@@ -181,8 +206,7 @@
                 'marker': vm.marker,
                 'tags': vm.selected_tags,
 
-                // These reference via names, not ids
-                'file': document.forms['asset']['file'].files[0],
+                'file': file,
 
             }).promise.then( function(cache) {
 
