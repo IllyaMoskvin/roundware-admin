@@ -245,6 +245,11 @@
                             formData.set( 'description_loc_ids', data.description_loc_ids.join(',') );
                         }
 
+                        // Ditto for tag ids. See c. L619 of api.py
+                        if( typeof data.tag_ids !== 'undefined' ) {
+                            formData.set( 'tag_ids', data.tag_ids.join(',') );
+                        }
+
                         return formData;
 
                     }
