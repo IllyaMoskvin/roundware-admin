@@ -40,15 +40,15 @@
 
         // Assets require some custom pre-processing
         var custom = {
-            update: update,
-            create: create,
+            updateEx: updateEx,
+            createEx: createEx,
         };
 
         // Return all methods from collection, some overwritten w/ custom
         return angular.merge( {}, collection, custom );
 
 
-        // Important! Note that AssetService's update() and create() expect `params`,
+        // Important! Note that AssetService's updateEx() and createEx() expect `params`,
         // which is *quite* different from other ModelServices. They are fairly
         // implementation-dependent, e.g. `marker` corresponds to a Leaflet marker.
         // This is done to reduce code duplication b/w New- and EditAssetControllers
@@ -143,7 +143,7 @@
 
 
         // This "overwrites" the collection's update() method
-        function update( params ) {
+        function updateEx( params ) {
 
             // Validate shared params
             // Start building promise chain
@@ -176,7 +176,7 @@
 
 
         // This "overwrites" the collection's create() method
-        function create( params, config ) {
+        function createEx( params, config ) {
 
             // Start a promise chain
             var promise = $q.when(true);

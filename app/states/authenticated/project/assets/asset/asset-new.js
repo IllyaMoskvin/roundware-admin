@@ -174,7 +174,7 @@
             vm.saving = true;
 
             // See AssetService for more details re: args & return
-            AssetService.create({
+            AssetService.createEx({
 
                 'asset': vm.asset,
                 'marker': vm.marker,

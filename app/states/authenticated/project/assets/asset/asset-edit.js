@@ -152,7 +152,7 @@
             vm.saving = true;
 
             // See AssetService for more details re: args & return
-            AssetService.update({
+            AssetService.updateEx({
 
                 'asset': vm.asset,
                 'marker': vm.marker,
