@@ -7,7 +7,7 @@
     <hr/>
 
     <!-- Asset Editing Form -->
-    <form class="form-horizontal">
+    <form class="form-horizontal" name="asset">
 
         <div class="form-group">
             <label class="col-sm-2 control-label">Admin Desc.</label>
@@ -18,6 +18,62 @@
 
         <hr/>
 
+        <!-- These form fields should be shown only for New Assets -->
+        <div ng-if="!vm.asset.file">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">File</label>
+                <div class="col-sm-10">
+                    <input type="file" name="file"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Media Type</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="language" ng-model="vm.asset.media_type">
+                        <option value="audio">audio</option>
+                        <option value="photo">photo</option>
+                        <option value="video">video</option>
+                        <option value="text">text</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr/>
+
+        </div>
+
+        <!-- These form fields should be shown only for uploaded Assets -->
+        <div ng-if="vm.asset.file">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Link</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">
+                        <a
+                            href="{{ vm.getFileUrl( vm.asset.file ) }}"
+                            title="{{ vm.asset.filename }}"
+                            target="_blank"
+                        >{{ vm.asset.filename }}</a> ({{ vm.asset.media_type }})
+                    </p>
+                </div>
+            </div>
+
+            <!-- TODO: Add previews for other media_types -->
+            <div class="form-group" ng-if="vm.asset.media_type == 'audio'">
+                <label class="col-sm-2 control-label">Preview</label>
+                <div class="col-sm-10">
+                    <audio controls preload="none">
+                        <source ng-src="{{ vm.getFileUrl( vm.asset.file ) }}">
+                    </audio>
+                </div>
+            </div>
+
+            <hr/>
+
+        </div>
+
         <div class="form-group">
             <label class="col-sm-2 control-label">Submitted</label>
             <div class="col-sm-10">
@@ -26,6 +82,29 @@
                         <input type="checkbox" ng-model="vm.asset.submitted">
                     </label>
                 </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 control-label">Session</label>
+            <div class="col-sm-10">
+                <p class="form-control-static">{{ vm.asset.session_id }}</p>
+            </div>
+        </div>
+
+        <div class="form-group row" ng-if="vm.asset.created">
+            <label class="col-sm-2 control-label">Created</label>
+            <div class="col-sm-10">
+                <p class="form-control-static">{{ vm.asset.created }}</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="language" class="col-sm-2 control-label">Language</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="language" ng-model="vm.asset.language_id" numeric>
+                    <option ng-repeat="option in vm.languages" value="{{option.id}}">{{option.name}}</option>
+                </select>
             </div>
         </div>
 
@@ -59,6 +138,18 @@
             </div>
         </div>
 
+        <hr/>
+
+        <div class="form-group row">
+            <label for="envelope" class="col-sm-2 control-label">Envelope</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="envelope" ng-model="vm.asset.envelope_ids" numeric>
+                    <option value="0">Create new envelope</option>
+                    <option ng-repeat="envelope in vm.envelopes" value="{{ envelope.id }}">{{envelope.id}}</option>
+                </select>
+            </div>
+        </div>
+
         <local-inputs model="vm.asset" field="loc_description" title="Description"></local-inputs>
 
         <!-- TODO: Determine why this isn't appearing in the Django Roundware admin page? -->
@@ -70,11 +161,11 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Latitude</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="latitude" ng-model="vm.marker.lat" numeric>
+                <input type="text" class="form-control" ng-model="vm.marker.lat" ng-change="vm.centerMapOnMarker()" numeric>
             </div>
             <label class="col-sm-2 control-label">Longitude</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="longitude" ng-model="vm.marker.lng" numeric>
+                <input type="text" class="form-control" ng-model="vm.marker.lng" ng-change="vm.centerMapOnMarker()" numeric>
             </div>
             <div class="col-sm-2">
                  <button class="btn btn-block btn-default" ng-click="vm.resetLocation()">Reset</button>
@@ -83,24 +174,15 @@
 
         <hr/>
 
-        <!-- Leaflet map for dragging the marker around -->
-        <leaflet
-            height="400px"
-            center="vm.leaflet.center"
-            defaults="vm.leaflet.defaults"
-            markers="vm.leaflet.markers"
-        ></leaflet>
-
-        <hr/>
-
         <!-- Lookup an address using Nominatim -->
-        <div class="form-group">
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="geocode" ng-model="vm.geocode.query">
-            </div>
-            <div class="col-sm-2">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+            </span>
+            <input type="text" class="form-control" placeholder="Search for address, city, etc." ng-model="vm.geocode.query">
+            <span class="input-group-btn">
                 <button class="btn btn-block btn-primary" ng-click="vm.geocode.search()">Geocode</button>
-            </div>
+            </span>
         </div>
 
         <!-- Output for geocoding search results -->
@@ -110,6 +192,17 @@
             ng-click="vm.setLocation( result.lat, result.lng )"
             style="text-align: left"
         >{{ result.title }}</button>
+
+        <hr/>
+
+        <!-- Leaflet map for dragging the marker around -->
+        <leaflet
+            id="map"
+            height="400px"
+            center="vm.leaflet.center"
+            defaults="vm.leaflet.defaults"
+            markers="vm.leaflet.markers"
+        ></leaflet>
 
         <hr/>
 

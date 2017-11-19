@@ -61,8 +61,6 @@
 
             angular.merge( config, {
                 params: {
-                    // session-for-admin-uploads
-                    session_id: 1,
                     // show embedded localized string lists
                     admin: 1,
                 }
@@ -133,6 +131,11 @@
         }
 
         function getBaseUrl( url ) {
+
+            // Prevent errors if the info is still loading
+            if( !url ) {
+                return settings.base;
+            }
 
             // add leading slash, if it's missing
             url = url.replace(/^\/?/g, '/');

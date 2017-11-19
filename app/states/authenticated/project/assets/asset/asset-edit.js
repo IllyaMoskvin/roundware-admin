@@ -4,14 +4,16 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$q', '$stateParams', 'ApiService', 'GeocodeService', 'AssetService', 'TagService'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'EnvelopeService', 'Notification'];
 
-    function Controller($q, $stateParams, ApiService, GeocodeService, AssetService, TagService) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, EnvelopeService, Notification) {
 
         var vm = this;
 
         vm.asset = null;
         vm.tags = null;
+        vm.languages = null;
+        vm.envelopes = null;
 
         vm.selected_tags = null;
 
@@ -33,7 +35,7 @@
             center: {
                 lat: 0,
                 lng: 0,
-                zoom: 6,
+                zoom: 17,
             },
             defaults: {
                 scrollWheelZoom: false,
@@ -50,6 +52,7 @@
         // Helpers for setting coordinates + updating map
         vm.setLocation = setLocation;
         vm.resetLocation = resetLocation;
+        vm.centerMapOnMarker = centerMapOnMarker;
 
         // Container for geocoding related stuff
         vm.geocode = {
@@ -72,17 +75,31 @@
             // eliminate server request spam caused by getTag()
 
             $q.all({
+                'map': leafletData.getMap('map'),
                 'asset': AssetService.find( $stateParams.asset_id ).promise,
                 'tags': TagService.list().promise,
-            }).then( function( caches ) {
+                'languages': LanguageService.list().promise,
+                'envelopes': EnvelopeService.list().promise,
+            }).then( function( results ) {
 
-                vm.asset = caches.asset.dirty;
-                vm.tags = caches.tags.clean;
+                vm.map = results.map;
+
+                // Load info from the caches
+                vm.asset = results.asset.dirty;
+                vm.tags = results.tags.clean;
+                vm.languages = results.languages.clean;
+                vm.envelopes = results.envelopes.clean;
+
+                // TODO: Filter languages by project languages?
 
                 // Find Tags assoc. w/ this asset
                 vm.selected_tags = vm.tags.filter( function( tag ) {
                     return vm.asset.tag_ids.includes( tag.id );
                 });
+
+                // Pan map to marker, when its coordinates change
+                // Triggering this for <input/> change requires `ng-change` attr
+                $scope.$watchGroup( ['vm.marker.lat', 'vm.marker.lng'], centerMapOnMarker );
 
                 // Update the marker to match the Asset's coordinates
                 resetLocation();
@@ -116,6 +133,12 @@
 
         }
 
+        function centerMapOnMarker( ) {
+
+            vm.map.panTo( new L.LatLng( vm.marker.lat, vm.marker.lng ) );
+
+        }
+
         function geocode( ) {
 
             GeocodeService.get( vm.geocode.query ).then( function( results ) {
@@ -126,21 +149,16 @@
 
         function save() {
 
-            // Serialize selected Tags back into the Asset
-            vm.asset.tag_ids = vm.selected_tags.map( function( tag ) {
-                return tag.id;
-            });
-
-            // Serialize Leaflet marker into the Asset
-            vm.asset.latitude = vm.marker.lat;
-            vm.asset.longitude = vm.marker.lng;
-
-            // TODO: Remove this once things are stable
-            console.log( vm.asset );
-
             vm.saving = true;
 
-            AssetService.update( vm.asset.id ).promise.then( function() {
+            // See AssetService for more details re: args & return
+            AssetService.updateEx({
+
+                'asset': vm.asset,
+                'marker': vm.marker,
+                'tags': vm.selected_tags,
+
+            }).promise.then( function() {
 
                 Notification.success( { message: 'Changes saved!' } );
 
@@ -149,7 +167,6 @@
                 vm.saving = false;
 
             });
-
 
         }
 

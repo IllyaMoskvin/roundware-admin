@@ -4,17 +4,21 @@
         .module('app')
         .controller('AssetsController',  Controller);
 
-    Controller.$inject = ['$q', 'ApiService', 'AssetService', 'TagService'];
+    Controller.$inject = ['$q', 'ApiService', 'AssetService', 'TagService', 'ModalService', 'Notification'];
 
-    function Controller($q, ApiService, AssetService, TagService) {
+    function Controller($q, ApiService, AssetService, TagService, ModalService, Notification) {
 
         var vm = this;
 
         vm.assets = null;
 
         vm.getFileUrl = getFileUrl;
-        vm.playAudio = playAudio;
         vm.getTag = getTag;
+
+        vm.getAsset = getAsset;
+        vm.toggleSubmitted = toggleSubmitted;
+
+        vm.deleteAsset = deleteAsset;
 
         activate();
 
@@ -41,17 +45,43 @@
 
         }
 
-        // TODO: This is terrible and should be replaced
-        function playAudio( file ) {
-
-            var audio = new Audio( getFileUrl( file ) );
-            audio.play();
-
-        }
-
         function getTag( tag_id ) {
 
             return TagService.find( tag_id ).cache.clean;
+
+        }
+
+        function getAsset( asset_id ) {
+
+            return AssetService.find( asset_id ).cache;
+
+        }
+
+        function toggleSubmitted( asset_id, is_submitted ) {
+
+            AssetService.update( asset_id, {
+
+                'submitted': is_submitted,
+
+            }).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            });
+
+        }
+
+        function deleteAsset( id ) {
+
+            ModalService.open('asset-confirm-delete').result.then( function() {
+
+                return AssetService.delete( id ).promise;
+
+            }).then( function() {
+
+                Notification.warning( { message: 'Asset deleted!' } );
+
+            });
 
         }
 

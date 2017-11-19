@@ -249,6 +249,11 @@
                 controller: 'ConfirmGenericController',
                 controllerAs: 'vm',
             })
+            .modal('asset-confirm-delete', {
+                templateUrl: 'modals/asset/confirm-delete.html',
+                controller: 'ConfirmGenericController',
+                controllerAs: 'vm',
+            })
             .modal('audiotrack-edit', {
                 templateUrl: 'modals/audiotrack/audiotrack.html',
                 controller: 'EditAudiotrackController',

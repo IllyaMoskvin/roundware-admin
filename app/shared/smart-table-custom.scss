@@ -44,7 +44,16 @@ th {
 	color: white !important;
 }
 
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-	vertical-align: initial;
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+	vertical-align: middle;
 	padding: 4px 8px;
+}
+
+.table .checkbox label {
+	vertical-align: bottom;
 }

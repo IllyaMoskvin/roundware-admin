@@ -12,6 +12,9 @@
         return new DataFactory.Collection({
             route: 'projects',
             refresh: true,
+            params: {
+                session_id: 1,
+            },
             mapped: [
                 {
                     incoming: 'demo_stream_message_loc_admin',

@@ -18,24 +18,16 @@
 
         function activate() {
 
-            TagService.setDefaultParams({
-                project_id: $stateParams.id
-            });
+            var services = [
+                AssetService,
+                AudiotrackService,
+                TagService,
+                SpeakerService,
+                UiGroupService,
+            ];
 
-            UiGroupService.setDefaultParams({
-                project_id: $stateParams.id
-            });
-
-            AssetService.setDefaultParams({
-                project_id: $stateParams.id
-            });
-
-            AudiotrackService.setDefaultParams({
-                project_id: $stateParams.id
-            });
-
-            SpeakerService.setDefaultParams({
-                project_id: $stateParams.id
+            services.forEach( function( service ) {
+                service.setDefaultParam('project_id', $stateParams.id );
             });
 
         }
