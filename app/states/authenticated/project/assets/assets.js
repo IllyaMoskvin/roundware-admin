@@ -4,9 +4,9 @@
         .module('app')
         .controller('AssetsController',  Controller);
 
-    Controller.$inject = ['$q', 'ApiService', 'AssetService', 'TagService', 'Notification'];
+    Controller.$inject = ['$q', 'ApiService', 'AssetService', 'TagService', 'ModalService', 'Notification'];
 
-    function Controller($q, ApiService, AssetService, TagService, Notification) {
+    function Controller($q, ApiService, AssetService, TagService, ModalService, Notification) {
 
         var vm = this;
 
@@ -14,9 +14,11 @@
 
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
-        vm.getAsset = getAsset;
 
+        vm.getAsset = getAsset;
         vm.toggleSubmitted = toggleSubmitted;
+
+        vm.deleteAsset = deleteAsset;
 
         activate();
 
@@ -64,6 +66,20 @@
             }).promise.then( function() {
 
                 Notification.success( { message: 'Changes saved!' } );
+
+            });
+
+        }
+
+        function deleteAsset( id ) {
+
+            ModalService.open('asset-confirm-delete').result.then( function() {
+
+                return AssetService.delete( id ).promise;
+
+            }).then( function() {
+
+                Notification.warning( { message: 'Asset deleted!' } );
 
             });
 
