@@ -4,9 +4,9 @@
         .module('app')
         .controller('AssetsController',  Controller);
 
-    Controller.$inject = ['$q', 'ApiService', 'AssetService', 'TagService'];
+    Controller.$inject = ['$q', 'ApiService', 'AssetService', 'TagService', 'Notification'];
 
-    function Controller($q, ApiService, AssetService, TagService) {
+    function Controller($q, ApiService, AssetService, TagService, Notification) {
 
         var vm = this;
 
@@ -14,6 +14,9 @@
 
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
+        vm.getAsset = getAsset;
+
+        vm.toggleSubmitted = toggleSubmitted;
 
         activate();
 
@@ -43,6 +46,26 @@
         function getTag( tag_id ) {
 
             return TagService.find( tag_id ).cache.clean;
+
+        }
+
+        function getAsset( asset_id ) {
+
+            return AssetService.find( asset_id ).cache;
+
+        }
+
+        function toggleSubmitted( asset_id, is_submitted ) {
+
+            AssetService.update( asset_id, {
+
+                'submitted': is_submitted,
+
+            }).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            });
 
         }
 

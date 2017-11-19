@@ -13,6 +13,7 @@
             <col>
             <col>
             <col width="160">
+            <col width="60">
             <col width="45">
         </colgroup>
         <thead>
@@ -23,6 +24,7 @@
                 <th st-sort="filename">File</th>
                 <th>Tags</th>
                 <th st-sort="created">Created</th>
+                <th st-sort="submitted"><abbr title="Submitted?">Sub?</abbr></th>
                 <th></th>
             </tr>
         </thead>
@@ -73,6 +75,16 @@
                 </td>
                 <!-- Assets created through the Django admin panel have milliseconds -->
                 <td>{{ row.created | date : 'yyyy-MM-dd HH:mm:ss' }}</td>
+                <!-- We are populating the table using cache.clean, but here, we need to target cache.dirty -->
+                <td>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"
+                                ng-model="vm.getAsset( row.id ).dirty.submitted"
+                                ng-change="vm.toggleSubmitted( row.id, vm.getAsset( row.id ).dirty.submitted )">
+                        </label>
+                    </div>
+                </td>
                 <td class="no-ellipsis"><btn-edit ui-sref="project.asset-edit({ asset_id: row.id })"/></td>
             </tr>
         </tbody>
