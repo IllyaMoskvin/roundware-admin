@@ -321,8 +321,8 @@
 
         // TODO: Load config from file?
         ApiService.init({
-            base: 'http://localhost:8888',
-            path: '/api/2/',
+            base: window.config.API_BASE_URL,
+            path: window.config.API_PATH_URL,
         });
 
         AuthService.init({
