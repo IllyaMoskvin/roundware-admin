@@ -42,7 +42,16 @@
                 <td>{{ row.minfadeouttime }} - {{ row.maxfadeouttime }}</td>
                 <td>{{ row.minpanpos }} - {{ row.maxpanpos }}</td>
                 <td>{{ row.minpanduration }} - {{ row.maxpanduration }}</td>
-                <td>{{ row.repeatrecordings }}</td>
+                <td>
+                    <div class="checkbox">
+                        <label>
+                            <!-- We are populating the table using cache.clean, but here, we need to target cache.dirty -->
+                            <input type="checkbox"
+                                ng-model="vm.getAudiotrack( row.id ).dirty.repeatrecordings"
+                                ng-change="vm.toggleRepeat( row.id, vm.getAudiotrack( row.id ).dirty.repeatrecordings )">
+                        </label>
+                    </div>
+                </td>
                 <td class="no-ellipsis"><btn-edit modal-href="audiotrack-edit" modal-data="{ id: row.id }"/></td>
                 <td class="no-ellipsis"><btn-delete ng-click="vm.deleteAudiotrack( row.id )"/></td>
             </tr>
