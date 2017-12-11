@@ -156,12 +156,27 @@
 		}
 
 		.btn-placeholder {
-			background-color: #efefef;
+			background-color: #f2f4f8;
 			border-radius: 5px;
 			display: inline-block;
 			vertical-align: middle;
 			height: 24px;
 			width: 24px;
+
+			&.pull-right {
+				margin: 0 2px;
+			}
+		}
+
+		.checkbox {
+
+			margin: 0;
+
+			label {
+				vertical-align: middle;
+				min-height: 24px;
+			}
+
 		}
 
 		.label-group {

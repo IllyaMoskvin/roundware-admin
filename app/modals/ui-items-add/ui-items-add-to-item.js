@@ -174,7 +174,7 @@
                 return {
                     index: max_index + i + 1,
                     tag_id: tag_id,
-                    default: false,
+                    default: vm.ui_group.ui_mode == 'listen',
                     active: true,
                     ui_group_id: vm.ui_group.id,
                     parent_id: vm.parent_ui_item.id,

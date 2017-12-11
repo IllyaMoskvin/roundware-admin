@@ -57,6 +57,9 @@
 
         vm.toggleItemsByGroup = toggleItemsByGroup;
 
+        vm.getItem = getItem;
+        vm.toggleDefault = toggleDefault;
+
         vm.saving = false;
 
         activate();
@@ -491,6 +494,28 @@
             function getItems( index ) {
                 return tree.querySelectorAll('.rw-index-' + index);
             }
+
+        }
+
+
+        function getItem( ui_item_id ) {
+
+            return UiItemService.find( ui_item_id ).cache;
+
+        }
+
+
+        function toggleDefault( ui_item_id, is_default ) {
+
+            UiItemService.update( ui_item_id, {
+
+                'default': is_default,
+
+            }).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            });
 
         }
 

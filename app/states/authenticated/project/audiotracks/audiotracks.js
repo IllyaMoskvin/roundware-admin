@@ -12,6 +12,9 @@
 
         vm.audiotracks = null;
 
+        vm.getAudiotrack = getAudiotrack;
+        vm.toggleRepeat = toggleRepeat;
+
         vm.deleteAudiotrack = deleteAudiotrack;
 
         activate();
@@ -21,6 +24,26 @@
         function activate() {
 
             vm.audiotracks = AudiotrackService.list().cache;
+
+        }
+
+        function getAudiotrack( audiotrack_id ) {
+
+            return AudiotrackService.find( audiotrack_id ).cache;
+
+        }
+
+        function toggleRepeat( audiotrack_id, is_repeated ) {
+
+            AudiotrackService.update( audiotrack_id, {
+
+                'repeatrecordings': is_repeated,
+
+            }).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            });
 
         }
 
