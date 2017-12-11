@@ -139,6 +139,8 @@
 
             <span class=>{{ node.tag.value }}</span>
 
+            <!-- Because these use .pull-right, they are in reverse order -->
+
             <button type="button" data-nodrag
                 class="btn btn-xs btn-default btn-square pull-right"
                 ng-click="vm.deleteItem( node )"
@@ -150,6 +152,17 @@
                 modal-data="{ parent_ui_item: node }"
                 ng-show="node.group.index < vm.max_index"
             ><span class="glyphicon glyphicon-plus"></span></button>
+
+            <span ng-if="node.group.index == vm.max_index" class="btn-placeholder pull-right"></span>
+
+            <div class="checkbox pull-right" data-nodrag>
+                <label>
+                    <!-- Here, we need to target cache.dirty -->
+                    <input type="checkbox"
+                        ng-model="vm.getItem( node.id ).dirty.default"
+                        ng-change="vm.toggleDefault( node.id, vm.getItem( node.id ).dirty.default )">
+                </label>
+            </div>
 
         </div>
 
