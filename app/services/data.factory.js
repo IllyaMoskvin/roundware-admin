@@ -40,6 +40,7 @@
 
                 // actions
                 list: list,
+                paginate: paginate,
                 find: find,
                 detail: detail,
                 inject: inject,
@@ -61,6 +62,48 @@
                 var promise = ApiService.get( url, config )
                     .then( transformResponse )
                     .then( cache.update );
+
+                var data = cache.list();
+
+                return {
+                    promise: promise,
+                    cache: data,
+                }
+
+            }
+
+
+            // Currently, pagination only works with Assets
+            // This works like list, but separates out the meta
+            // Instead of returning the cache directly, it returns cache + meta
+            function paginate( config ) {
+
+                var url = getUrl();
+                var config = getConfig( config );
+
+                var meta = {};
+
+                var promise = ApiService.get( url, config )
+                    .then( function( response ) {
+
+                        // We only care about the count, but might as well grab it all
+                        meta.count = response.data.count;
+                        meta.next = response.data.next;
+                        meta.previous = response.data.previous;
+
+                        return response.data.results;
+
+                    })
+                    .then( transformResponse )
+                    .then( cache.update )
+                    .then( function( cache ) {
+
+                        return {
+                            cache: cache,
+                            meta: meta,
+                        }
+
+                    });
 
                 var data = cache.list();
 

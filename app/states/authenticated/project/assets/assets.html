@@ -5,7 +5,7 @@
     <hr/>
 
     <!-- Assets Table -->
-    <table st-table="vm.displayed.assets" st-safe-src="vm.assets" class="table table-striped">
+    <table st-table="vm.assets" st-pipe="vm.pipe" class="table table-striped" st-refresh>
         <colgroup>
             <col width="42">
             <col width="42">
@@ -19,19 +19,19 @@
         </colgroup>
         <thead>
             <tr>
-                <th st-sort="id" st-sort-default="true">ID</th>
+                <th>ID</th>
                 <th></th>
-                <th st-sort="audio_length_in_seconds">Size</th>
-                <th st-sort="filename">File</th>
+                <th>Size</th>
+                <th>File</th>
                 <th>Tags</th>
-                <th st-sort="created">Created</th>
-                <th st-sort="submitted"><abbr title="Submitted?">Sub?</abbr></th>
+                <th>Created</th>
+                <th><abbr title="Submitted?">Sub?</abbr></th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="row in vm.displayed.assets">
+            <tr ng-repeat="row in vm.assets">
                 <td>{{ row.id }}</td>
                 <td class="text-center">
 
@@ -91,6 +91,12 @@
                 <td class="no-ellipsis"><btn-delete ng-click="vm.deleteAsset( row.id )"/></td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td st-pagination="" st-items-by-page="20" colspan="9">
+                </td>
+            </tr>
+        </tfoot>
     </table>
 
 </div>
