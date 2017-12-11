@@ -10,9 +10,6 @@
 
         var vm = this;
 
-        // We don't usually declare this explicitly, but we need to here b/c we override pipe
-        vm.displayed = {};
-
         vm.assets = null;
         vm.tags = null;
 
@@ -62,12 +59,7 @@
                 }
             }).promise.then( function( data ) {
 
-                // I think pipe will also trigger if this array changes
                 vm.assets = data.cache.clean;
-
-                // Since we override pipe, Smart Table's safe-copy for display needs to be updated manually
-                // https://github.com/lorenzofox3/Smart-Table/blob/02fc2a5/dist/smart-table.js#L66
-                vm.displayed.assets = angular.extend( [], vm.assets );
 
                 tableState.pagination.totalItemCount = data.meta.count;
                 tableState.pagination.numberOfPages = Math.ceil( data.meta.count / tableState.pagination.number );

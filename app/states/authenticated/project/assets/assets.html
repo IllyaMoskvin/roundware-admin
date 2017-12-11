@@ -5,7 +5,7 @@
     <hr/>
 
     <!-- Assets Table -->
-    <table st-table="vm.displayed.assets" st-safe-src="vm.assets" st-pipe="vm.pipe" class="table table-striped" st-refresh>
+    <table st-table="vm.assets" st-pipe="vm.pipe" class="table table-striped" st-refresh>
         <colgroup>
             <col width="42">
             <col width="42">
@@ -31,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="row in vm.displayed.assets">
+            <tr ng-repeat="row in vm.assets">
                 <td>{{ row.id }}</td>
                 <td class="text-center">
 
