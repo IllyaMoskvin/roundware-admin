@@ -41,6 +41,7 @@
                 // actions
                 list: list,
                 paginate: paginate,
+                cache: getCache,
                 find: find,
                 detail: detail,
                 inject: inject,
@@ -109,6 +110,41 @@
 
                 return {
                     promise: promise,
+                    cache: data,
+                }
+
+            }
+
+
+            // cache() is like a soft list(), meant for modals
+            // only use it when you're 100% certain the list hasn't changed
+            // its return structure is meant to mirror that of list()
+            // this method has to be named `getCache` b/c cache is a variable
+            // call it via ModelService.cache()
+            function getCache( config ) {
+
+                var url = getUrl();
+                var config = getConfig( config );
+                var data = cache.list();
+
+                var deferred = $q.defer();
+
+                if( data.both.length < 1 ) {
+
+                    list.config.promise.then( function( cache ) {
+
+                        deferred.resolve( cache );
+
+                    });
+
+                } else {
+
+                    deferred.resolve( data );
+
+                }
+
+                return {
+                    promise: deferred.promise,
                     cache: data,
                 }
 

@@ -42,7 +42,18 @@
 
         function activate() {
 
-            UiGroupService.list().promise.then( function( cache ) {
+            $q.all({
+                // This ensures our caches are preloaded before processing
+                'ui_groups': UiGroupService.cache().promise,
+                'ui_items': UiItemService.cache().promise,
+                'tag_categories': TagCategoryService.cache().promise,
+                'tags': TagService.cache().promise,
+            }).then( function( caches ) {
+
+                // We are only interested in UI Groups currently
+                return caches.ui_groups;
+
+            }).then( function( cache ) {
 
                 var ui_groups = angular.extend([], cache.clean);
 
@@ -66,7 +77,7 @@
                 vm.parent_ui_group_id = parent_ui_group ? parent_ui_group.id : null;
 
                 // Grab all UI Items; we'll filter them later
-                return UiItemService.list().promise;
+                return UiItemService.cache().promise;
 
             }).then( function( cache ) {
 
@@ -96,7 +107,7 @@
                 vm.category = cache.clean;
 
                 // Retrieve all tags; we will filter them later
-                return TagService.list().promise;
+                return TagService.cache().promise;
 
             }).then( function( cache ) {
 
