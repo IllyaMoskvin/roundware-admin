@@ -31,6 +31,9 @@
         vm.deleteSpeaker = deleteSpeaker;
         vm.addSpeakerHandler = addSpeakerHandler;
 
+        vm.getSpeaker = getSpeaker;
+        vm.toggleActive = toggleActive;
+
         vm.saving = false;
         vm.editing = false;
 
@@ -759,6 +762,27 @@
             ];
 
             return classes.join(' ');
+
+        }
+
+
+        function getSpeaker( speaker_id ) {
+
+            return SpeakerService.find( speaker_id ).cache;
+
+        }
+
+        function toggleActive( speaker_id, is_active ) {
+
+            SpeakerService.update( speaker_id, {
+
+                'activeyn': is_active,
+
+            }).promise.then( function() {
+
+                Notification.success( { message: 'Changes saved!' } );
+
+            });
 
         }
 

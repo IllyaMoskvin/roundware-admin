@@ -45,7 +45,16 @@
                     ><span class="glyphicon glyphicon-map-marker"></span></a>
                 </td>
                 <td>{{ row.id }}</td>
-                <td>{{ row.activeyn }}</td>
+                <td>
+                    <div class="checkbox">
+                        <label>
+                            <!-- We are populating the table using cache.clean, but here, we need to target cache.dirty -->
+                            <input type="checkbox"
+                                ng-model="vm.getSpeaker( row.id ).dirty.activeyn"
+                                ng-change="vm.toggleActive( row.id, vm.getSpeaker( row.id ).dirty.activeyn )">
+                        </label>
+                    </div>
+                </td>
                 <td>{{ row.code }}</td>
                 <td>{{ row.minvolume }} - {{ row.maxvolume }}</td>
                 <td>{{ row.attenuation_distance }}</td>
