@@ -4,9 +4,9 @@
         .module('app')
         .controller('ProjectController',  Controller);
 
-    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService', 'AssetService', 'AudiotrackService', 'SpeakerService'];
+    Controller.$inject = ['$stateParams', 'ProjectService', 'TagService', 'UiGroupService', 'AssetService', 'EnvelopeService', 'AudiotrackService', 'SpeakerService'];
 
-    function Controller($stateParams, ProjectService, TagService, UiGroupService, AssetService, AudiotrackService, SpeakerService) {
+    function Controller($stateParams, ProjectService, TagService, UiGroupService, AssetService, EnvelopeService, AudiotrackService, SpeakerService) {
 
         var vm = this;
 
@@ -21,6 +21,7 @@
             var services = [
                 AssetService,
                 AudiotrackService,
+                EnvelopeService,
                 TagService,
                 SpeakerService,
                 UiGroupService,
