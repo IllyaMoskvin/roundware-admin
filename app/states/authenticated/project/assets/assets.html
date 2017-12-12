@@ -8,24 +8,55 @@
     <table st-table="vm.assets" st-pipe="vm.pipe" class="table table-striped" st-refresh>
         <colgroup>
             <col width="42">
-            <col width="42">
+            <col width="55">
             <col width="60">
             <col>
             <col>
             <col width="160">
-            <col width="60">
+            <col width="55">
             <col width="45">
             <col width="45">
         </colgroup>
         <thead>
             <tr>
                 <th>ID</th>
-                <th></th>
+                <th>Type</th>
                 <th>Size</th>
                 <th>File</th>
                 <th>Tags</th>
                 <th>Created</th>
                 <th><abbr title="Submitted?">Sub?</abbr></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>
+                    <select st-search="media_type" class="glyphicon-inline">
+                        <option value="">&#x002a;</option>
+                        <option value="audio">&#xe035;</option>
+                        <option value="photo">&#xe060;</option>
+                        <option value="video">&#xe059;</option>
+                        <option value="text">&#xe241;</option>
+                    </select>
+                </th>
+                <th></th>
+                <th></th>
+                <th>
+                    <!-- TODO: Make this a multi-select? -->
+                    <select st-search="tag_id">
+                        <option value="">All</option>
+                        <option ng-repeat="tag in vm.tags" value="{{ tag.id }}">{{ tag.value }}</option>
+                    </select>
+                </th>
+                <th></th>
+                <th>
+                    <select st-search="submitted" class="glyphicon-inline">
+                        <option value="undefined">&#x002a;</option>
+                        <option value="true">&#xe067;</option>
+                        <option value="false">&#xe157;</option>
+                    </select>
+                </th>
                 <th></th>
                 <th></th>
             </tr>

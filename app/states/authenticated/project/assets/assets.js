@@ -49,14 +49,51 @@
                 return;
             }
 
-            // Page size is set via st-items-by-page in assets.html
+            // Start building our param array
+            var params = {};
 
-            AssetService.paginate({
-                params: {
-                    paginate: true,
-                    page_size: tableState.pagination.number,
-                    page: Math.floor( tableState.pagination.start / tableState.pagination.number ) + 1
+            // Parse out the filters from tableState
+            var filters = angular.extend( {}, tableState.search.predicateObject );
+
+            if( filters.tag_id ) {
+
+                // TODO: Make this a multi-select?
+                filters.tag_ids = [ parseInt( filters.tag_id ) ];
+                delete filters.tag_id;
+
+            }
+
+            if( filters.submitted ) {
+
+                // Convert string to boolean
+                switch( filters.submitted ) {
+                    case 'true':
+                        filters.submitted = true;
+                    break;
+                    case 'false':
+                        filters.submitted = false;
+                    break;
+                    default:
+                        delete filters.submitted;
+                    break;
                 }
+
+            }
+
+            // Append filters to the params array
+            params = angular.extend( params, filters );
+
+            // Append pagination to the params array
+            // Page size is set via st-items-by-page in assets.html
+            params = angular.extend( params, {
+                paginate: true,
+                page_size: tableState.pagination.number,
+                page: Math.floor( tableState.pagination.start / tableState.pagination.number ) + 1
+            });
+
+            // Run a paginated list query using our params
+            AssetService.paginate({
+                params: params
             }).promise.then( function( data ) {
 
                 vm.assets = data.cache.clean;
