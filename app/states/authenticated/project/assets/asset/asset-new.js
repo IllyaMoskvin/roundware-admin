@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$state', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService', 'EnvelopeService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$state', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService', 'Notification'];
 
-    function Controller($scope, $q, $state, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService, EnvelopeService, Notification) {
+    function Controller($scope, $q, $state, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService, Notification) {
 
         var vm = this;
 
@@ -37,7 +37,6 @@
 
         vm.map = null;
         vm.languages = null;
-        vm.envelopes = null;
 
         // Multi-select widget won't work if these start as null
         vm.selected_tags = [];
@@ -105,7 +104,6 @@
                 'tags': TagService.list().promise,
                 'project': ProjectService.find( $stateParams.id ).promise,
                 'languages': LanguageService.list().promise,
-                'envelopes': EnvelopeService.list().promise,
             }).then( function( results ) {
 
                 vm.map = results.map;
@@ -113,7 +111,6 @@
                 // Load info from the caches
                 vm.tags = results.tags.clean;
                 vm.languages = results.languages.clean;
-                vm.envelopes = results.envelopes.clean;
 
                 // TODO: Filter languages by project languages?
 
