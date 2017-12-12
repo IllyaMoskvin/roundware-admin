@@ -236,18 +236,38 @@
 
                         });
 
-                        // TODO: Fix server to accept and return description ids in a consistent format:
-                        // `partial_update` expects `description_loc_ids` to be an array, but
-                        // `create` expects them to be a comma-searated string...
-                        // See c. L628 of api.py
-                        if( typeof data.description_loc_ids !== 'undefined' ) {
-                            formData.set( 'description_loc_ids', data.description_loc_ids.join(',') );
+                        // `partial_update` expects `description_loc_ids` and `tag_ids` to be arrays, but
+                        // `create` expects them to be a comma-separated string...
+                        formData.setArray = function( data, key ) {
+
+                            if(
+                                typeof data[key] !== 'undefined' &&
+                                data[key].constructor === Array &&
+                                data[key].length > 0
+                            ) {
+
+                                this.set( key, data[key].join(',') );
+
+                            } else {
+
+                                if( this.has(key) ) {
+                                    this.delete(key);
+                                }
+
+                            }
+
+                            // No reason to send the arrays in either case
+                            if( this.has(key + '[]') ) {
+                                this.delete(key + '[]');
+                            }
+
                         }
 
-                        // Ditto for tag ids. See c. L619 of api.py
-                        if( typeof data.tag_ids !== 'undefined' ) {
-                            formData.set( 'tag_ids', data.tag_ids.join(',') );
-                        }
+                        // See c. L628 of api.py
+                        formData.setArray( data, 'description_loc_ids' );
+
+                        // See c. L619 of api.py
+                        formData.setArray( data, 'tag_ids' );
 
                         return formData;
 
