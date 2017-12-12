@@ -207,10 +207,9 @@
                 // Append our file
                 asset.file = params.file;
 
-                // TODO: envelope_ids[] is not accepted for create call
-                // Fix server to expect envelope_ids, not envelope_id
-                asset.envelope_id = asset.envelope_ids[0];
-                delete asset.envelope_ids;
+                // Create call expects envelope_ids to be an integer, not an array
+                // https://github.com/roundware/roundware-server/pull/357
+                asset.envelope_ids = asset.envelope_ids[0];
 
                 // https://stackoverflow.com/questions/16483873/angularjs-http-post-file-and-form-data
                 return collection.create( asset, {
