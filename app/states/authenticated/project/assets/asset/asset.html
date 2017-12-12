@@ -145,7 +145,10 @@
             <div class="col-sm-10">
                 <select class="form-control" id="envelope" ng-model="vm.asset.envelope_ids" numeric>
                     <option value="0">Create new envelope</option>
-                    <option ng-repeat="envelope in vm.envelopes" value="{{ envelope.id }}">{{envelope.id}}</option>
+                    <option
+                        ng-if="vm.saved_envelope_id"
+                        value="{{ vm.saved_envelope_id }}"
+                    >Keep current envelope (#{{ vm.saved_envelope_id }})</option>
                 </select>
             </div>
         </div>

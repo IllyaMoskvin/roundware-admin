@@ -4,16 +4,17 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'EnvelopeService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'Notification'];
 
-    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, EnvelopeService, Notification) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, Notification) {
 
         var vm = this;
 
         vm.asset = null;
         vm.tags = null;
         vm.languages = null;
-        vm.envelopes = null;
+
+        vm.saved_envelope_id = null;
 
         vm.selected_tags = null;
 
@@ -79,7 +80,6 @@
                 'asset': AssetService.find( $stateParams.asset_id ).promise,
                 'tags': TagService.list().promise,
                 'languages': LanguageService.list().promise,
-                'envelopes': EnvelopeService.list().promise,
             }).then( function( results ) {
 
                 vm.map = results.map;
@@ -88,7 +88,9 @@
                 vm.asset = results.asset.dirty;
                 vm.tags = results.tags.clean;
                 vm.languages = results.languages.clean;
-                vm.envelopes = results.envelopes.clean;
+
+                // Save the original envelope id
+                vm.saved_envelope_id = vm.asset.envelope_ids[0];
 
                 // TODO: Filter languages by project languages?
 
@@ -158,7 +160,10 @@
                 'marker': vm.marker,
                 'tags': vm.selected_tags,
 
-            }).promise.then( function() {
+            }).promise.then( function( cache ) {
+
+                // Save the new envelope id
+                vm.saved_envelope_id = cache.clean.envelope_ids[0];
 
                 Notification.success( { message: 'Changes saved!' } );
 
