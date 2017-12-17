@@ -1,0 +1,16 @@
+/* the multiselect button */
+.multiSelect > button {
+	white-space: nowrap;
+	padding: 6px 12px;
+	line-height: 1.42857143;
+	min-height: initial !important;
+	height: 34px;
+}
+
+.multiSelect .buttonLabel {
+	padding: 0;
+}
+
+.multiSelect .multiSelectItem {
+	min-height: initial;
+}
