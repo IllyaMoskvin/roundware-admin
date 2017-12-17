@@ -15,6 +15,7 @@
         'ui.bootstrap',
         'ui.tree',
         'btorfs.multiselect',
+        'isteven-multi-select',
         'nemLogging',
         'ui-leaflet',
         'rzModule',
