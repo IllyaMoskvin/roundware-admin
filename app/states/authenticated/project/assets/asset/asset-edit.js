@@ -4,19 +4,16 @@
         .module('app')
         .controller('EditAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'TagService', 'LanguageService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'LanguageService', 'Notification'];
 
-    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, TagService, LanguageService, Notification) {
+    function Controller($scope, $q, $stateParams, leafletData, ApiService, GeocodeService, AssetService, LanguageService, Notification) {
 
         var vm = this;
 
         vm.asset = null;
-        vm.tags = null;
         vm.languages = null;
 
         vm.saved_envelope_id = null;
-
-        vm.selected_tags = null;
 
         // Serialize this into vm.asset on save()
         vm.marker = {
@@ -48,7 +45,6 @@
 
         // Helper functions for rendering in view
         vm.getFileUrl = getFileUrl;
-        vm.getTag = getTag;
 
         // Helpers for setting coordinates + updating map
         vm.setLocation = setLocation;
@@ -72,13 +68,9 @@
 
         function activate() {
 
-            // Waiting until Tags are loaded to set vm.asset will
-            // eliminate server request spam caused by getTag()
-
             $q.all({
                 'map': leafletData.getMap('map'),
                 'asset': AssetService.find( $stateParams.asset_id ).promise,
-                'tags': TagService.list().promise,
                 'languages': LanguageService.list().promise,
             }).then( function( results ) {
 
@@ -86,18 +78,12 @@
 
                 // Load info from the caches
                 vm.asset = results.asset.dirty;
-                vm.tags = results.tags.clean;
                 vm.languages = results.languages.clean;
 
                 // Save the original envelope id
                 vm.saved_envelope_id = vm.asset.envelope_ids[0];
 
                 // TODO: Filter languages by project languages?
-
-                // Find Tags assoc. w/ this asset
-                vm.selected_tags = vm.tags.filter( function( tag ) {
-                    return vm.asset.tag_ids.includes( tag.id );
-                });
 
                 // Pan map to marker, when its coordinates change
                 // Triggering this for <input/> change requires `ng-change` attr
@@ -113,12 +99,6 @@
         function getFileUrl( path ) {
 
             return ApiService.getBaseUrl( path );
-
-        }
-
-        function getTag( tag_id ) {
-
-            return TagService.find( tag_id ).cache.clean;
 
         }
 
@@ -158,7 +138,6 @@
 
                 'asset': vm.asset,
                 'marker': vm.marker,
-                'tags': vm.selected_tags,
 
             }).promise.then( function( cache ) {
 

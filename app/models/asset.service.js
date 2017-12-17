@@ -64,7 +64,6 @@
             var required = [
                 'asset',
                 'marker',
-                'tags',
             ];
 
             required.forEach( function( param ) {
@@ -304,11 +303,6 @@
 
                 // Add the correct(ed) envelope_ids
                 asset.envelope_ids = envelope_ids;
-
-                // Serialize multi-selected Tags back into the Asset
-                asset.tag_ids = params.tags.map( function( tag ) {
-                    return tag.id;
-                });
 
                 // Serialize Leaflet marker into the Asset
                 asset.latitude = params.marker.lat;

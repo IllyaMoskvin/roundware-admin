@@ -111,13 +111,9 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Tags</label>
             <div class="col-sm-10">
-                <multiselect
-                    ng-if="vm.selected_tags"
-                    ng-model="vm.selected_tags"
-                    options="vm.tags"
-                    id-prop="id"
-                    display-prop="value">
-                </multiselect>
+                <tag-multi-select
+                    model="vm.asset.tag_ids"
+                ></tag-multi-select>
             </div>
         </div>
 
