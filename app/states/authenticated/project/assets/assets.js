@@ -109,6 +109,15 @@
             // Append filters to the params array
             params = angular.extend( params, filters );
 
+            // Append sorting to the params array
+            if( tableState.sort.predicate )
+            {
+                console.log( tableState.sort );
+                params = angular.extend( params, {
+                    ordering: ( tableState.sort.reverse ? '-' : '' ) + tableState.sort.predicate,
+                });
+            }
+
             // Append pagination to the params array
             // Page size is set via st-items-by-page in assets.html
             params = angular.extend( params, {
