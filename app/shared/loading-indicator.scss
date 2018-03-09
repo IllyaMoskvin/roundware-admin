@@ -1,0 +1,48 @@
+.loading-indicator {
+
+	box-sizing: border-box;
+	display: inline-block;
+
+	background-color: transparentize( $color-gray-dark, 0.1 );
+	border-radius: 100%;
+
+	line-height: 0;
+
+	margin: 5px;
+	padding: 5px;
+
+	&:before {
+
+		$c1: #646464;
+		$c2: #e6e6e6;
+
+		$outer-size: 30px;
+		$border-size: 3px;
+
+		content: "";
+
+		display: inline-block;
+		min-width: $outer-size;
+		min-height: $outer-size;
+
+		border-width: $border-size;
+		border-style: solid;
+
+		border-top-color: $c1;
+		border-bottom-color: $c1;
+
+		border-right-color: $c2;
+		border-left-color: $c2;
+
+		border-radius: 100%;
+
+		animation: halfspin 1s ease infinite;
+
+	}
+}
+
+@keyframes halfspin {
+	to {
+		transform: rotate(180deg);
+	}
+}

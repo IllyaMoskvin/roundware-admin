@@ -20,6 +20,8 @@
         // Defined here so we can watch it
         vm.search_tag_ids = null;
 
+        vm.loading = null;
+
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
         vm.getLanguage = getLanguage;
@@ -34,6 +36,9 @@
         return vm;
 
         function activate() {
+
+            // Show the loading indicator
+            vm.loading = true;
 
             $q.all({
                 // This ensures our caches are preloaded before processing
@@ -52,6 +57,9 @@
                 // Pipe is usually triggered on page load, but we want to wait until tags are ready
                 // This will trigger it manually, via the stRefresh directive
                 $scope.$broadcast('refreshTable');
+
+                // Release the loading indicator
+                vm.loading = false;
 
             });
 
@@ -75,6 +83,9 @@
             if( !vm.tags ) {
                 return;
             }
+
+            // Show the loading indicator
+            vm.loading = true;
 
             // Start building our param array
             var params = {};
@@ -135,6 +146,11 @@
 
                 tableState.pagination.totalItemCount = data.meta.count;
                 tableState.pagination.numberOfPages = Math.ceil( data.meta.count / tableState.pagination.number );
+
+            }).finally( function() {
+
+                // Release the loading indicator
+                vm.loading = false;
 
             });
 
