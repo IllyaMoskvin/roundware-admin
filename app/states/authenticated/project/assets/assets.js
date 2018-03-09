@@ -123,7 +123,6 @@
             // Append sorting to the params array
             if( tableState.sort.predicate )
             {
-                console.log( tableState.sort );
                 params = angular.extend( params, {
                     ordering: ( tableState.sort.reverse ? '-' : '' ) + tableState.sort.predicate,
                 });
@@ -139,7 +138,9 @@
 
             // Run a paginated list query using our params
             AssetService.paginate({
+
                 params: params
+
             }).promise.then( function( data ) {
 
                 vm.assets = data.cache.clean;
