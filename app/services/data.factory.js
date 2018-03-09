@@ -77,10 +77,14 @@
             // Currently, pagination only works with Assets
             // This works like list, but separates out the meta
             // Instead of returning the cache directly, it returns cache + meta
+            // It also nukes the cache to create a clean slate for every page
             function paginate( config ) {
 
                 var url = getUrl();
                 var config = getConfig( config );
+
+                // Clear the cache to support sorting
+                cache.clear();
 
                 var meta = {};
 

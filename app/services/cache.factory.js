@@ -32,6 +32,7 @@
                 detail: detail,
                 update: update,
                 delete: remove,
+                clear: clear,
             };
 
 
@@ -193,6 +194,17 @@
                     return false;
 
                 }
+
+            }
+
+
+            // Does not return a promise. Used for pagination w/ sorting.
+            function clear( ) {
+
+                // https://stackoverflow.com/a/1232046/1943591
+                cache.both.length = 0;
+                cache.clean.length = 0;
+                cache.dirty.length = 0;
 
             }
 
