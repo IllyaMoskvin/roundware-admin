@@ -15,6 +15,10 @@
 
         vm.pipe = pipe;
 
+        // Controlled by our tag-multi-select
+        // Defined here so we can watch it
+        vm.search_tag_ids = null;
+
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
 
@@ -39,6 +43,17 @@
 
             });
 
+            // This directive requires us to manually trigger pipe
+            $scope.$watch( 'vm.search_tag_ids', function( nv, ov ) {
+
+                if( !vm.search_tag_ids ) {
+                    return;
+                }
+
+                $scope.$broadcast('refreshTable');
+
+            });
+
         }
 
         function pipe( tableState, tableCtrl ) {
@@ -55,13 +70,11 @@
             // Parse out the filters from tableState
             var filters = angular.extend( {}, tableState.search.predicateObject );
 
-            if( filters.tag_id ) {
+            // `media_type` filter is used directly b/c it's a string
 
-                // TODO: Make this a multi-select?
-                filters.tag_ids = [ parseInt( filters.tag_id ) ];
-                delete filters.tag_id;
+            // Sending an array doesn't work right, but comma-separated does
+            filters.tag_ids = vm.search_tag_ids.join(',');
 
-            }
 
             if( filters.submitted ) {
 

@@ -43,11 +43,10 @@
                 <th></th>
                 <th></th>
                 <th>
-                    <!-- TODO: Make this a multi-select? -->
-                    <select st-search="tag_id">
-                        <option value="">All</option>
-                        <option ng-repeat="tag in vm.tags" value="{{ tag.id }}">{{ tag.value }}</option>
-                    </select>
+                    <tag-multi-select
+                        model="vm.search_tag_ids"
+                        max_labels="0"
+                    ></tag-multi-select>
                 </th>
                 <th></th>
                 <th>
