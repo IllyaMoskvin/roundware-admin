@@ -4,14 +4,15 @@
         .module('app')
         .controller('AssetsController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', 'ApiService', 'AssetService', 'TagService', 'ModalService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$stateParams', 'ApiService', 'AssetService', 'TagService', 'ProjectService', 'LanguageService', 'ModalService', 'Notification'];
 
-    function Controller($scope, $q, ApiService, AssetService, TagService, ModalService, Notification) {
+    function Controller($scope, $q, $stateParams, ApiService, AssetService, TagService, ProjectService, LanguageService, ModalService, Notification) {
 
         var vm = this;
 
         vm.assets = null;
         vm.tags = null;
+        vm.languages = null;
 
         vm.pipe = pipe;
 
@@ -21,6 +22,7 @@
 
         vm.getFileUrl = getFileUrl;
         vm.getTag = getTag;
+        vm.getLanguage = getLanguage;
 
         vm.getAsset = getAsset;
         vm.toggleSubmitted = toggleSubmitted;
@@ -33,9 +35,19 @@
 
         function activate() {
 
-            TagService.list().promise.then( function( cache ) {
+            $q.all({
+                // This ensures our caches are preloaded before processing
+                'languages': LanguageService.list().promise,
+                'project': ProjectService.find( $stateParams.id ).promise,
+                'tags': TagService.list().promise,
+            }).then( function( caches ) {
 
-                vm.tags = cache.clean;
+                vm.tags = caches.tags.clean;
+
+                // Filter languages by this project's languages
+                vm.languages = caches.languages.clean.filter( function( language ) {
+                    return caches.project.clean.language_ids.indexOf( parseInt( language.id ) ) > -1;
+                });
 
                 // Pipe is usually triggered on page load, but we want to wait until tags are ready
                 // This will trigger it manually, via the stRefresh directive
@@ -75,6 +87,7 @@
             // Sending an array doesn't work right, but comma-separated does
             filters.tag_ids = vm.search_tag_ids.join(',');
 
+            // `language` filter is used directly b/c it's a string
 
             if( filters.submitted ) {
 
@@ -127,6 +140,12 @@
         function getTag( tag_id ) {
 
             return TagService.find( tag_id ).cache.clean;
+
+        }
+
+        function getLanguage( language_id ) {
+
+            return LanguageService.find( language_id ).cache.clean;
 
         }
 

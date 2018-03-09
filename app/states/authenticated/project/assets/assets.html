@@ -12,6 +12,7 @@
             <col width="60">
             <col>
             <col>
+            <col>
             <col width="160">
             <col width="70">
             <col width="45">
@@ -24,6 +25,7 @@
                 <th>Size</th>
                 <th>File</th>
                 <th>Tags</th>
+                <th>Language</th>
                 <th>Created</th>
                 <th><abbr title="Submitted?">Sub?</abbr></th>
                 <th></th>
@@ -47,6 +49,15 @@
                         model="vm.search_tag_ids"
                         max_labels="0"
                     ></tag-multi-select>
+                </th>
+                <th>
+                    <select st-search="language" class="form-control">
+                        <option value="">Any</option>
+                        <option
+                            ng-repeat="language in vm.languages"
+                            value="{{ language.language_code }}"
+                        >{{ language.name }}</option>
+                    </select>
                 </th>
                 <th></th>
                 <th>
@@ -104,6 +115,9 @@
                     <div ng-repeat="tag_id in row.tag_ids">
                         {{ vm.getTag( tag_id ).value }}
                     </div>
+                </td>
+                <td>
+                    {{ vm.getLanguage( row.language_id ).name }}
                 </td>
                 <!-- Assets created through the Django admin panel have milliseconds -->
                 <td>{{ row.created | date : 'yyyy-MM-dd HH:mm:ss' }}</td>
