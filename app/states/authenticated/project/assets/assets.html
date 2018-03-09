@@ -8,12 +8,12 @@
     <table st-table="vm.assets" st-pipe="vm.pipe" class="table table-striped" st-refresh>
         <colgroup>
             <col width="42">
-            <col width="55">
+            <col width="70">
             <col width="60">
             <col>
             <col>
             <col width="160">
-            <col width="55">
+            <col width="70">
             <col width="45">
             <col width="45">
         </colgroup>
@@ -32,12 +32,12 @@
             <tr>
                 <th></th>
                 <th>
-                    <select st-search="media_type" class="glyphicon-inline">
-                        <option value="">&#x002a;</option>
-                        <option value="audio">&#xe035;</option>
-                        <option value="photo">&#xe060;</option>
-                        <option value="video">&#xe059;</option>
-                        <option value="text">&#xe241;</option>
+                    <select st-search="media_type" class="form-control">
+                        <option value="">Any</option>
+                        <option value="audio">Snd.</option>
+                        <option value="photo">Img.</option>
+                        <option value="video">Vid.</option>
+                        <option value="text">Txt.</option>
                     </select>
                 </th>
                 <th></th>
@@ -50,10 +50,10 @@
                 </th>
                 <th></th>
                 <th>
-                    <select st-search="submitted" class="glyphicon-inline">
-                        <option value="undefined">&#x002a;</option>
-                        <option value="true">&#xe067;</option>
-                        <option value="false">&#xe157;</option>
+                    <select st-search="submitted" class="form-control">
+                        <option value="undefined">Any</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
                     </select>
                 </th>
                 <th></th>
