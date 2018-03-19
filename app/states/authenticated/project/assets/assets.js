@@ -95,8 +95,12 @@
 
             // `media_type` filter is used directly b/c it's a string
 
-            // Sending an array doesn't work right, but comma-separated does
-            filters.tag_ids = vm.search_tag_ids.join(',');
+            if( filters.tag_ids ) {
+
+                // Sending an array doesn't work, but comma-separated does
+                filters.tag_ids = vm.search_tag_ids.join(',');
+
+            }
 
             // `language` filter is used directly b/c it's a string
 
