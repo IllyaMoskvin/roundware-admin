@@ -26,7 +26,7 @@
                     button-label="label"
                     item-label="label"
                     tick-property="is_selected"
-                    helper-elements="filter"
+                    helper-elements="filter none"
                     search-property="label"
                     group-property="group"
                     translation="localization"
