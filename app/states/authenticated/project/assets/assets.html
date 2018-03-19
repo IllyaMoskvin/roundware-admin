@@ -8,29 +8,81 @@
     <table st-table="vm.assets" st-pipe="vm.pipe" class="table table-striped" st-refresh>
         <colgroup>
             <col width="42">
-            <col width="42">
+            <col width="70">
             <col width="60">
             <col>
             <col>
+            <col>
+            <col width="50">
+            <col width="50">
             <col width="160">
-            <col width="60">
+            <col width="70">
             <col width="45">
             <col width="45">
         </colgroup>
         <thead>
             <tr>
-                <th>ID</th>
-                <th></th>
+                <th st-sort="id" st-sort-default="true">ID</th>
+                <th>Type</th>
                 <th>Size</th>
                 <th>File</th>
                 <th>Tags</th>
+                <th>Language</th>
+                <th st-sort="weight"><abbr title="Weight">Wgt.</abbr></th>
+                <th st-sort="volume"><abbr title="Volume">Vol.</abbr></th>
                 <th>Created</th>
                 <th><abbr title="Submitted?">Sub?</abbr></th>
                 <th></th>
                 <th></th>
             </tr>
+            <tr>
+                <th></th>
+                <th>
+                    <select st-search="media_type" class="form-control">
+                        <option value="">Any</option>
+                        <option value="audio">Snd.</option>
+                        <option value="photo">Img.</option>
+                        <option value="video">Vid.</option>
+                        <option value="text">Txt.</option>
+                    </select>
+                </th>
+                <th></th>
+                <th></th>
+                <th>
+                    <tag-multi-select
+                        model="vm.search_tag_ids"
+                        max_labels="0"
+                    ></tag-multi-select>
+                </th>
+                <th>
+                    <select st-search="language" class="form-control">
+                        <option value="">Any</option>
+                        <option
+                            ng-repeat="language in vm.languages"
+                            value="{{ language.language_code }}"
+                        >{{ language.name }}</option>
+                    </select>
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                    <select st-search="submitted" class="form-control">
+                        <option value="undefined">Any</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
         </thead>
-        <tbody>
+        <tbody ng-show="vm.loading">
+            <tr class="loader">
+                <td colspan="12"><div class="loading-indicator"></div></td>
+            </tr>
+        </tbody>
+        <tbody ng-hide="vm.loading">
             <tr ng-repeat="row in vm.assets">
                 <td>{{ row.id }}</td>
                 <td class="text-center">
@@ -60,7 +112,7 @@
                     </audio>
 
                 </td>
-                <td ng-if="row.media_type != 'audio'" class="no-ellipsis">
+                <td ng-if="row.media_type != 'audio'">
 
                     <a
                         href="{{ vm.getFileUrl( row.file ) }}"
@@ -75,6 +127,11 @@
                         {{ vm.getTag( tag_id ).value }}
                     </div>
                 </td>
+                <td>
+                    {{ vm.getLanguage( row.language_id ).name }}
+                </td>
+                <td>{{ row.weight }}</td>
+                <td>{{ row.volume }}</td>
                 <!-- Assets created through the Django admin panel have milliseconds -->
                 <td>{{ row.created | date : 'yyyy-MM-dd HH:mm:ss' }}</td>
                 <!-- We are populating the table using cache.clean, but here, we need to target cache.dirty -->
@@ -93,7 +150,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td st-pagination="" st-items-by-page="20" colspan="9">
+                <td st-pagination="" st-items-by-page="20" colspan="12">
                 </td>
             </tr>
         </tfoot>

@@ -111,13 +111,9 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Tags</label>
             <div class="col-sm-10">
-                <multiselect
-                    ng-if="vm.selected_tags"
-                    ng-model="vm.selected_tags"
-                    options="vm.tags"
-                    id-prop="id"
-                    display-prop="value">
-                </multiselect>
+                <tag-multi-select
+                    model="vm.asset.tag_ids"
+                ></tag-multi-select>
             </div>
         </div>
 
@@ -145,7 +141,10 @@
             <div class="col-sm-10">
                 <select class="form-control" id="envelope" ng-model="vm.asset.envelope_ids" numeric>
                     <option value="0">Create new envelope</option>
-                    <option ng-repeat="envelope in vm.envelopes" value="{{ envelope.id }}">{{envelope.id}}</option>
+                    <option
+                        ng-if="vm.saved_envelope_id"
+                        value="{{ vm.saved_envelope_id }}"
+                    >Keep current envelope (#{{ vm.saved_envelope_id }})</option>
                 </select>
             </div>
         </div>

@@ -4,9 +4,9 @@
         .module('app')
         .controller('NewAssetController',  Controller);
 
-    Controller.$inject = ['$scope', '$q', '$state', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'TagService', 'LanguageService', 'EnvelopeService', 'Notification'];
+    Controller.$inject = ['$scope', '$q', '$state', '$stateParams', 'leafletData', 'ApiService', 'GeocodeService', 'AssetService', 'ProjectService', 'LanguageService', 'Notification'];
 
-    function Controller($scope, $q, $state, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, TagService, LanguageService, EnvelopeService, Notification) {
+    function Controller($scope, $q, $state, $stateParams, leafletData, ApiService, GeocodeService, AssetService, ProjectService, LanguageService, Notification) {
 
         var vm = this;
 
@@ -37,11 +37,6 @@
 
         vm.map = null;
         vm.languages = null;
-        vm.envelopes = null;
-
-        // Multi-select widget won't work if these start as null
-        vm.selected_tags = [];
-        vm.tags = [];
 
         // Serialize this into vm.asset on save()
         vm.marker = {
@@ -73,7 +68,6 @@
 
         // Helper functions for rendering in view
         vm.getFileUrl = getFileUrl;
-        vm.getTag = getTag;
 
         // Helpers for setting coordinates + updating map
         vm.setLocation = setLocation;
@@ -97,23 +91,16 @@
 
         function activate() {
 
-            // Waiting until Tags are loaded to set vm.asset will
-            // eliminate server request spam caused by getTag()
-
             $q.all({
                 'map': leafletData.getMap('map'),
-                'tags': TagService.list().promise,
                 'project': ProjectService.find( $stateParams.id ).promise,
                 'languages': LanguageService.list().promise,
-                'envelopes': EnvelopeService.list().promise,
             }).then( function( results ) {
 
                 vm.map = results.map;
 
                 // Load info from the caches
-                vm.tags = results.tags.clean;
                 vm.languages = results.languages.clean;
-                vm.envelopes = results.envelopes.clean;
 
                 // TODO: Filter languages by project languages?
 
@@ -132,12 +119,6 @@
         function getFileUrl( path ) {
 
             return ApiService.getBaseUrl( path );
-
-        }
-
-        function getTag( tag_id ) {
-
-            return TagService.find( tag_id ).cache.clean;
 
         }
 
@@ -178,7 +159,6 @@
 
                 'asset': vm.asset,
                 'marker': vm.marker,
-                'tags': vm.selected_tags,
 
                 // Note that these reference elements via names, not ids
                 'file': document.forms['asset']['file'].files[0],
