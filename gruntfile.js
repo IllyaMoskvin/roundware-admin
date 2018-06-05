@@ -28,10 +28,26 @@ module.exports = function(grunt) {
                 }
             }
         },
+        usebanner: {
+            dist: {
+                options: {
+                    position: 'top',
+                    linebreak: true,
+                    banner: '/**\n' +
+                            ' * This file was generated with grunt-contrib-sass.\n' +
+                            ' * Do NOT edit it directly! Edit *.scss files instead.\n' +
+                            ' * Consult the readme for more details.\n' +
+                            ' */\n',
+                },
+                files: {
+                    src: ['app/app.css']
+                }
+            }
+        },
         watch: {
             styles: {
                 files: ['**/*.scss'],
-                tasks: ['sass_globbing', 'sass'],
+                tasks: ['sass_globbing', 'sass', 'usebanner'],
                 options: {
                     event: ['changed', 'added', 'deleted']
                 }
@@ -42,7 +58,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sass-globbing');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-banner');
 
-    grunt.registerTask('default', ['sass_globbing', 'sass', 'watch'] );
+    grunt.registerTask('default', ['sass_globbing', 'sass', 'usebanner', 'watch'] );
 
 };
