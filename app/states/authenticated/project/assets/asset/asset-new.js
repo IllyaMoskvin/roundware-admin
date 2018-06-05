@@ -118,7 +118,9 @@
 
         function getFileUrl( path ) {
 
-            return ApiService.getBaseUrl( path );
+            // If path is relative: ApiService.getBaseUrl( path )
+            // https://stackoverflow.com/a/17819167/1943591
+            return path;
 
         }
 
